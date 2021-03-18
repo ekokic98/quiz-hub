@@ -22,6 +22,7 @@ public class Comment {
     @Column(name="user_id", nullable = false)
     private int userId;
 
+
     @Column(name="quiz_id", nullable = false)
     private int quizId;
 
