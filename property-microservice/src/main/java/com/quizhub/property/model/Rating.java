@@ -3,10 +3,9 @@ package com.quizhub.property.model;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.UUID;
 
 @Entity
@@ -17,22 +16,27 @@ public class Rating {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column(name="user_id", nullable = false)
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(name="quiz_id", nullable = false)
-    private int quizId;
+    @ManyToOne
+    @JoinColumn(name="quiz_id", nullable = false)
+    private Quiz quiz;
 
     @Column(nullable = false)
+    @Min(value = 1, message = "Minimal value is 1")
+    @Max(value = 5, message = "Max value is 5")
     private int rate;
 
     public Rating() {
     }
 
-    public Rating(UUID id, int userId, int quizId, int rate) {
+    public Rating(UUID id, User user, Quiz quiz, int rate) {
         this.id = id;
-        this.userId = userId;
-        this.quizId = quizId;
+        this.user = user;
+        this.quiz = quiz;
+        this.rate = rate;
     }
 
     public UUID getId() {
@@ -43,20 +47,20 @@ public class Rating {
         this.id = id;
     }
 
-    public int getQuizId() {
-        return quizId;
+    public Quiz getQuizId() {
+        return quiz;
     }
 
-    public void setQuizId(int quizId) {
-        this.quizId = quizId;
+    public void setQuizId(Quiz quizId) {
+        this.quiz = quizId;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUserId() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserId(User user) {
+        this.user = user;
     }
 
     public int getRate() {

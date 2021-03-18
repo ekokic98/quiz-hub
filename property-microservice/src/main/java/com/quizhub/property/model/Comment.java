@@ -4,10 +4,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -19,14 +18,17 @@ public class Comment {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column(name="user_id", nullable = false)
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-
-    @Column(name="quiz_id", nullable = false)
-    private int quizId;
+    @ManyToOne
+    @JoinColumn(name="quiz_id", nullable = false)
+    private Quiz quiz;
 
     @Column(nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 255)
     private String content;
 
     @CreationTimestamp
@@ -39,10 +41,10 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(UUID id, int userId, int quizId, String content, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
+    public Comment(UUID id, User user, Quiz quiz, String content, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
         this.id = id;
-        this.quizId = quizId;
-        this.userId = userId;
+        this.quiz = quiz;
+        this.user = user;
         this.content = content;
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
@@ -56,20 +58,20 @@ public class Comment {
         this.id = id;
     }
 
-    public int getQuizId() {
-        return quizId;
+    public Quiz getQuiz() {
+        return quiz;
     }
 
-    public void setQuizId(int quizId) {
-        this.quizId = quizId;
+    public void setQuiz(Quiz quizId) {
+        this.quiz = quiz;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getContent() {
