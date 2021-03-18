@@ -8,6 +8,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -21,22 +24,32 @@ public class User {
     private UUID id;
 
     @CreationTimestamp
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime dateCreated;
 
     @Column(nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 50)
     private String firstName;
 
     @Column(nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 50)
     private String lastName;
 
     @Column(nullable = false, unique = true)
+    @NotBlank
     private String username;
 
     @Column(nullable = false, unique = true)
+    @NotBlank
+    @Size(max = 320)
+    @Email
     private String email;
 
     @Column(nullable = false)
+    @NotBlank
+    @Size(max = 128)
     private String password;
 
     private String city;
