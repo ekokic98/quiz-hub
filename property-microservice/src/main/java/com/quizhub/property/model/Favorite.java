@@ -15,8 +15,8 @@ public class Favorite {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "person_id", nullable = false)
+    private Person person;
 
     @ManyToOne
     @JoinColumn(name="quiz_id", nullable = false)
@@ -25,10 +25,10 @@ public class Favorite {
     public Favorite() {
     }
 
-    public Favorite(UUID id, Quiz quiz, User user) {
+    public Favorite(UUID id, Quiz quiz, Person person) {
         this.id = id;
         this.quiz = quiz;
-        this.user = user;
+        this.person = person;
     }
 
     public UUID getId() {
@@ -47,11 +47,11 @@ public class Favorite {
         this.quiz = quizId;
     }
 
-    public User getUserId() {
-        return user;
+    public Person getUserId() {
+        return person;
     }
 
-    public void setUserId(User userId) {
-        this.user = userId;
+    public void setUserId(Person personId) {
+        this.person = personId;
     }
 }

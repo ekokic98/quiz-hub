@@ -17,8 +17,8 @@ public class Rating {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "person_id", nullable = false)
+    private Person person;
 
     @ManyToOne
     @JoinColumn(name="quiz_id", nullable = false)
@@ -32,9 +32,9 @@ public class Rating {
     public Rating() {
     }
 
-    public Rating(UUID id, User user, Quiz quiz, int rate) {
+    public Rating(UUID id, Person person, Quiz quiz, int rate) {
         this.id = id;
-        this.user = user;
+        this.person = person;
         this.quiz = quiz;
         this.rate = rate;
     }
@@ -55,12 +55,12 @@ public class Rating {
         this.quiz = quizId;
     }
 
-    public User getUserId() {
-        return user;
+    public Person getUserId() {
+        return person;
     }
 
-    public void setUserId(User user) {
-        this.user = user;
+    public void setUserId(Person person) {
+        this.person = person;
     }
 
     public int getRate() {

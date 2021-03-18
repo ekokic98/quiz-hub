@@ -19,8 +19,8 @@ public class Comment {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "person_id", nullable = false)
+    private Person person;
 
     @ManyToOne
     @JoinColumn(name="quiz_id", nullable = false)
@@ -41,10 +41,10 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(UUID id, User user, Quiz quiz, String content, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
+    public Comment(UUID id, Person person, Quiz quiz, String content, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
         this.id = id;
         this.quiz = quiz;
-        this.user = user;
+        this.person = person;
         this.content = content;
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
@@ -66,12 +66,12 @@ public class Comment {
         this.quiz = quiz;
     }
 
-    public User getUser() {
-        return user;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public String getContent() {

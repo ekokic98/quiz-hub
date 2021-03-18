@@ -17,8 +17,8 @@ public class Score {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "person_id", nullable = false)
+    private Person person;
 
     @ManyToOne
     @JoinColumn(name="quiz_id", nullable = false)
@@ -42,10 +42,10 @@ public class Score {
     public Score() {
     }
 
-    public Score(UUID id, User user, Quiz quiz, int totalTime, int correctAnswers, int points, LocalDateTime dateScored) {
+    public Score(UUID id, Person person, Quiz quiz, int totalTime, int correctAnswers, int points, LocalDateTime dateScored) {
         this.id = id;
         this.quiz = quiz;
-        this.user = user;
+        this.person = person;
         this.totalTime = totalTime;
         this.correctAnswers = correctAnswers;
         this.points = points;
@@ -68,12 +68,12 @@ public class Score {
         this.quiz = quiz;
     }
 
-    public User getUser() {
-        return user;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public int getTotalTime() {

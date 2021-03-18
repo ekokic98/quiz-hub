@@ -1,6 +1,5 @@
 package com.quizhub.property.model;
 
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
@@ -8,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -20,8 +18,8 @@ public class Quiz {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable = false)
-    private User user;
+    @JoinColumn(name="person_id", nullable = false)
+    private Person person;
 
     @Column(nullable = false)
     @NotBlank
@@ -38,7 +36,7 @@ public class Quiz {
     public Quiz() {
     }
 
-    public Quiz(UUID id, User user, String name, int timeLimit, int totalQuestions) {
+    public Quiz(UUID id, Person person, String name, int timeLimit, int totalQuestions) {
         this.id = id;
         this.name = name;
         this.timeLimit = timeLimit;
@@ -53,12 +51,12 @@ public class Quiz {
         this.id = id;
     }
 
-    public User getUserId() {
-        return user;
+    public Person getUserId() {
+        return person;
     }
 
-    public void setUserId(User userId) {
-        this.user = userId;
+    public void setUserId(Person personId) {
+        this.person = personId;
     }
 
     public String getName() {

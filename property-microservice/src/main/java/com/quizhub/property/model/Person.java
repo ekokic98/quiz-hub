@@ -12,8 +12,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name="\"user\"")
-public class User {
+public class Person {
 
     @Id
     @Type(type = "uuid-char")
@@ -25,10 +24,10 @@ public class User {
     @NotBlank
     private String username;
 
-    public User() {
+    public Person() {
     }
 
-    public User(UUID id, String username) {
+    public Person(UUID id, String username) {
         this.id = id;
         this.username = username;
     }
