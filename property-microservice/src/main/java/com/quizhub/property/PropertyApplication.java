@@ -1,11 +1,13 @@
 package com.quizhub.property;
 
 import com.quizhub.property.model.Person;
-import com.quizhub.property.repositories.UserRepository;
+import com.quizhub.property.repositories.PersonRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.util.UUID;
 
 @SpringBootApplication
 public class PropertyApplication {
@@ -15,17 +17,16 @@ public class PropertyApplication {
 	}
 
 	@Bean
-	public CommandLineRunner demo(UserRepository repository) {
+	public CommandLineRunner demo(PersonRepository repository) {
 		return (args) -> {
-			// save a few customers
-			Person n = new Person();
-			n.setUsername("Bauer");
-
-			repository.save(n);
-			//repository.save(new User(UUID.randomUUID(), "O'Brian"));
-			//repository.save(new User(UUID.randomUUID(), "Bauer"));
-			//repository.save(new User(UUID.randomUUID(), "Palmer"));
-			//repository.save(new User(UUID.randomUUID(), "Dessler"));
+			//unos podataka
+         if (!repository.existsByUsername("O'Brian")) {
+			 repository.save(new Person(UUID.randomUUID(), "O'Brian"));
+			 repository.save(new Person(UUID.randomUUID(), "Bauer"));
+			 repository.save(new Person(UUID.randomUUID(), "Palmer"));
+			 repository.save(new Person(UUID.randomUUID(), "Dessler"));
+		 }
+			System.out.println(repository.existsByUsername("Desslerov"));
 		};
 	}
 }
