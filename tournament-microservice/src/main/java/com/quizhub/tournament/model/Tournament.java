@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -30,6 +31,7 @@ public class Tournament {
     @Column(nullable = false)
     private LocalDateTime dateEnd;
 
+    @NotBlank
     @Column(nullable = false, unique = true)
     private String name;
 
