@@ -1,4 +1,4 @@
-package com.quizhub.user.model;
+package com.quizhub.person.model;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
