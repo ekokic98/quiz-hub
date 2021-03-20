@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-public class User {
+public class Person {
 
     @Id
     @Type(type = "uuid-char")
@@ -58,11 +58,11 @@ public class User {
 
     private String imageUrl;
 
-    public User() {
+    public Person() {
     }
 
-    public User(UUID id, LocalDateTime dateCreated, String firstName, String lastName, String username, String email,
-                String password, String city, String country, String imageUrl) {
+    public Person(UUID id, LocalDateTime dateCreated, String firstName, String lastName, String username, String email,
+                  String password, String city, String country, String imageUrl) {
         this.id = id;
         this.dateCreated = dateCreated;
         this.firstName = firstName;

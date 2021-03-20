@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import java.util.UUID;
 
 @Entity
-public class UserFollower {
+public class PersonFollower {
 
     @Id
     @Type(type = "uuid-char")
@@ -20,19 +20,19 @@ public class UserFollower {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "person_id", nullable = false)
+    private Person person;
 
     @ManyToOne
     @JoinColumn(name = "follower_id", nullable = false)
-    private User follower;
+    private Person follower;
 
-    public UserFollower() {
+    public PersonFollower() {
     }
 
-    public UserFollower(UUID id, User user, User follower) {
+    public PersonFollower(UUID id, Person person, Person follower) {
         this.id = id;
-        this.user = user;
+        this.person = person;
         this.follower = follower;
     }
 
@@ -44,19 +44,19 @@ public class UserFollower {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Person getUser() {
+        return person;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Person person) {
+        this.person = person;
     }
 
-    public User getFollower() {
+    public Person getFollower() {
         return follower;
     }
 
-    public void setFollower(User follower) {
+    public void setFollower(Person follower) {
         this.follower = follower;
     }
 }

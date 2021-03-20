@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.quizhub</groupId>
-	<artifactId>user</artifactId>
+	<artifactId>person</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>user</name>
-	<description>User microservice</description>
+	<name>person</name>
+	<description>Person microservice</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
