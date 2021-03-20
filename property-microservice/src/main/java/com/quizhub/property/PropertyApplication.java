@@ -19,14 +19,14 @@ public class PropertyApplication {
 	@Bean
 	public CommandLineRunner demo(PersonRepository repository) {
 		return (args) -> {
-			//unos podataka
-         if (!repository.existsByUsername("O'Brian")) {
-			 repository.save(new Person(UUID.randomUUID(), "O'Brian"));
-			 repository.save(new Person(UUID.randomUUID(), "Bauer"));
-			 repository.save(new Person(UUID.randomUUID(), "Palmer"));
-			 repository.save(new Person(UUID.randomUUID(), "Dessler"));
-		 }
 			System.out.println(repository.existsByUsername("Desslerov"));
+         if (!repository.existsByUsername("O'Brian")) {
+			// repository.save(new Person(UUID.randomUUID(), "O'Brian", "null"));
+			 repository.save(new Person(UUID.randomUUID(), "Bauer", null));
+			 repository.save(new Person(UUID.randomUUID(), "Palmer", null));
+			 repository.save(new Person(UUID.randomUUID(), "Dessler", null));
+		 }
+
 		};
 	}
 }

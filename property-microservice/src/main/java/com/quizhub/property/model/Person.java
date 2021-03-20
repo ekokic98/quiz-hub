@@ -3,6 +3,7 @@ package com.quizhub.property.model;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -24,12 +25,16 @@ public class Person {
     @NotBlank
     private String username;
 
+    @URL
+    private String imageUrl;
+
     public Person() {
     }
 
-    public Person(UUID id, String username) {
+    public Person(UUID id, String username, String imageUrl) {
         this.id = id;
         this.username = username;
+        this.imageUrl = imageUrl;
     }
 
     public UUID getId() {
@@ -46,6 +51,14 @@ public class Person {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 }
