@@ -16,15 +16,13 @@ public class Quiz {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column(name="user_id", nullable = false)
-    private int userId; //FK iz vanjskog mikroservisa
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable = false)
+    private Person userId;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-
-    @Column(name="tournament_id", nullable = false)
-    private int tournamentId; //FK iz vanjskog mikroservisa
 
     @Column(nullable = false)
     private String name;
@@ -41,11 +39,10 @@ public class Quiz {
     public Quiz() {
     }
 
-    public Quiz(UUID id, int userId, Category category, int tournamentId, String name, LocalDateTime dateCreated, int timeLimit, int totalQuestions) {
+    public Quiz(UUID id, Person userId, Category category, String name, LocalDateTime dateCreated, int timeLimit, int totalQuestions) {
         this.id = id;
         this.userId = userId;
         this.category = category;
-        this.tournamentId = tournamentId;
         this.name = name;
         this.dateCreated = dateCreated;
         this.timeLimit = timeLimit;
@@ -60,11 +57,11 @@ public class Quiz {
         this.id = id;
     }
 
-    public int getUserId() {
+    public Person getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Person userId) {
         this.userId = userId;
     }
 
@@ -74,14 +71,6 @@ public class Quiz {
 
     public void setCategory(Category category) {
         this.category = category;
-    }
-
-    public int getTournamentId() {
-        return tournamentId;
-    }
-
-    public void setTournamentId(int tournamentId) {
-        this.tournamentId = tournamentId;
     }
 
     public String getName() {
