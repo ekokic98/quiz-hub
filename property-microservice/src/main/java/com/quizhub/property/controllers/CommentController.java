@@ -1,22 +1,24 @@
 package com.quizhub.property.controllers;
 
 import com.quizhub.property.model.Comment;
-import com.quizhub.property.repositories.CommentRepository;
+import com.quizhub.property.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path="/comment")
 public class CommentController {
     @Autowired
-    private CommentRepository repository;
+    private CommentService service;
 
     @GetMapping(path="/all")
     public @ResponseBody
-    Iterable<Comment> getAllPersons () {
-        return repository.findAll();
+    Iterable<Comment> getAllComments () {
+        return service.getAllComments();
+    }
+
+    @PostMapping("/add/comment")
+    Comment addComment(@RequestBody Comment newComment) {
+        return service.addComment(newComment);
     }
 }

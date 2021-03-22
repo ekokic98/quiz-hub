@@ -58,13 +58,9 @@ public class Comment {
         this.id = id;
     }
 
-    public Quiz getQuiz() {
-        return quiz;
-    }
+    public Quiz getQuiz() { return quiz; }
 
-    public void setQuiz(Quiz quizId) {
-        this.quiz = quiz;
-    }
+    public void setQuiz(Quiz quiz) { this.quiz = quiz; }
 
     public Person getPerson() {
         return person;
@@ -96,5 +92,17 @@ public class Comment {
 
     public void setDateUpdated(LocalDateTime dateUpdated) {
         this.dateUpdated = dateUpdated;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", person=" + person +
+                ", quiz=" + quiz +
+                ", content='" + content + '\'' +
+                ", dateCreated=" + dateCreated +
+                ", dateUpdated=" + dateUpdated +
+                '}';
     }
 }

@@ -61,4 +61,12 @@ public class Person {
         this.imageUrl = imageUrl;
     }
 
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }

@@ -1,6 +1,8 @@
 package com.quizhub.property.model;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -38,6 +40,7 @@ public class Quiz {
 
     public Quiz(UUID id, Person person, String name, int timeLimit, int totalQuestions) {
         this.id = id;
+        this.person = person;
         this.name = name;
         this.timeLimit = timeLimit;
         this.totalQuestions = totalQuestions;
@@ -51,13 +54,14 @@ public class Quiz {
         this.id = id;
     }
 
-    public Person getUserId() {
+    public Person getPerson() {
         return person;
     }
 
-    public void setUserId(Person personId) {
-        this.person = personId;
+    public void setPerson(Person person) {
+        this.person = person;
     }
+
 
     public String getName() {
         return name;
@@ -81,5 +85,16 @@ public class Quiz {
 
     public void setTotalQuestions(int totalQuestions) {
         this.totalQuestions = totalQuestions;
+    }
+
+    @Override
+    public String toString() {
+        return "Quiz{" +
+                "id=" + id +
+                ", person=" + person +
+                ", name='" + name + '\'' +
+                ", timeLimit=" + timeLimit +
+                ", totalQuestions=" + totalQuestions +
+                '}';
     }
 }
