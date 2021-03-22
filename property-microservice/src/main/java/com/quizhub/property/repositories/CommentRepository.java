@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface CommentRepository extends CrudRepository<Comment, UUID> {
+    boolean existsById(UUID id);
 }
