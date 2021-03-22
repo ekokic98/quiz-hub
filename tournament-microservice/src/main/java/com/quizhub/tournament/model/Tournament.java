@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -25,14 +27,18 @@ public class Tournament {
     @Column(nullable = false)
     private LocalDateTime dateCreated;
 
+    @NotNull
     @Column(nullable = false)
     private LocalDateTime dateStart;
 
+    @NotNull
     @Column(nullable = false)
     private LocalDateTime dateEnd;
 
     @NotBlank
+    @NotNull
     @Column(nullable = false, unique = true)
+    @Size(max = 255)
     private String name;
 
     public Tournament() {

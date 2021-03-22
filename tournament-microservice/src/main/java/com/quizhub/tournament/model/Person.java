@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
@@ -21,10 +22,12 @@ public class Person {
 
     @URL
     @NotBlank
+    @Size(max = 255)
     private String imageUrl;
 
     @NotBlank
     @Column(nullable = false, unique = true)
+    @Size(max = 255)
     private String username;
 
     public Person() {
