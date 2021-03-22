@@ -43,19 +43,20 @@ public class Favorite {
         this.id = id;
     }
 
-    public Quiz getQuizId() {
-        return quiz;
-    }
 
-    public void setQuizId(Quiz quizId) {
-        this.quiz = quizId;
-    }
-
-    public Person getUserId() {
+    public Person getPerson() {
         return person;
     }
 
-    public void setUserId(Person personId) {
-        this.person = personId;
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public Quiz getQuiz() {
+        return quiz;
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
     }
 }

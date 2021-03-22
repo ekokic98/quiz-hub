@@ -1,22 +1,61 @@
 package com.quizhub.property.controllers;
 
+import com.quizhub.property.exceptions.BadRequestException;
+import com.quizhub.property.exceptions.InternalErrorException;
 import com.quizhub.property.model.Favorite;
-import com.quizhub.property.repositories.FavoriteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.quizhub.property.services.FavoriteService;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.json.simple.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
-@RequestMapping(path="/favorite")
+@RequestMapping(path="/api/property-service/favorites")
 public class FavoriteController {
-    @Autowired
-    private FavoriteRepository repository;
 
-    @GetMapping(path="/all")
-    public @ResponseBody
-    Iterable<Favorite> getAllPersons () {
-        return repository.findAll();
+    private FavoriteService favoriteService;
+
+    public FavoriteController(FavoriteService favoriteService) {
+        this.favoriteService = favoriteService;
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<Iterable<Favorite>> getAllScores() {
+        return ResponseEntity.ok(favoriteService.getAllFavorites());
+    }
+
+    @GetMapping
+    public ResponseEntity<Favorite> getAllFavoritesById(@RequestParam UUID id) {
+        return ResponseEntity.ok(favoriteService.getFavoriteById(id));
+    }
+
+    @GetMapping("/all/user")
+    public ResponseEntity<Iterable<Favorite>> getAllFavoritesByUser(@RequestParam String username) {
+        return ResponseEntity.ok(favoriteService.getAllFavoritesByUser(username));
+    }
+
+    @GetMapping("/all/quiz")
+    public ResponseEntity<Iterable<Favorite>> getAllFavoritesByQuiz(@RequestParam UUID id) {
+        return ResponseEntity.ok(favoriteService.getAllFavoritesByQuiz(id));
+    }
+
+    @PostMapping
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),})
+    public ResponseEntity<Favorite> addScore(@RequestBody @Valid Favorite favorite) {
+        return ResponseEntity.ok(favoriteService.addFavorite(favorite));
+    }
+
+    @DeleteMapping
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),
+            @ApiResponse(code = 501, message = "Internal server error", response = InternalErrorException.class),})
+    public ResponseEntity<JSONObject> deleteScore(@RequestParam UUID id) {
+        return new ResponseEntity<>(favoriteService.deleteFavorite(id), HttpStatus.OK);
+    }
+
 }

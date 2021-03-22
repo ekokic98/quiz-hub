@@ -51,27 +51,27 @@ public class Rating {
         this.id = id;
     }
 
-    public Quiz getQuizId() {
-        return quiz;
-    }
-
-    public void setQuizId(Quiz quizId) {
-        this.quiz = quizId;
-    }
-
-    public Person getUserId() {
-        return person;
-    }
-
-    public void setUserId(Person person) {
-        this.person = person;
-    }
-
     public int getRate() {
         return rate;
     }
 
     public void setRate(int rate) {
         this.rate = rate;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public Quiz getQuiz() {
+        return quiz;
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
     }
 }

@@ -7,11 +7,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 @SpringBootApplication
 public class PropertyApplication {
@@ -36,13 +34,13 @@ public class PropertyApplication {
 			Rating r1 = new Rating(null, p1, q1, 5), r2 = new Rating(null, p2, q2, 2);
 			Favorite f1 = new Favorite(null, q1, p1), f2 = new Favorite(null, q2, p1), f3 = new Favorite(null, q3, p3);
 			Score s1 = new Score(null, p1, q1, 120, 5, 15, s), s2 = new Score(null, p1, q2, 200, 7, 5, s),
-					s3 = new Score(null, p3, q3, 300, 12, 20, s);
+					s3 = new Score(null, p3, q3, 300, 12, 20, s), s4 = new Score(null, p3, q3, 200, 10, 13, s);
 			List<Person> persons = Arrays.asList(p1,p2,p3);
 			List<Quiz> quizzes = Arrays.asList(q1,q2,q3,q4);
 			List<Comment> comments = Arrays.asList(c1,c2);
 			List<Rating> ratings = Arrays.asList(r1, r2);
 			List<Favorite> favorites = Arrays.asList(f1,f2,f3);
-			List<Score> scores = Arrays.asList(s1,s2,s3);
+			List<Score> scores = Arrays.asList(s1,s2,s3, s4);
 
 			personRepository.saveAll(persons);
 		    quizRepository.saveAll(quizzes);

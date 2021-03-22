@@ -41,7 +41,6 @@ public class CommentService {
         return commentRepository.findById(id).orElseThrow(() -> new BadRequestException("Comment ID is either incorrect or comment does not exist"));
     }
 
-
     public Comment updateComment(Comment comment) {
         if (comment.getId() == null)
             throw new BadRequestException("Id cannot be null");
