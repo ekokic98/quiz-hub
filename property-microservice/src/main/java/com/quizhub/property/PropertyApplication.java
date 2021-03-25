@@ -23,7 +23,7 @@ public class PropertyApplication {
 								  FavoriteRepository favoriteRepository, QuizRepository quizRepository,
 								  RatingRepository ratingRepository, ScoreRepository scoreRepository) {
 		return (args) -> {
-
+             /*
 				Person p1 = new Person(null, "Bauer", null), p2 = new Person(null, "Palmer", null),
 						p3 = new Person(null, "Dessler", null);
 				Quiz q1 = new Quiz(null, p1, "RPR quiz", 300, 5),
@@ -50,7 +50,7 @@ public class PropertyApplication {
 				favoriteRepository.saveAll(favorites);
 				scoreRepository.saveAll(scores);
 
-
+               */
 		};
 	}
 }

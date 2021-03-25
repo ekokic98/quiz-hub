@@ -1,13 +1,20 @@
 package com.quizhub.property.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import org.hibernate.annotations.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
+
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 @Entity
 public class Comment {
@@ -36,6 +43,7 @@ public class Comment {
     @Column(nullable = false)
     private LocalDateTime dateCreated;
 
+    @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime dateUpdated;
 
@@ -106,4 +114,6 @@ public class Comment {
                 ", dateUpdated=" + dateUpdated +
                 '}';
     }
+
+
 }
