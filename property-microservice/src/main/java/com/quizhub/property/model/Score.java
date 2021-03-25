@@ -1,11 +1,9 @@
 package com.quizhub.property.model;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -40,6 +38,7 @@ public class Score {
     @Min(value = 0, message = "Minimal value for nr of points is 0")
     private int points;
 
+    @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime dateScored;
 

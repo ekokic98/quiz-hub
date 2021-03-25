@@ -36,7 +36,7 @@ public class Comment {
 
     @Column(nullable = false)
     @NotBlank
-    @Size(min = 2, max = 255)
+    @Size(min = 2, max = 255, message = "Comment can't be shorter than 2 chars or longer than 255")
     private String content;
 
     @CreationTimestamp

@@ -137,4 +137,22 @@ public class CommentControllerTest {
         this.mockMvc.perform(delete("/api/property-service/comments").param("username",comments.get(0).getId().toString())).andExpect(status().isBadRequest());
     }
 
+    @Order(10)
+    @Test
+    public void testCommentContentValidation() throws Exception {
+        String stringWith300Chars = new String(new char[300]).replace('\0', 'x');
+        Comment c1 = new Comment(null, persons.get(0), quizzes.get(0), stringWith300Chars, null, null);
+        String json = ow.writeValueAsString(c1);
+        mockMvc.perform(post("/api/property-service/comments").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
+    }
+
+    @Order(11)
+    @Test
+    public void testCommentNotNullValidation() throws Exception {
+        // randomly testing field with not-null property by passing null as argument
+        Comment c1 = new Comment(null, null, quizzes.get(0), null, null, null);
+        String json = ow.writeValueAsString(c1);
+        mockMvc.perform(post("/api/property-service/comments").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
+    }
+
 }

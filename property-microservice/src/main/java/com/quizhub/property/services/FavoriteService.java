@@ -45,7 +45,7 @@ public class FavoriteService {
     }
 
     public Favorite addFavorite (Favorite favorite) {
-        if (!(personRepository.existsById(favorite.getPerson().getId()) && quizRepository.existsById(favorite.getQuiz().getId())))
+        if (favorite.getPerson()==null || favorite.getQuiz()==null || !(personRepository.existsById(favorite.getPerson().getId()) && quizRepository.existsById(favorite.getQuiz().getId())))
             throw new BadRequestException("Quiz or person does not exist, check provided IDs");
         if (favoriteRepository.existsByQuizAndPerson(favorite.getQuiz(), favorite.getPerson()))
             throw new ConflictException("Favorite already exists");

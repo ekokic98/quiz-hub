@@ -1,11 +1,16 @@
 package com.quizhub.property.model;
 
+import io.swagger.v3.oas.annotations.links.Link;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+
 import org.hibernate.validator.constraints.URL;
+import org.hibernate.validator.internal.constraintvalidators.hv.URLValidator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
@@ -19,9 +24,9 @@ public class Person {
 
     @Column(nullable = false, unique = true)
     @NotBlank
+    @Size(min = 2, max = 20)
     private String username;
 
-    @URL
     private String imageUrl;
 
     public Person() {
