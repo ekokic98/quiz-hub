@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
@@ -19,6 +20,7 @@ public class Answer {
     private Question question;
 
     @Column(nullable = false)
+    @Size(max = 255)
     private String name;
 
     @Column(nullable = false)

@@ -1,9 +1,12 @@
 package com.quizhub.quiz.model;
 
+import com.quizhub.quiz.model.enums.QuestionType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
@@ -19,15 +22,17 @@ public class Question {
     private Quiz quiz;
 
     @Column(nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 255)
     private String name;
 
     @Column(nullable = false)
-    private String type; //Question-type u ERD?
+    private QuestionType type;
 
     public Question() {
     }
 
-    public Question(UUID id, Quiz quiz, String name, String type) {
+    public Question(UUID id, Quiz quiz, String name, QuestionType type) {
         this.id = id;
         this.quiz = quiz;
         this.name = name;
@@ -58,11 +63,11 @@ public class Question {
         this.name = name;
     }
 
-    public String getType() {
+    public QuestionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(QuestionType type) {
         this.type = type;
     }
 }
