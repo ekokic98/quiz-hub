@@ -45,7 +45,8 @@ public class RatingService {
     }
 
     public Rating addRating (Rating rating) {
-        if (!(personRepository.existsById(rating.getPerson().getId()) && quizRepository.existsById(rating.getQuiz().getId())))
+        if (rating.getPerson()==null || rating.getQuiz()==null ||
+                !(personRepository.existsById(rating.getPerson().getId()) && quizRepository.existsById(rating.getQuiz().getId())))
             throw new BadRequestException("Quiz or person does not exist, check provided IDs");
         if (ratingRepository.existsByQuizAndPerson(rating.getQuiz(), rating.getPerson()))
             throw new ConflictException("Rating already exists");

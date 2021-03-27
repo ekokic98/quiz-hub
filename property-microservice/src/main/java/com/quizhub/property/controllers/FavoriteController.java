@@ -46,7 +46,7 @@ public class FavoriteController {
 
     @PostMapping
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),})
-    public ResponseEntity<Favorite> addScore(@RequestBody @Valid Favorite favorite) {
+    public ResponseEntity<Favorite> addFavorite(@RequestBody @Valid Favorite favorite) {
         return ResponseEntity.ok(favoriteService.addFavorite(favorite));
     }
 
@@ -54,7 +54,7 @@ public class FavoriteController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),
             @ApiResponse(code = 501, message = "Internal server error", response = InternalErrorException.class),})
-    public ResponseEntity<JSONObject> deleteScore(@RequestParam UUID id) {
+    public ResponseEntity<JSONObject> deleteFavorite(@RequestParam UUID id) {
         return new ResponseEntity<>(favoriteService.deleteFavorite(id), HttpStatus.OK);
     }
 

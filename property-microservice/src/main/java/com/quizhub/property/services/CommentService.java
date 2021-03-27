@@ -32,7 +32,8 @@ public class CommentService {
     }
 
     public Comment addComment(Comment newComment) {
-        if (!(personRepository.existsById(newComment.getPerson().getId()) && quizRepository.existsById(newComment.getQuiz().getId())))
+        if (newComment.getPerson()==null || newComment.getQuiz()==null ||
+                !(personRepository.existsById(newComment.getPerson().getId()) && quizRepository.existsById(newComment.getQuiz().getId())))
             throw new BadRequestException("Quiz or person does not exist, check provided IDs");
         return commentRepository.save(newComment);
     }
