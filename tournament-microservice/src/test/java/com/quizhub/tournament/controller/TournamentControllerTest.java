@@ -1,6 +1,8 @@
 package com.quizhub.tournament.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.quizhub.tournament.repositories.TournamentRepository;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -14,8 +16,10 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Map;
+import java.util.UUID;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -24,6 +28,43 @@ public class TournamentControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private TournamentRepository tournamentRepository;
+
+    @Test
+    public void addBadRequestTest() throws Exception {
+        RequestBuilder request = MockMvcRequestBuilders
+                .post("/api/tournament-service/tournaments")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"dateStart\": \"2020-11-29T15:50:05.609\",\n" +
+                        "    \"dateEnd\": \"2021-11-29T15:50:05.609\",\n" +
+                        "    \"name\": \"\"\n" +
+                        "}");
+
+        mockMvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.path", equalTo("/api/tournament-service/tournaments")))
+                .andExpect(jsonPath("$.message", equalTo("name must not be blank")))
+                .andReturn();
+    }
+
+    @Test
+    public void addBadRequest2Test() throws Exception {
+        RequestBuilder request = MockMvcRequestBuilders
+                .post("/api/tournament-service/tournaments")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"dateStart\": \"2022-11-29T15:50:05.609\",\n" +
+                        "    \"dateEnd\": \"2021-11-29T15:50:05.609\",\n" +
+                        "    \"name\": \"Exampleeeee\"\n" +
+                        "}");
+
+        mockMvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
 
     @Test
     public void addTest() throws Exception {
@@ -38,6 +79,8 @@ public class TournamentControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", Matchers.anything()))
+                .andExpect(jsonPath("$.name", equalTo("Example")))
                 .andReturn();
     }
 
@@ -57,6 +100,7 @@ public class TournamentControllerTest {
 
         mockMvc.perform(updateRequest)
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", equalTo(tournamentRepository.findById(UUID.fromString(id)).get().getName())))
                 .andReturn();
     }
 
@@ -76,12 +120,13 @@ public class TournamentControllerTest {
         String id = addTournament("Example 2").get("id");
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/tournament-service/tournaments/all")
+                .get("/api/tournament-service/tournaments")
                 .param("id", id)
                 .accept(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", equalTo(id)))
                 .andReturn();
     }
 
@@ -96,6 +141,7 @@ public class TournamentControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
+                .andExpect(content().string("[]"))
                 .andReturn();
     }
 
@@ -110,6 +156,21 @@ public class TournamentControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
+                .andExpect(content().string("[]"))
+                .andReturn();
+    }
+
+    @Test
+    public void getLeaderboardForTournamentBadRequestTest() throws Exception {
+        RequestBuilder request = MockMvcRequestBuilders
+                .get("/api/tournament-service/tournaments/leaderboard")
+                .param("id", "wrong")
+                .accept(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", equalTo(400)))
+                .andExpect(jsonPath("$.error", equalTo("Bad Request")))
                 .andReturn();
     }
 
