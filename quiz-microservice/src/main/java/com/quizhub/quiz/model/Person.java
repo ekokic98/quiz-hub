@@ -2,40 +2,50 @@ package com.quizhub.quiz.model;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
 public class Person {
-
     @Id
     @Type(type = "uuid-char")
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column
+    @Column(nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 50)
     private String firstName;
 
-    @Column
+    @Column(nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 50)
     private String lastName;
 
     @Column
+    @URL
+    @Size(max = 255)
     private String imageUrl;
 
-    @NotEmpty
-    @Column(unique = true)
+    @NotBlank
+    @Column(nullable = false, unique = true)
+    @Size(max = 255)
     private String userName;
 
     @Email(message = "Email should be valid")
-    @NotEmpty
-    @Column(unique = true)
+    @NotBlank
+    @Size(max = 320)
+    @Column(nullable = false, unique = true)
     private String email;
 
     public Person() {

@@ -5,6 +5,9 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -17,31 +20,35 @@ public class Quiz {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable = false)
-    private Person userId;
+    @JoinColumn(name="person_id", nullable = false)
+    private Person person;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Size(min = 2, max = 50)
     private String name;
 
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime dateCreated;
 
+    @Min(value = 0, message = "Time limit should not be below 0")
     private int timeLimit;
 
     @Column(nullable = false)
+    @Min(value = 1, message = "Each quiz should contain at least one question")
     private int totalQuestions;
 
     public Quiz() {
     }
 
-    public Quiz(UUID id, Person userId, Category category, String name, LocalDateTime dateCreated, int timeLimit, int totalQuestions) {
+    public Quiz(UUID id, Person person, Category category, String name, LocalDateTime dateCreated, int timeLimit, int totalQuestions) {
         this.id = id;
-        this.userId = userId;
+        this.person = person;
         this.category = category;
         this.name = name;
         this.dateCreated = dateCreated;
@@ -57,12 +64,12 @@ public class Quiz {
         this.id = id;
     }
 
-    public Person getUserId() {
-        return userId;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setUserId(Person userId) {
-        this.userId = userId;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public Category getCategory() {

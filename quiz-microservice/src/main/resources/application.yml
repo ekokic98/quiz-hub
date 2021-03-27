@@ -1,11 +1,19 @@
 spring:
-  datasource:
-    url: ${JDBC_DATABASE_URL}
-    username: ${JDBC_DATABASE_USERNAME}
-    password: ${JDBC_DATABASE_PASSWORD}
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update
+    datasource:
+        url: ${JDBC_DATABASE_URL}
+        username: ${JDBC_DATABASE_USERNAME}
+        password: ${JDBC_DATABASE_PASSWORD}
+        initialization-mode: ${INITIALIZE_DB}
+    jpa:
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+            jdbc:
+                time_zone: UTC
+        hibernate:
+            ddl-auto: ${SCHEMA_DB}
+server:
+    port: 8082
+    error:
+        include-message: always
+        include-stacktrace: never

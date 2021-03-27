@@ -2,11 +2,13 @@ package com.quizhub.quiz.model;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
@@ -18,8 +20,12 @@ public class Category {
     private UUID id;
 
     @Column(nullable = false, unique = true)
+    @Size(max = 255)
     private String name;
 
+    @Column(unique = true)
+    @URL
+    @Size(max = 255)
     private String imageUrl;
 
     public Category() {
