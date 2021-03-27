@@ -46,11 +46,11 @@ public class RatingControllerTest {
     @BeforeAll
     public void init(@Autowired PersonRepository pR, @Autowired QuizRepository qR, @Autowired RatingRepository rR) {
 
-        Person  p1 = new Person(null, "Bauer", null),
-                p2 = new Person(null, "Palmer", null),
-                p3 = new Person(null, "Dessler", null);
-        Quiz   q1 = new Quiz(null, p1, "RPR quiz", 300, 5),
-                q2 = new Quiz(null, p1, "DM quiz", 600, 10);
+        Person  p1 = new Person(null, "Baueraa", null),
+                p2 = new Person(null, "Palmeraa", null),
+                p3 = new Person(null, "Dessleraa", null);
+        Quiz   q1 = new Quiz(null, p1, "RPR quizaa", 300, 5),
+                q2 = new Quiz(null, p1, "DM quizaa", 600, 10);
         Rating c1 = new Rating(null, p1, q1, 5),
                 c2 =  new Rating(null, p2, q2, 2);
         persons = Arrays.asList(p1, p2, p3); quizzes = Arrays.asList(q1, q2); ratings = Arrays.asList(c1, c2);

@@ -1,5 +1,6 @@
 package com.quizhub.property.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -19,11 +20,13 @@ public class Score {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false)
+    @JsonIgnoreProperties({"username", "imageUrl"})
     private Person person;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     @JoinColumn(name="quiz_id", nullable = false)
+    @JsonIgnoreProperties({"person", "name", "timeLimit", "totalQuestions"})
     private Quiz quiz;
 
     @Column(nullable = false)

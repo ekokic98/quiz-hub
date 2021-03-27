@@ -42,8 +42,8 @@ public class PersonControllerTest {
 
     @BeforeAll
     public void init(@Autowired PersonRepository pR) {
-        Person  p1 = new Person(null, "Bauer", null),
-                p2 = new Person(null, "Palmer", null);
+        Person  p1 = new Person(null, "Bauerg", null),
+                p2 = new Person(null, "Palmerg", null);
         persons = Arrays.asList(p1, p2);
         pR.saveAll(persons);
     }

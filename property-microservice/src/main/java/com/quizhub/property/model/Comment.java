@@ -1,6 +1,7 @@
 package com.quizhub.property.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import org.hibernate.annotations.*;
@@ -27,11 +28,13 @@ public class Comment {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false)
+    @JsonIgnoreProperties({"username", "imageUrl"})
     private Person person;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     @JoinColumn(name="quiz_id", nullable = false)
+    @JsonIgnoreProperties({"person", "name", "timeLimit", "totalQuestions"})
     private Quiz quiz;
 
     @Column(nullable = false)

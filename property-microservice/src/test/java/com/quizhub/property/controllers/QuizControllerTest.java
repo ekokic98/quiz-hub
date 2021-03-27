@@ -48,8 +48,8 @@ public class QuizControllerTest {
         Person  p1 = new Person(null, "Adon", null),
                 p2 = new Person(null, "Doppler", null),
                 p3 = new Person(null, "Mark", null);
-        Quiz    q1 = new Quiz(null, p1, "RPR quiz", 300, 5),
-                q2 = new Quiz(null, p1, "DM quiz", 600, 10);
+        Quiz    q1 = new Quiz(null, p1, "RPR quizgg", 300, 5),
+                q2 = new Quiz(null, p1, "DM quizgg", 600, 10);
 
         persons = Arrays.asList(p1, p2, p3); quizzes = Arrays.asList(q1, q2);
         pR.saveAll(persons); qR.saveAll(quizzes);

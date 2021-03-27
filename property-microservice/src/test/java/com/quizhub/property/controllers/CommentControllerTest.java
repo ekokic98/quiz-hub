@@ -49,14 +49,14 @@ public class CommentControllerTest {
     @BeforeAll
     public void init(@Autowired PersonRepository pR, @Autowired QuizRepository qR, @Autowired CommentRepository cR) {
 
-        Person  p1 = new Person(null, "Bauer", null),
-                p2 = new Person(null, "Palmer", null),
-                p3 = new Person(null, "Dessler", null);
-         Quiz   q1 = new Quiz(null, p1, "RPR quiz", 300, 5),
-                q2 = new Quiz(null, p1, "DM quiz", 600, 10),
-                q3 = new Quiz(null, p2, "PNWT quiz", 200, 3);
-        Comment c1 = new Comment(null, p2, q2, "Wow, nice quiz!", null, null),
-                c2 = new Comment(null, p1, q1, "Easy ;)", null, null);
+        Person  p1 = new Person(null, "Balmr", null),
+                p2 = new Person(null, "Palmeer", null),
+                p3 = new Person(null, "Desssdler", null);
+         Quiz   q1 = new Quiz(null, p1, "RPR quiz ff", 300, 5),
+                q2 = new Quiz(null, p1, "DM quiz ff2", 600, 10),
+                q3 = new Quiz(null, p2, "PNWT quiz f1", 200, 3);
+        Comment c1 = new Comment(null, p2, q2, "Wow, nice quiz! ff", null, null),
+                c2 = new Comment(null, p1, q1, "Easy ;) ff", null, null);
 
         persons = Arrays.asList(p1, p2, p3); quizzes = Arrays.asList(q1, q2, q3); comments = Arrays.asList(c1, c2);
         pR.saveAll(persons); qR.saveAll(quizzes); cR.saveAll(comments);

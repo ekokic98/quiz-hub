@@ -46,12 +46,12 @@ public class ScoreControllerTest {
     @BeforeAll
     public void init(@Autowired PersonRepository pR, @Autowired QuizRepository qR, @Autowired ScoreRepository sR) {
 
-        Person  p1 = new Person(null, "Bauer", null),
-                p2 = new Person(null, "Palmer", null),
-                p3 = new Person(null, "Dessler", null);
-        Quiz   q1 = new Quiz(null, p1, "RPR quiz", 300, 5),
-                q2 = new Quiz(null, p1, "DM quiz", 600, 10),
-                q3 = new Quiz(null, p2, "PNWT quiz", 200, 3);
+        Person  p1 = new Person(null, "Bauerqq", null),
+                p2 = new Person(null, "Palmerqq", null),
+                p3 = new Person(null, "Desslerqq", null);
+        Quiz   q1 = new Quiz(null, p1, "RPR quizqq", 300, 5),
+                q2 = new Quiz(null, p1, "DM quizqq", 600, 10),
+                q3 = new Quiz(null, p2, "PNWT quizqq", 200, 3);
         Score s1 = new Score(null, p1, q1, 120, 5, 15, null),
                 s2 = new Score(null, p1, q2, 200, 7, 5, null);
 

@@ -1,5 +1,6 @@
 package com.quizhub.property.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class Quiz {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     @JoinColumn(name="person_id", nullable = false)
+    @JsonIgnoreProperties({"username", "imageUrl"})
     private Person person;
 
     @Column(nullable = false)
