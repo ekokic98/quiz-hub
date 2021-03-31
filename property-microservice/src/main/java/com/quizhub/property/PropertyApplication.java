@@ -49,8 +49,6 @@ public class PropertyApplication {
 				ratingRepository.saveAll(ratings);
 				favoriteRepository.saveAll(favorites);
 				scoreRepository.saveAll(scores);
-
-
 		};
 	}
 }

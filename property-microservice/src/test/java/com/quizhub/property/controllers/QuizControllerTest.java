@@ -145,4 +145,9 @@ public class QuizControllerTest {
         mockMvc.perform(post("/api/property-service/quizzes").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
     }
 
+    @AfterAll
+    public void clearDatabase(@Autowired PersonRepository pR) {
+        pR.deleteAll();
+    }
+
 }

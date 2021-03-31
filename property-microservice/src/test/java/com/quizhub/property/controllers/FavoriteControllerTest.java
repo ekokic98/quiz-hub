@@ -128,5 +128,11 @@ public class FavoriteControllerTest {
         mockMvc.perform(post("/api/property-service/favorites").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().is4xxClientError()).andDo(print());
     }
 
+    @AfterAll
+    public void clearDatabase(@Autowired PersonRepository pR, @Autowired QuizRepository qR) {
+        pR.deleteAll(); qR.deleteAll();
+    }
+
+
 
 }

@@ -130,5 +130,10 @@ public class ScoreControllerTest {
         mockMvc.perform(post("/api/property-service/scores").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
     }
 
+    @AfterAll
+    public void clearDatabase(@Autowired PersonRepository pR) {
+        pR.deleteAll();
+    }
+
 
 }

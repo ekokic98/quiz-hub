@@ -155,4 +155,9 @@ public class CommentControllerTest {
         mockMvc.perform(post("/api/property-service/comments").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
     }
 
+    @AfterAll
+    public void clearDatabase(@Autowired PersonRepository pR, @Autowired QuizRepository qR) {
+        pR.deleteAll(); qR.deleteAll();
+    }
+
 }

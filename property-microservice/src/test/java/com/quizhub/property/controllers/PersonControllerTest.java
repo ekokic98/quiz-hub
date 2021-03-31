@@ -42,6 +42,7 @@ public class PersonControllerTest {
 
     @BeforeAll
     public void init(@Autowired PersonRepository pR) {
+        pR.deleteAll();
         Person  p1 = new Person(null, "Bauerg", null),
                 p2 = new Person(null, "Palmerg", null);
         persons = Arrays.asList(p1, p2);
@@ -141,4 +142,10 @@ public class PersonControllerTest {
         String json = ow.writeValueAsString(p1);
         mockMvc.perform(post("/api/property-service/persons").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().is4xxClientError());
     }
+
+    @AfterAll
+    public void clearDatabase(@Autowired PersonRepository pR) {
+        pR.deleteAll();
+    }
+
 }

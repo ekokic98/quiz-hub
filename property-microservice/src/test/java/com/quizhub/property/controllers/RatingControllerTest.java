@@ -159,4 +159,9 @@ public class RatingControllerTest {
         mockMvc.perform(post("/api/property-service/ratings").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().is4xxClientError()).andDo(print());
     }
 
+    @AfterAll
+    public void clearDatabase(@Autowired PersonRepository pR) {
+        pR.deleteAll();
+    }
+
 }

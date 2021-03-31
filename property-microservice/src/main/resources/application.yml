@@ -4,6 +4,8 @@ server:
     include-message: always
     include-stacktrace: never
 spring:
+  application:
+    name: property-microservice
   datasource:
     url: ${JDBC_DATABASE_URL}
     username: ${JDBC_DATABASE_USERNAME}
