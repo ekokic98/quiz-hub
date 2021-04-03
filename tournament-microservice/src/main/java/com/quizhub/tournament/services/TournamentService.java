@@ -115,7 +115,7 @@ public class TournamentService {
         HttpEntity<String> entity = new HttpEntity<>(body.toString(), headers);
 
         return restTemplate.postForObject(
-                "http://quiz-microservice/api/quiz-service/quizzes/tournament",
+                "http://quiz-service/api/quiz-service/quizzes/tournament",
                 entity,
                 Object.class
         );

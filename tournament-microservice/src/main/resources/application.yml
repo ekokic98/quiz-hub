@@ -1,21 +1,5 @@
 spring:
     application:
-        name: tournament-microservice
-    datasource:
-        url: ${JDBC_DATABASE_URL}
-        username: ${JDBC_DATABASE_USERNAME}
-        password: ${JDBC_DATABASE_PASSWORD}
-        initialization-mode: ${INITIALIZE_DB}
-    jpa:
-        properties:
-            hibernate:
-                dialect: org.hibernate.dialect.PostgreSQLDialect
-            jdbc:
-                time_zone: UTC
-        hibernate:
-            ddl-auto: ${SCHEMA_DB}
-server:
-    port: 8083
-    error:
-        include-message: always
-        include-stacktrace: never
+        name: tournament-service
+    config:
+        import: ${CONFIG_SERVER_URI}
