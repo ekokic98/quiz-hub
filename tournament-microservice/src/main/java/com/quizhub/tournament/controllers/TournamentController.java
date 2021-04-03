@@ -39,7 +39,6 @@ public class TournamentController {
     @PostMapping("/quiz")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),
-            @ApiResponse(code = 409, message = "Conflict", response = ConflictException.class),
     })
     public ResponseEntity<Object> addGeneratedQuizToTournament(@RequestBody @Valid QuizParams quizParams) {
         return ResponseEntity.ok(tournamentService.addGeneratedQuizToTournament(quizParams));

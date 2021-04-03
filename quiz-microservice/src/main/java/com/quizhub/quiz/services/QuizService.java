@@ -41,7 +41,10 @@ public class QuizService {
     }
 
     public Quiz add(Quiz quiz) {
-        Person savedPerson = restTemplate.getForObject("http//person-service/persons", Person.class);
+        Person savedPerson = restTemplate.getForObject(
+                "http://person-service/api/person-ms/persons?id=" + quiz.getPerson().getId(),
+                Person.class
+        );
         Category savedCategory = categoryRepository.save(quiz.getCategory());
         if (quizRepository.existsByName(quiz.getName()))
             throw new ConflictException("Name already in use");

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/person-service/persons")
+@RequestMapping("/api/person-ms/persons")
 public class PersonController {
 
     private final PersonService personService;

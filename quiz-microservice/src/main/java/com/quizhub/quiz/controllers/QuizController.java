@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/quiz-service/quizzes")
+@RequestMapping("/api/quiz-ms/quizzes")
 public class QuizController {
 
     private final QuizService quizService;
