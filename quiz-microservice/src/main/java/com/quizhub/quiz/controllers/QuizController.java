@@ -68,7 +68,7 @@ public class QuizController {
     @DeleteMapping
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),
-            @ApiResponse(code = 501, message = "Internal server error", response = InternalErrorException.class),})
+            @ApiResponse(code = 500, message = "Internal server error", response = InternalErrorException.class),})
     public ResponseEntity<JSONObject> deleteQuizById (@RequestParam UUID id) {
         return new ResponseEntity<>(quizService.deleteQuizById(id), HttpStatus.OK);
     }
