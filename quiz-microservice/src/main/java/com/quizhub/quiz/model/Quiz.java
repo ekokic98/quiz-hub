@@ -20,11 +20,11 @@ public class Quiz {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name="person_id", nullable = false)
+    @JoinColumn(name="person_id")
     private Person person;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @Column(nullable = false, unique = true)

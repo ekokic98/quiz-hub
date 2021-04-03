@@ -39,6 +39,12 @@ public class Question {
         this.type = type;
     }
 
+    public Question(Quiz quiz, @NotBlank @Size(min = 2, max = 255) String name, QuestionType type) {
+        this.quiz = quiz;
+        this.name = name;
+        this.type = type;
+    }
+
     public UUID getId() {
         return id;
     }

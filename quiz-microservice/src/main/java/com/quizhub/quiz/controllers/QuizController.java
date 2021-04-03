@@ -1,6 +1,7 @@
 package com.quizhub.quiz.controllers;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.quizhub.property.exceptions.InternalErrorException;
 import com.quizhub.quiz.exceptions.BadRequestException;
 import com.quizhub.quiz.exceptions.ConflictException;
@@ -70,6 +71,56 @@ public class QuizController {
             @ApiResponse(code = 501, message = "Internal server error", response = InternalErrorException.class),})
     public ResponseEntity<JSONObject> deleteQuizById (@RequestParam UUID id) {
         return new ResponseEntity<>(quizService.deleteQuizById(id), HttpStatus.OK);
+    }
+
+    @PostMapping("/tournament")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),
+    })
+    public ResponseEntity<Quiz> addQuizFromTournament(@RequestBody @Valid TournamentQuiz tournamentQuiz) {
+        return ResponseEntity.ok(quizService.addQuizFromTournament(tournamentQuiz));
+    }
+
+    public static class TournamentQuiz {
+        private final Question[] questions;
+
+        public TournamentQuiz(@JsonProperty("questions") Question[] questions) {
+            this.questions = questions;
+        }
+
+        public Question[] getQuestions() {
+            return questions;
+        }
+
+        public int getQuestionsLength() {
+            return questions.length;
+        }
+
+        public static class Question {
+            private final String name;
+            private final String correctAnswer;
+            private final String[] incorrectAnswers;
+
+            public Question(@JsonProperty("name") String name,
+                            @JsonProperty("correctAnswer") String correctAnswer,
+                            @JsonProperty("incorrectAnswers") String[] incorrectAnswers) {
+                this.name = name;
+                this.correctAnswer = correctAnswer;
+                this.incorrectAnswers = incorrectAnswers;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public String getCorrectAnswer() {
+                return correctAnswer;
+            }
+
+            public String[] getIncorrectAnswers() {
+                return incorrectAnswers;
+            }
+        }
     }
 }
 

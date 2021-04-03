@@ -36,6 +36,12 @@ public class Answer {
         this.correct = correct;
     }
 
+    public Answer(Question question, @Size(max = 255) String name, Boolean correct) {
+        this.question = question;
+        this.name = name;
+        this.correct = correct;
+    }
+
     public UUID getId() {
         return id;
     }

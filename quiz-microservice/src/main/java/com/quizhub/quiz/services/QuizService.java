@@ -1,18 +1,17 @@
 package com.quizhub.quiz.services;
 
 import com.quizhub.property.exceptions.InternalErrorException;
+import com.quizhub.quiz.controllers.QuizController;
 import com.quizhub.quiz.exceptions.BadRequestException;
 import com.quizhub.quiz.exceptions.ConflictException;
-import com.quizhub.quiz.model.Category;
-import com.quizhub.quiz.model.Person;
-import com.quizhub.quiz.model.Quiz;
-import com.quizhub.quiz.repositories.CategoryRepository;
-import com.quizhub.quiz.repositories.PersonRepository;
-import com.quizhub.quiz.repositories.QuizRepository;
+import com.quizhub.quiz.model.*;
+import com.quizhub.quiz.model.enums.QuestionType;
+import com.quizhub.quiz.repositories.*;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -21,11 +20,15 @@ import java.util.UUID;
 public class QuizService {
 
     private final QuizRepository quizRepository;
+    private final QuestionRepository questionRepository;
+    private final AnswerRepository answerRepository;
     private final PersonRepository personRepository;
     private final CategoryRepository categoryRepository;
 
-    public QuizService(QuizRepository quizRepository, PersonRepository personRepository, CategoryRepository categoryRepository) {
+    public QuizService(QuizRepository quizRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, PersonRepository personRepository, CategoryRepository categoryRepository) {
         this.quizRepository = quizRepository;
+        this.questionRepository = questionRepository;
+        this.answerRepository = answerRepository;
         this.personRepository = personRepository;
         this.categoryRepository = categoryRepository;
     }
@@ -75,5 +78,22 @@ public class QuizService {
         if (quizRepository.existsById(id)) throw new InternalErrorException("Quiz was not deleted (database issue)");
         JSONObject js = new JSONObject(new HashMap<String, String>() {{ put("message", "Quiz with id " + id.toString() + " has been successfully deleted");}});
         return js;
+    }
+
+    public Quiz addQuizFromTournament(QuizController.TournamentQuiz tournamentQuiz) {
+        Quiz quiz = new Quiz();
+        quiz.setName(LocalDateTime.now().toString());
+        quiz.setTimeLimit(tournamentQuiz.getQuestionsLength() * 15);
+        quiz.setTotalQuestions(tournamentQuiz.getQuestionsLength());
+        Quiz savedQuiz = quizRepository.save(quiz);
+        tournamentQuiz.getQuestions();
+        for (var question : tournamentQuiz.getQuestions()) {
+            Question savedQuestion = questionRepository.save(new Question(savedQuiz, question.getName(), QuestionType.SINGLE_CHOICE));
+            answerRepository.save(new Answer(savedQuestion, question.getCorrectAnswer(), true));
+            for (var answer : question.getIncorrectAnswers()) {
+                answerRepository.save(new Answer(savedQuestion, answer, false));
+            }
+        }
+        return savedQuiz;
     }
 }

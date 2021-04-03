@@ -1,5 +1,7 @@
 package com.quizhub.tournament.services;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.quizhub.tournament.controllers.TournamentController;
 import com.quizhub.tournament.exceptions.BadRequestException;
 import com.quizhub.tournament.exceptions.ConflictException;
 import com.quizhub.tournament.model.Person;
@@ -8,8 +10,16 @@ import com.quizhub.tournament.model.Tournament;
 import com.quizhub.tournament.repositories.PersonRepository;
 import com.quizhub.tournament.repositories.QuizRepository;
 import com.quizhub.tournament.repositories.TournamentRepository;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,11 +29,15 @@ public class TournamentService {
     private final TournamentRepository tournamentRepository;
     private final QuizRepository quizRepository;
     private final PersonRepository personRepository;
+    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplateBasic;
 
-    public TournamentService(TournamentRepository tournamentRepository, QuizRepository quizRepository, PersonRepository personRepository) {
+    public TournamentService(TournamentRepository tournamentRepository, QuizRepository quizRepository, PersonRepository personRepository, @LoadBalanced RestTemplate restTemplate, RestTemplate restTemplateBasic) {
         this.tournamentRepository = tournamentRepository;
         this.quizRepository = quizRepository;
         this.personRepository = personRepository;
+        this.restTemplate = restTemplate;
+        this.restTemplateBasic = restTemplateBasic;
     }
 
     public Tournament add(Tournament tournament) {
@@ -69,4 +83,122 @@ public class TournamentService {
         return personRepository.getLeaderboardForTournament(id.toString());
     }
 
+    public Object addGeneratedQuizToTournament(TournamentController.QuizParams quizParams) {
+        if (!tournamentRepository.existsById(quizParams.getTournamentId())) {
+            throw new BadRequestException("Wrong tournament id");
+        }
+
+        QuizApiResponse quizApiResponse = restTemplateBasic.getForObject(
+                formApiUrl(quizParams),
+                QuizApiResponse.class
+        );
+
+        JSONArray questions = new JSONArray();
+
+        for (var question : quizApiResponse.getQuestions()) {
+            JSONObject jsonQuestion = new JSONObject();
+            jsonQuestion.put("name", question.getQuestion());
+            jsonQuestion.put("correctAnswer", question.getCorrectAnswer());
+
+            JSONArray jsonAnswers = new JSONArray();
+            Collections.addAll(jsonAnswers, question.getIncorrectAnswers());
+            jsonQuestion.put("incorrectAnswers", jsonAnswers);
+
+            questions.add(jsonQuestion);
+        }
+
+        JSONObject body = new JSONObject();
+        body.put("questions", questions);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(body.toString(), headers);
+
+        return restTemplate.postForObject(
+                "http://quiz-microservice/api/quiz-service/quizzes/tournament",
+                entity,
+                Object.class
+        );
+    }
+
+    private String formApiUrl(TournamentController.QuizParams quizParams) {
+        String basePath = "https://opentdb.com/api.php?";
+        basePath += "amount=" + quizParams.getAmount() + "&";
+        if (quizParams.getDifficulty() != null) {
+            basePath += "difficulty=" + quizParams.getDifficulty() + "&";
+        }
+        if (quizParams.getCategory() != null) {
+            basePath += "category=" + quizParams.getCategory() + "&";
+        }
+        if (quizParams.getType() != null) {
+            basePath += "type=" + quizParams.getType();
+        }
+        return basePath;
+    }
+
+    public static class QuizApiResponse {
+        private final int responseCode;
+        private final Question[] questions;
+
+        public QuizApiResponse(@JsonProperty("response_code") int responseCode,
+                               @JsonProperty("results") Question[] questions) {
+            this.responseCode = responseCode;
+            this.questions = questions;
+        }
+
+        public int getResponseCode() {
+            return responseCode;
+        }
+
+        public Question[] getQuestions() {
+            return questions;
+        }
+    }
+
+    private static class Question {
+        private final String category;
+        private final String type;
+        private final String difficulty;
+        private final String question;
+        private final String correctAnswer;
+        private final String[] incorrectAnswers;
+
+        public Question(@JsonProperty("category") String category,
+                        @JsonProperty("type") String type,
+                        @JsonProperty("difficulty") String difficulty,
+                        @JsonProperty("question") String question,
+                        @JsonProperty("correct_answer") String correctAnswer,
+                        @JsonProperty("incorrect_answers") String[] incorrectAnswers) {
+            this.category = category;
+            this.type = type;
+            this.difficulty = difficulty;
+            this.question = question;
+            this.correctAnswer = correctAnswer;
+            this.incorrectAnswers = incorrectAnswers;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getDifficulty() {
+            return difficulty;
+        }
+
+        public String getQuestion() {
+            return question;
+        }
+
+        public String getCorrectAnswer() {
+            return correctAnswer;
+        }
+
+        public String[] getIncorrectAnswers() {
+            return incorrectAnswers;
+        }
+    }
 }
