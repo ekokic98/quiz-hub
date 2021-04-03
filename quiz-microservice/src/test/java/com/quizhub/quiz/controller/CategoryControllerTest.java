@@ -38,7 +38,7 @@ public class CategoryControllerTest {
 
     @Test
     public void getCategoryTest() throws Exception {
-        String id = addCategory("Category 5").get("id");
+        String id = (String) addCategory("Category 5").get("id");
 
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/api/quiz-service/categories")
@@ -50,7 +50,7 @@ public class CategoryControllerTest {
                 .andReturn();
     }
 
-    private Map<String, String> addCategory(String name) throws Exception {
+    private Map addCategory(String name) throws Exception {
         RequestBuilder postRequest = MockMvcRequestBuilders
                 .post("/api/quiz-service/categories")
                 .contentType(MediaType.APPLICATION_JSON)

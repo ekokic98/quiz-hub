@@ -1,13 +1,5 @@
 spring:
   application:
-    name: person-microservice
-  datasource:
-    url: ${JDBC_DATABASE_URL}
-    username: ${JDBC_DATABASE_USERNAME}
-    password: ${JDBC_DATABASE_PASSWORD}
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: ${SCHEMA_DB}
+    name: person-service
+  config:
+    import: ${CONFIG_SERVER_URI}
