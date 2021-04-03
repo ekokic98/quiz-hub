@@ -1,20 +1,5 @@
-server:
-  port: 8082
-  error:
-    include-message: always
-    include-stacktrace: never
 spring:
   application:
-    name: property-microservice
-  datasource:
-    url: ${JDBC_DATABASE_URL}
-    username: ${JDBC_DATABASE_USERNAME}
-    password: ${JDBC_DATABASE_PASSWORD}
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-     ddl-auto: create-drop
-    # ddl-auto: update
-
+    name: property-service
+  config:
+    import: ${CONFIG_SERVER_URI}
