@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/tournament-service/tournaments")
+@RequestMapping("/api/tournament-ms/tournaments")
 public class TournamentController {
 
     private final TournamentService tournamentService;
