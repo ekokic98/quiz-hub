@@ -3,12 +3,15 @@ package com.quizhub.property.services;
 import com.quizhub.property.exceptions.BadRequestException;
 import com.quizhub.property.exceptions.ConflictException;
 import com.quizhub.property.exceptions.InternalErrorException;
+import com.quizhub.property.model.Person;
+import com.quizhub.property.model.Quiz;
 import com.quizhub.property.model.Rating;
 import com.quizhub.property.repositories.PersonRepository;
 import com.quizhub.property.repositories.QuizRepository;
 import com.quizhub.property.repositories.RatingRepository;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
@@ -19,11 +22,13 @@ public class RatingService {
     private final RatingRepository ratingRepository;
     private final PersonRepository personRepository;
     private final QuizRepository quizRepository;
+    private final RestTemplate restTemplate;
 
-    public RatingService(RatingRepository RatingRepository, PersonRepository personRepository, QuizRepository quizRepository) {
+    public RatingService(RatingRepository RatingRepository, PersonRepository personRepository, QuizRepository quizRepository, RestTemplate restTemplate) {
         this.ratingRepository = RatingRepository;
         this.personRepository = personRepository;
         this.quizRepository = quizRepository;
+        this.restTemplate = restTemplate;
     }
 
     public Iterable<Rating> getAllRatings() {
@@ -45,9 +50,30 @@ public class RatingService {
     }
 
     public Rating addRating (Rating rating) {
-        if (rating.getPerson()==null || rating.getQuiz()==null ||
-                !(personRepository.existsById(rating.getPerson().getId()) && quizRepository.existsById(rating.getQuiz().getId())))
-            throw new BadRequestException("Quiz or person does not exist, check provided IDs");
+        Quiz quiz = null;
+        Person person = null;
+        if (rating.getPerson()==null || rating.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
+        try {
+            //fetch quiz
+            quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + rating.getQuiz().getId(), Quiz.class);
+            //fetch person - tvoj dio kerime
+            // person = restTemplate.getForObject("http://person-service/api/quiz-ms/person?id=" + rating.getPerson().getId(), Person.class);
+            //mora postojati u lokalnoj bazi da bi uopce mogli dodati
+            if (!(personRepository.existsById(rating.getPerson().getId()))) {
+                // personRepository.save(person);
+            }
+            if (!(quizRepository.existsById(rating.getQuiz().getId())))  {
+                quizRepository.save(quiz);
+            }
+            System.out.println(quiz.toString());
+        }
+        catch (Exception e) {
+            throw new BadRequestException("Quiz or person does not exist");
+        }
+        // obavezno postaviti osobu i kviz koji se povuku iz drugog servisa
+       // rating.setPerson(person);
+        rating.setQuiz(quiz);
+
         if (ratingRepository.existsByQuizAndPerson(rating.getQuiz(), rating.getPerson()))
             throw new ConflictException("Rating already exists");
         return ratingRepository.save(rating);

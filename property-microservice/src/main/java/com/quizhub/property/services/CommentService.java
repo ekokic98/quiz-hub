@@ -2,6 +2,8 @@ package com.quizhub.property.services;
 
 import com.quizhub.property.exceptions.BadRequestException;
 import com.quizhub.property.model.Comment;
+import com.quizhub.property.model.Person;
+import com.quizhub.property.model.Quiz;
 import com.quizhub.property.repositories.CommentRepository;
 import com.quizhub.property.repositories.PersonRepository;
 import com.quizhub.property.repositories.QuizRepository;
@@ -9,6 +11,7 @@ import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
@@ -20,21 +23,44 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PersonRepository personRepository;
     private final QuizRepository quizRepository;
+    private final RestTemplate restTemplate;
 
-    public CommentService(CommentRepository commentRepository, PersonRepository personRepository, QuizRepository quizRepository) {
+    public CommentService(CommentRepository commentRepository, PersonRepository personRepository, QuizRepository quizRepository, RestTemplate restTemplate) {
         this.commentRepository = commentRepository;
         this.personRepository = personRepository;
         this.quizRepository = quizRepository;
+        this.restTemplate = restTemplate;
     }
 
     public Iterable<Comment> getAllComments () {
         return commentRepository.findAll();
     }
 
+    //***************************************************************************************
     public Comment addComment(Comment newComment) {
-        if (newComment.getPerson()==null || newComment.getQuiz()==null ||
-                !(personRepository.existsById(newComment.getPerson().getId()) && quizRepository.existsById(newComment.getQuiz().getId())))
-            throw new BadRequestException("Quiz or person does not exist, check provided IDs");
+        Quiz quiz = null;
+        Person person = null;
+        if (newComment.getPerson()==null || newComment.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
+        try {
+            //fetch quiz
+            quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + newComment.getQuiz().getId(), Quiz.class);
+            //fetch person - tvoj dio kerime
+            // person = restTemplate.getForObject("http://person-service/api/quiz-ms/person?id=" + newComment.getPerson().getId(), Person.class);
+            //mora postojati u lokalnoj bazi da bi uopce mogli dodati
+            if (!(personRepository.existsById(newComment.getPerson().getId()))) {
+                // personRepository.save(person); }
+            }
+            if (!(quizRepository.existsById(newComment.getQuiz().getId())))  {
+                quizRepository.save(quiz);
+            }
+            System.out.println(quiz.toString());
+        }
+        catch (Exception e) {
+            throw new BadRequestException("Quiz or person does not exist");
+        }
+        // obavezno postaviti osobu i kviz koji se povuku iz drugog servisa
+       // newComment.setPerson(person);
+        newComment.setQuiz(quiz);
         return commentRepository.save(newComment);
     }
 
