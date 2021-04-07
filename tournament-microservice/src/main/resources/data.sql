@@ -1,0 +1,1 @@
+INSERT INTO public.tournament (id, date_created, date_end, date_start, name) VALUES ('112e4019-c5ec-49a2-9be4-4871dcebe89f', '2021-04-07 19:43:09.745522', '2021-11-29 15:50:05.609000', '2020-11-29 15:50:05.609000', 'Example tournament');
