@@ -50,3 +50,16 @@ INSERT INTO public.answer (id, correct, name, question_id) VALUES ('aa101d3f-60b
 INSERT INTO public.answer (id, correct, name, question_id) VALUES ('182cb183-b021-4b1b-a2cf-c71561ceb8b5', false, 'Jerome', '2370d6ff-08cc-4c47-8313-96c5c2c4cf1d');
 INSERT INTO public.answer (id, correct, name, question_id) VALUES ('ed5990ef-c321-48a5-8199-6b311a8b74f9', false, 'Greg', '2370d6ff-08cc-4c47-8313-96c5c2c4cf1d');
 INSERT INTO public.answer (id, correct, name, question_id) VALUES ('1123c2fc-30ee-49bb-98db-40852e602e9a', false, 'Joe', '2370d6ff-08cc-4c47-8313-96c5c2c4cf1d');
+
+INSERT INTO public.category (id, image_url, name) VALUES ('d22558ce-d8e7-400c-b37f-a6de88192fe1', null, 'Category 1');
+INSERT INTO public.category (id, image_url, name) VALUES ('bfd8b999-3c43-4a3a-ad39-ce490bc86d5c', null, 'Category 2');
+INSERT INTO public.category (id, image_url, name) VALUES ('fc891004-5435-4632-ad24-600eb03da5cf', null, 'Category 3');
+INSERT INTO public.category (id, image_url, name) VALUES ('285d4c25-efc3-4916-bc9d-edaada54fae7', null, 'Category 4');
+INSERT INTO public.category (id, image_url, name) VALUES ('f5242a3b-3076-4ad2-a422-433901ce2e39', null, 'Category 5');
+INSERT INTO public.category (id, image_url, name) VALUES ('bcb18585-5dbd-44f3-a97c-7302e57a9620', null, 'Category 6');
+INSERT INTO public.category (id, image_url, name) VALUES ('66028772-71af-4b15-b006-dfca38ea77b3', null, 'Quiz 5');
+INSERT INTO public.category (id, image_url, name) VALUES ('97a5735c-7959-4eba-ab25-2eb3f559ec85', null, 'Quiz 7');
+
+INSERT INTO public.person (id, email, first_name, image_url, last_name, username) VALUES ('d234091b-41f8-45a5-927a-89f88e6d5da0', 'MC@gmail.com', 'AMRA', null, 'MUSIC', 'AAA');
+
+INSERT INTO public.quiz (id, date_created, name, time_limit, total_questions, category_id, person_id) VALUES ('a545e6a4-546e-45ad-880f-81bfda328b01', '2021-04-07 22:17:14.059577', 'Quizz 8', 23, 10, '97a5735c-7959-4eba-ab25-2eb3f559ec85', 'd234091b-41f8-45a5-927a-89f88e6d5da0');

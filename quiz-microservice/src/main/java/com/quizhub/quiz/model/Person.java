@@ -1,12 +1,10 @@
 package com.quizhub.quiz.model;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -18,8 +16,6 @@ import java.util.UUID;
 public class Person {
     @Id
     @Type(type = "uuid-char")
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
     @Column(nullable = false)
@@ -40,7 +36,7 @@ public class Person {
     @NotBlank
     @Column(nullable = false, unique = true)
     @Size(max = 255)
-    private String userName;
+    private String username;
 
     @Email(message = "Email should be valid")
     @NotBlank
@@ -51,12 +47,12 @@ public class Person {
     public Person() {
     }
 
-    public Person(UUID id, String firstName, String lastName, String imageUrl, @NotEmpty String userName, @Email(message = "Email should be valid") @NotEmpty String email) {
+    public Person(UUID id, String firstName, String lastName, String imageUrl, @NotEmpty String username, @Email(message = "Email should be valid") @NotEmpty String email) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.imageUrl = imageUrl;
-        this.userName = userName;
+        this.username = username;
         this.email = email;
     }
 
@@ -92,12 +88,12 @@ public class Person {
         this.imageUrl = imageUrl;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {

@@ -41,13 +41,21 @@ public class QuizService {
     }
 
     public Quiz add(Quiz quiz) {
-        Person savedPerson = restTemplate.getForObject(
+        Person person = restTemplate.getForObject(
                 "http://person-service/api/person-ms/persons?id=" + quiz.getPerson().getId(),
                 Person.class
         );
+
+        if (person == null) {
+            throw new InternalErrorException("Error while communicating with person service.");
+        }
+
         Category savedCategory = categoryRepository.save(quiz.getCategory());
         if (quizRepository.existsByName(quiz.getName()))
             throw new ConflictException("Name already in use");
+
+        Person savedPerson = personRepository.save(person);
+
         return quizRepository.save(new Quiz(
                 quiz.getId(),
                 savedPerson,
