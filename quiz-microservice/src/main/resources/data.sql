@@ -1,8 +1,5 @@
 -- Tournament quiz
-INSERT INTO public.person (id, email, first_name, image_url, last_name, username) VALUES ('d72d5d78-97d7-11eb-a8b3-0242ac130003', 'amusic1@etf.unsa.ba', 'ime', null, 'prezime', 'swww');
-INSERT INTO public.category (id, image_url, name) VALUES ('57464010-97d8-11eb-a8b3-0242ac130003',null, 'ime');
-INSERT INTO public.quiz (id, date_created, name, time_limit, total_questions, category_id, person_id) VALUES ('1bfdd50f-90b3-4804-81f2-1062e4292508', '2021-04-07 19:43:26.218458', '2021-04-07T19:43:26.155401400', 150, 10, '57464010-97d8-11eb-a8b3-0242ac130003', 'd72d5d78-97d7-11eb-a8b3-0242ac130003');
-
+INSERT INTO public.quiz (id, date_created, name, time_limit, total_questions, category_id, person_id) VALUES ('1bfdd50f-90b3-4804-81f2-1062e4292508', '2021-04-07 19:43:26.218458', '2021-04-07T19:43:26.155401400', 150, 10, null, null);
 
 INSERT INTO public.question (id, name, type, quiz_id) VALUES ('e400ee02-9b6d-490c-a5b8-d74b363fe160', 'How many books are in the Chronicles of Narnia series?', 0, '1bfdd50f-90b3-4804-81f2-1062e4292508');
 INSERT INTO public.question (id, name, type, quiz_id) VALUES ('ab822744-664b-4f1c-aa72-c29822f4eca5', 'In the game Half-Life, which enemy is showcased as the final boss?', 0, '1bfdd50f-90b3-4804-81f2-1062e4292508');

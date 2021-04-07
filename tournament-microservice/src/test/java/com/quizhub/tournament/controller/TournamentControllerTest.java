@@ -59,15 +59,15 @@ public class TournamentControllerTest {
 
         String content = mvcResult.getResponse().getContentAsString();
         JSONObject jsonObject = new JSONObject(content);
-        String addedQuizId = jsonObject.get("id").toString();
+        String addedQuizId = jsonObject.getString("id");
 
         ResponseEntity<String> response = restTemplate.getForEntity("http://quiz-service/api/quiz-ms/quizzes?id=" + addedQuizId, String.class);
         Assert.assertNotNull(response.getBody());
 
         JSONObject jsonResponse = new JSONObject(response.getBody());
-        Assert.assertEquals(jsonResponse.get("id").toString(), addedQuizId);
-        Assert.assertEquals(jsonResponse.get("totalQuestions").toString(), "10");
-        Assert.assertEquals(jsonResponse.get("timeLimit").toString(), "150");
+        Assert.assertEquals(jsonResponse.getString("id"), addedQuizId);
+        Assert.assertEquals(jsonResponse.getString("totalQuestions"), "10");
+        Assert.assertEquals(jsonResponse.getString("timeLimit"), "150");
     }
 
     @Test

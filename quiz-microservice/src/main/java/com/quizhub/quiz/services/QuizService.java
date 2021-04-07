@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -50,16 +51,29 @@ public class QuizService {
             throw new InternalErrorException("Error while communicating with person service.");
         }
 
-        Category savedCategory = categoryRepository.save(quiz.getCategory());
         if (quizRepository.existsByName(quiz.getName()))
             throw new ConflictException("Name already in use");
+
+        Optional<Category> savedCategory = categoryRepository.findById(quiz.getCategory().getId());
+
+        Category quizCategory;
+
+        if (savedCategory.isEmpty()) {
+            if (categoryRepository.existsByName(quiz.getCategory().getName())) {
+                throw new BadRequestException("Category name already exists.");
+            }
+            quizCategory = categoryRepository.save(quiz.getCategory());
+        } else {
+            quizCategory = savedCategory.get();
+        }
+
 
         Person savedPerson = personRepository.save(person);
 
         return quizRepository.save(new Quiz(
                 quiz.getId(),
                 savedPerson,
-                savedCategory,
+                quizCategory,
                 quiz.getName(),
                 quiz.getDateCreated(),
                 quiz.getTimeLimit(),
