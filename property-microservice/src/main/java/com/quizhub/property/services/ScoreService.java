@@ -67,6 +67,7 @@ public class ScoreService {
             System.out.println(quiz.toString());
         }
         catch (Exception e) {
+
             throw new BadRequestException("Quiz or person does not exist");
         }
         // obavezno postaviti osobu i kviz koji se povuku iz drugog servisa

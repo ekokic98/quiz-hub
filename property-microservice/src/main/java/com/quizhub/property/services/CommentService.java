@@ -38,6 +38,7 @@ public class CommentService {
 
     //***************************************************************************************
     public Comment addComment(Comment newComment) {
+        System.out.println(newComment);
         Quiz quiz = null;
         Person person = null;
         if (newComment.getPerson()==null || newComment.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
@@ -45,17 +46,13 @@ public class CommentService {
             //fetch quiz
             quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + newComment.getQuiz().getId(), Quiz.class);
             //fetch person - tvoj dio kerime
-            // person = restTemplate.getForObject("http://person-service/api/quiz-ms/person?id=" + newComment.getPerson().getId(), Person.class);
+            // person = restTemplate.getForObject("http://person-service/api/person-ms/person?id=" + newComment.getPerson().getId(), Person.class);
             //mora postojati u lokalnoj bazi da bi uopce mogli dodati
-            if (!(personRepository.existsById(newComment.getPerson().getId()))) {
-                // personRepository.save(person); }
-            }
-            if (!(quizRepository.existsById(newComment.getQuiz().getId())))  {
-                quizRepository.save(quiz);
-            }
-            System.out.println(quiz.toString());
+            // personRepository.save(person);
+            quizRepository.save(quiz);
         }
         catch (Exception e) {
+            e.printStackTrace();
             throw new BadRequestException("Quiz or person does not exist");
         }
         // obavezno postaviti osobu i kviz koji se povuku iz drugog servisa
