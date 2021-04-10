@@ -2,9 +2,13 @@ package com.quizhub.quiz.services;
 
 import com.quizhub.property.exceptions.InternalErrorException;
 import com.quizhub.quiz.controllers.QuizController;
+import com.quizhub.quiz.dto.Person;
 import com.quizhub.quiz.exceptions.BadRequestException;
 import com.quizhub.quiz.exceptions.ConflictException;
-import com.quizhub.quiz.model.*;
+import com.quizhub.quiz.model.Answer;
+import com.quizhub.quiz.model.Category;
+import com.quizhub.quiz.model.Question;
+import com.quizhub.quiz.model.Quiz;
 import com.quizhub.quiz.model.enums.QuestionType;
 import com.quizhub.quiz.repositories.*;
 import org.json.simple.JSONObject;
@@ -24,15 +28,13 @@ public class QuizService {
     private final QuizRepository quizRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
-    private final PersonRepository personRepository;
     private final CategoryRepository categoryRepository;
     private final RestTemplate restTemplate;
 
-    public QuizService(QuizRepository quizRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, PersonRepository personRepository, CategoryRepository categoryRepository, RestTemplate restTemplate) {
+    public QuizService(QuizRepository quizRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CategoryRepository categoryRepository, RestTemplate restTemplate) {
         this.quizRepository = quizRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
-        this.personRepository = personRepository;
         this.categoryRepository = categoryRepository;
         this.restTemplate = restTemplate;
     }
@@ -43,7 +45,7 @@ public class QuizService {
 
     public Quiz add(Quiz quiz) {
         Person person = restTemplate.getForObject(
-                "http://person-service/api/person-ms/persons?id=" + quiz.getPerson().getId(),
+                "http://person-service/api/person-ms/persons?id=" + quiz.getPersonId().toString(),
                 Person.class
         );
 
@@ -67,14 +69,12 @@ public class QuizService {
             quizCategory = savedCategory.get();
         }
 
-
-        Person savedPerson = personRepository.save(person);
-
         return quizRepository.save(new Quiz(
                 quiz.getId(),
-                savedPerson,
+                person.getId(),
                 quizCategory,
                 quiz.getName(),
+                null,
                 quiz.getDateCreated(),
                 quiz.getTimeLimit(),
                 quiz.getTotalQuestions()

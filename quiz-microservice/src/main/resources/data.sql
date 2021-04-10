@@ -60,6 +60,4 @@ INSERT INTO public.category (id, image_url, name) VALUES ('bcb18585-5dbd-44f3-a9
 INSERT INTO public.category (id, image_url, name) VALUES ('66028772-71af-4b15-b006-dfca38ea77b3', null, 'Quiz 5');
 INSERT INTO public.category (id, image_url, name) VALUES ('97a5735c-7959-4eba-ab25-2eb3f559ec85', null, 'Quiz 7');
 
-INSERT INTO public.person (id, email, first_name, image_url, last_name, username) VALUES ('d234091b-41f8-45a5-927a-89f88e6d5da0', 'MC@gmail.com', 'AMRA', null, 'MUSIC', 'AAA');
-
 INSERT INTO public.quiz (id, date_created, name, time_limit, total_questions, category_id, person_id) VALUES ('a545e6a4-546e-45ad-880f-81bfda328b01', '2021-04-07 22:17:14.059577', 'Quizz 8', 23, 10, '97a5735c-7959-4eba-ab25-2eb3f559ec85', 'd234091b-41f8-45a5-927a-89f88e6d5da0');

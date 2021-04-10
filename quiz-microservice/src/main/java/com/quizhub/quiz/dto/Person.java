@@ -1,53 +1,20 @@
-package com.quizhub.quiz.model;
+package com.quizhub.quiz.dto;
 
-import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.URL;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import java.util.UUID;
 
-@Entity
 public class Person {
-    @Id
-    @Type(type = "uuid-char")
+
     private UUID id;
-
-    @Column(nullable = false)
-    @NotBlank
-    @Size(min = 2, max = 50)
     private String firstName;
-
-    @Column(nullable = false)
-    @NotBlank
-    @Size(min = 2, max = 50)
     private String lastName;
-
-    @Column
-    @URL
-    @Size(max = 255)
     private String imageUrl;
-
-    @NotBlank
-    @Column(nullable = false, unique = true)
-    @Size(max = 255)
     private String username;
-
-    @Email(message = "Email should be valid")
-    @NotBlank
-    @Size(max = 320)
-    @Column(nullable = false, unique = true)
     private String email;
 
     public Person() {
     }
 
-    public Person(UUID id, String firstName, String lastName, String imageUrl, @NotEmpty String username, @Email(message = "Email should be valid") @NotEmpty String email) {
+    public Person(UUID id, String firstName, String lastName, String imageUrl, String username, String email) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -104,3 +71,4 @@ public class Person {
         this.email = email;
     }
 }
+

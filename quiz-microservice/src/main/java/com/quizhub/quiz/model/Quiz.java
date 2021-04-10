@@ -19,15 +19,16 @@ public class Quiz {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name="person_id")
-    private Person person;
+    @Type(type = "uuid-char")
+    private UUID personId;
+
+    @Type(type = "uuid-char")
+    private UUID tournamentId;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    private UUID tournamentId;
 
     @Column(nullable = false, unique = true)
     @NotBlank
@@ -48,9 +49,10 @@ public class Quiz {
     public Quiz() {
     }
 
-    public Quiz(UUID id, Person person, Category category, String name, LocalDateTime dateCreated, int timeLimit, int totalQuestions) {
+    public Quiz(UUID id, UUID personId, Category category, String name, UUID tournamentId, LocalDateTime dateCreated, int timeLimit, int totalQuestions) {
         this.id = id;
-        this.person = person;
+        this.personId = personId;
+        this.tournamentId = tournamentId;
         this.category = category;
         this.name = name;
         this.dateCreated = dateCreated;
@@ -66,12 +68,12 @@ public class Quiz {
         this.id = id;
     }
 
-    public Person getPerson() {
-        return person;
+    public UUID getPersonId() {
+        return personId;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
+    public void setPersonId(UUID personId) {
+        this.personId = personId;
     }
 
     public Category getCategory() {
