@@ -1,10 +1,10 @@
 package com.quizhub.tournament.controllers;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.quizhub.tournament.dto.Quiz;
 import com.quizhub.tournament.exceptions.BadRequestException;
 import com.quizhub.tournament.exceptions.ConflictException;
 import com.quizhub.tournament.model.Person;
-import com.quizhub.tournament.model.Quiz;
 import com.quizhub.tournament.model.Tournament;
 import com.quizhub.tournament.services.TournamentService;
 import io.swagger.annotations.ApiResponse;
@@ -40,7 +40,7 @@ public class TournamentController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),
     })
-    public ResponseEntity<Object> addGeneratedQuizToTournament(@RequestBody @Valid QuizParams quizParams) {
+    public ResponseEntity<Quiz> addGeneratedQuizToTournament(@RequestBody @Valid QuizParams quizParams) {
         return ResponseEntity.ok(tournamentService.addGeneratedQuizToTournament(quizParams));
     }
 
@@ -64,14 +64,6 @@ public class TournamentController {
     })
     public ResponseEntity<Tournament> getTournament(@RequestParam UUID id) {
         return ResponseEntity.ok(tournamentService.getTournament(id));
-    }
-
-    @GetMapping("/quizzes")
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),
-    })
-    public ResponseEntity<List<Quiz>> getQuizzesForTournament(@RequestParam UUID id) {
-        return ResponseEntity.ok(tournamentService.getQuizzesForTournament(id));
     }
 
     @GetMapping("/leaderboard")

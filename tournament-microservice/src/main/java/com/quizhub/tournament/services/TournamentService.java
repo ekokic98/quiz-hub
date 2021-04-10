@@ -2,21 +2,24 @@ package com.quizhub.tournament.services;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.quizhub.tournament.controllers.TournamentController;
+import com.quizhub.tournament.dto.Quiz;
 import com.quizhub.tournament.exceptions.BadRequestException;
 import com.quizhub.tournament.exceptions.ConflictException;
+import com.quizhub.tournament.exceptions.ServiceUnavailableException;
 import com.quizhub.tournament.model.Person;
-import com.quizhub.tournament.model.Quiz;
 import com.quizhub.tournament.model.Tournament;
 import com.quizhub.tournament.repositories.PersonRepository;
 import com.quizhub.tournament.repositories.QuizRepository;
 import com.quizhub.tournament.repositories.TournamentRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
@@ -31,6 +34,13 @@ public class TournamentService {
     private final PersonRepository personRepository;
     private final RestTemplate restTemplate;
     private final RestTemplate restTemplateBasic;
+
+    private static String externalApiUrl;
+
+    @Value("${app.external-api-url}")
+    public void setExternalApiUrl(String externalApiUrl) {
+        TournamentService.externalApiUrl = externalApiUrl;
+    }
 
     public TournamentService(TournamentRepository tournamentRepository, QuizRepository quizRepository, PersonRepository personRepository, @LoadBalanced RestTemplate restTemplate, RestTemplate restTemplateBasic) {
         this.tournamentRepository = tournamentRepository;
@@ -69,13 +79,6 @@ public class TournamentService {
                 .orElseThrow(() -> new BadRequestException("Wrong tournament id"));
     }
 
-    public List<Quiz> getQuizzesForTournament(UUID id) {
-        if (!tournamentRepository.existsById(id)) {
-            throw new BadRequestException("Wrong tournament id");
-        }
-        return quizRepository.findAllByTournamentId(id);
-    }
-
     public List<Person> getLeaderboardForTournament(UUID id) {
         if (!tournamentRepository.existsById(id)) {
             throw new BadRequestException("Wrong tournament id");
@@ -83,7 +86,7 @@ public class TournamentService {
         return personRepository.getLeaderboardForTournament(id.toString());
     }
 
-    public Object addGeneratedQuizToTournament(TournamentController.QuizParams quizParams) {
+    public Quiz addGeneratedQuizToTournament(TournamentController.QuizParams quizParams) {
         if (!tournamentRepository.existsById(quizParams.getTournamentId())) {
             throw new BadRequestException("Wrong tournament id");
         }
@@ -113,27 +116,29 @@ public class TournamentService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(body.toString(), headers);
-
-        return restTemplate.postForObject(
-                "http://quiz-service/api/quiz-ms/quizzes/tournament",
-                entity,
-                Object.class
-        );
+        try {
+            return restTemplate.postForObject(
+                    "http://quiz-service/api/quiz-ms/quizzes/tournament",
+                    entity,
+                    Quiz.class
+            );
+        } catch (ResourceAccessException exception) {
+            throw new ServiceUnavailableException("Error while communicating with another microservice.");
+        }
     }
 
     private String formApiUrl(TournamentController.QuizParams quizParams) {
-        String basePath = "https://opentdb.com/api.php?";
-        basePath += "amount=" + quizParams.getAmount() + "&";
+        externalApiUrl += "amount=" + quizParams.getAmount() + "&";
         if (quizParams.getDifficulty() != null) {
-            basePath += "difficulty=" + quizParams.getDifficulty() + "&";
+            externalApiUrl += "difficulty=" + quizParams.getDifficulty() + "&";
         }
         if (quizParams.getCategory() != null) {
-            basePath += "category=" + quizParams.getCategory() + "&";
+            externalApiUrl += "category=" + quizParams.getCategory() + "&";
         }
         if (quizParams.getType() != null) {
-            basePath += "type=" + quizParams.getType();
+            externalApiUrl += "type=" + quizParams.getType();
         }
-        return basePath;
+        return externalApiUrl;
     }
 
     public static class QuizApiResponse {
