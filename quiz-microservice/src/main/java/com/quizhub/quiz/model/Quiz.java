@@ -27,6 +27,8 @@ public class Quiz {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    private UUID tournamentId;
+
     @Column(nullable = false, unique = true)
     @NotBlank
     @Size(min = 2, max = 50)

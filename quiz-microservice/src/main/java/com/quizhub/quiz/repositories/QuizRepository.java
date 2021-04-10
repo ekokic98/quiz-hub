@@ -15,6 +15,8 @@ public interface QuizRepository extends JpaRepository<Quiz, UUID> {
 
     List<Quiz> findAllByCategoryId(UUID id);
 
+    List<Quiz> findAllByTournamentId(UUID tournamentId);
+
     @Query(value = "SELECT * FROM quiz WHERE name LIKE '%:name%';", nativeQuery = true)
     List<Quiz> getQuizzesByName(String name);
 

@@ -81,6 +81,14 @@ public class QuizController {
         return ResponseEntity.ok(quizService.addQuizFromTournament(tournamentQuiz));
     }
 
+    @GetMapping("/tournament")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),
+    })
+    public ResponseEntity<List<Quiz>> getQuizzesForTournament(@RequestParam UUID id) {
+        return ResponseEntity.ok(quizService.getQuizzesForTournament(id));
+    }
+
     public static class TournamentQuiz {
         private final Question[] questions;
 
