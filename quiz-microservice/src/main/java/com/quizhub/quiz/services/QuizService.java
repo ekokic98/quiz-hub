@@ -5,14 +5,19 @@ import com.quizhub.quiz.controllers.QuizController;
 import com.quizhub.quiz.dto.Person;
 import com.quizhub.quiz.exceptions.BadRequestException;
 import com.quizhub.quiz.exceptions.ConflictException;
+import com.quizhub.quiz.exceptions.ServiceUnavailableException;
 import com.quizhub.quiz.model.Answer;
 import com.quizhub.quiz.model.Category;
 import com.quizhub.quiz.model.Question;
 import com.quizhub.quiz.model.Quiz;
 import com.quizhub.quiz.model.enums.QuestionType;
-import com.quizhub.quiz.repositories.*;
+import com.quizhub.quiz.repositories.AnswerRepository;
+import com.quizhub.quiz.repositories.CategoryRepository;
+import com.quizhub.quiz.repositories.QuestionRepository;
+import com.quizhub.quiz.repositories.QuizRepository;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
@@ -44,10 +49,16 @@ public class QuizService {
     }
 
     public Quiz add(Quiz quiz) {
-        Person person = restTemplate.getForObject(
+        Person person;
+
+        try {
+        person = restTemplate.getForObject(
                 "http://person-service/api/person-ms/persons?id=" + quiz.getPersonId().toString(),
                 Person.class
         );
+        } catch (ResourceAccessException exception) {
+            throw new ServiceUnavailableException("Error while communicating with another microservice.");
+        }
 
         if (person == null) {
             throw new InternalErrorException("Error while communicating with person service.");
