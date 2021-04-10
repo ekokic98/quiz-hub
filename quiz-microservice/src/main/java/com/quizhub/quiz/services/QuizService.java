@@ -127,4 +127,8 @@ public class QuizService {
         }
         return savedQuiz;
     }
+
+    public List<Quiz> getQuizzesForTournament(UUID id) {
+        return quizRepository.findAllByTournamentId(id);
+    }
 }
