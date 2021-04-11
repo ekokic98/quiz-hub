@@ -1,8 +1,11 @@
 package com.quizhub.quiz.services;
 
-import com.quizhub.property.exceptions.InternalErrorException;
+import com.google.protobuf.Timestamp;
 import com.quizhub.quiz.controllers.QuizController;
 import com.quizhub.quiz.dto.Person;
+import com.quizhub.quiz.event.EventRequest;
+import com.quizhub.quiz.event.EventResponse;
+import com.quizhub.quiz.event.EventServiceGrpc;
 import com.quizhub.quiz.exceptions.BadRequestException;
 import com.quizhub.quiz.exceptions.ConflictException;
 import com.quizhub.quiz.exceptions.ServiceUnavailableException;
@@ -15,12 +18,16 @@ import com.quizhub.quiz.repositories.AnswerRepository;
 import com.quizhub.quiz.repositories.CategoryRepository;
 import com.quizhub.quiz.repositories.QuestionRepository;
 import com.quizhub.quiz.repositories.QuizRepository;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +43,19 @@ public class QuizService {
     private final CategoryRepository categoryRepository;
     private final RestTemplate restTemplate;
 
+    private static String grpcUrl;
+    private static int grpcPort;
+
+    @Value("${app.grpc-url}")
+    public void setGrpcUrl(String grpcUrl) {
+        QuizService.grpcUrl = grpcUrl;
+    }
+
+    @Value("${app.grpc-port}")
+    public void setGrpcPort(int grpcPort) {
+        QuizService.grpcPort = grpcPort;
+    }
+
     public QuizService(QuizRepository quizRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CategoryRepository categoryRepository, RestTemplate restTemplate) {
         this.quizRepository = quizRepository;
         this.questionRepository = questionRepository;
@@ -45,6 +65,7 @@ public class QuizService {
     }
 
     public List<Quiz> getAllQuizzes() {
+        registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes/all", "200");
         return quizRepository.findAll();
     }
 
@@ -52,20 +73,19 @@ public class QuizService {
         Person person;
 
         try {
-        person = restTemplate.getForObject(
+            person = restTemplate.getForObject(
                 "http://person-service/api/person-ms/persons?id=" + quiz.getPersonId().toString(),
                 Person.class
-        );
+            );
         } catch (ResourceAccessException exception) {
+            registerEvent(EventRequest.actionType.CREATE, "/api/quiz-ms/quizzes", "503");
             throw new ServiceUnavailableException("Error while communicating with another microservice.");
         }
 
-        if (person == null) {
-            throw new InternalErrorException("Error while communicating with person service.");
-        }
-
-        if (quizRepository.existsByName(quiz.getName()))
+        if (quizRepository.existsByName(quiz.getName())) {
+            registerEvent(EventRequest.actionType.CREATE, "/api/quiz-ms/quizzes", "409");
             throw new ConflictException("Name already in use");
+        }
 
         Optional<Category> savedCategory = categoryRepository.findById(quiz.getCategory().getId());
 
@@ -73,6 +93,7 @@ public class QuizService {
 
         if (savedCategory.isEmpty()) {
             if (categoryRepository.existsByName(quiz.getCategory().getName())) {
+                registerEvent(EventRequest.actionType.CREATE, "/api/quiz-ms/quizzes", "400");
                 throw new BadRequestException("Category name already exists.");
             }
             quizCategory = categoryRepository.save(quiz.getCategory());
@@ -80,6 +101,7 @@ public class QuizService {
             quizCategory = savedCategory.get();
         }
 
+        registerEvent(EventRequest.actionType.CREATE, "/api/quiz-ms/quizzes", "200");
         return quizRepository.save(new Quiz(
                 quiz.getId(),
                 person.getId(),
@@ -93,33 +115,48 @@ public class QuizService {
     }
 
     public Quiz getQuiz(UUID id) {
-        return quizRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Wrong quiz id"));
+        Optional<Quiz> optionalQuiz = quizRepository.findById(id);
+        if (optionalQuiz.isPresent()) {
+            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes", "200");
+            return optionalQuiz.get();
+        } else {
+            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes", "400");
+            throw new BadRequestException("Wrong quiz id");
+        }
     }
 
     public List<Quiz> getQuizzesByCategory(UUID id) {
+        registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes/category", "200");
         return quizRepository.findAllByCategoryId(id);
     }
 
     public List<Quiz> getQuizzesByName(String name) {
+        registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes/search", "200");
         return quizRepository.getQuizzesByName(name);
     }
 
     public Quiz getRandomQuiz() {
-        return quizRepository.getRandomQuiz()
-                .orElseThrow(() -> new BadRequestException("No active quizzes in database"));
+        Optional<Quiz> optionalQuiz = quizRepository.getRandomQuiz();
+        if (optionalQuiz.isPresent()) {
+            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes/random", "200");
+            return optionalQuiz.get();
+        } else {
+            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes/random", "400");
+            throw new BadRequestException("No active quizzes in database");
+        }
     }
 
     @Transactional
     public JSONObject deleteQuizById(UUID id) {
-        if (!quizRepository.existsById(id))
+        if (!quizRepository.existsById(id)) {
+            registerEvent(EventRequest.actionType.DELETE, "/api/quiz-ms/quizzes", "400");
             throw new BadRequestException("Quiz with id " + id.toString() + " does not exist");
+        }
+        registerEvent(EventRequest.actionType.DELETE, "/api/quiz-ms/quizzes", "200");
         quizRepository.deleteById(id);
-        if (quizRepository.existsById(id)) throw new InternalErrorException("Quiz was not deleted (database issue)");
-        JSONObject js = new JSONObject(new HashMap<String, String>() {{
+        return new JSONObject(new HashMap<String, String>() {{
             put("message", "Quiz with id " + id.toString() + " has been successfully deleted");
         }});
-        return js;
     }
 
     public Quiz addQuizFromTournament(QuizController.TournamentQuiz tournamentQuiz) {
@@ -136,10 +173,37 @@ public class QuizService {
                 answerRepository.save(new Answer(savedQuestion, answer, false));
             }
         }
+        registerEvent(EventRequest.actionType.CREATE, "/api/quiz-ms/quizzes/tournament", "200");
         return savedQuiz;
     }
 
     public List<Quiz> getQuizzesForTournament(UUID id) {
+        registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes/tournament", "200");
         return quizRepository.findAllByTournamentId(id);
     }
+
+    public static void registerEvent(EventRequest.actionType actionType, String resource, String status) {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(grpcUrl, grpcPort)
+                .usePlaintext()
+                .build();
+
+        EventServiceGrpc.EventServiceBlockingStub stub = EventServiceGrpc.newBlockingStub(channel);
+
+        Instant time = Instant.now();
+        Timestamp timestamp = Timestamp.newBuilder().setSeconds(time.getEpochSecond()).setNanos(time.getNano()).build();
+
+        EventResponse eventResponse = stub.log(EventRequest.newBuilder()
+                .setDate(timestamp)
+                .setMicroservice("Quiz service")
+                .setUser("Unknown")
+                .setAction(actionType)
+                .setResource(resource)
+                .setStatus(status)
+                .build());
+
+        System.out.println(eventResponse.getMessage());
+        channel.shutdown();
+    }
+
+
 }

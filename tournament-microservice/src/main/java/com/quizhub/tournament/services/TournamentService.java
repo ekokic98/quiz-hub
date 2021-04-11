@@ -31,6 +31,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -110,12 +111,14 @@ public class TournamentService {
     }
 
     public Tournament getTournament(UUID id) {
-        registerEvent(EventRequest.actionType.GET, "/api/tournament-ms/tournaments", "200");
-        return tournamentRepository.findById(id)
-                .orElseThrow(() -> {
-                    registerEvent(EventRequest.actionType.GET, "/api/tournament-ms/tournaments", "400");
-                    return new BadRequestException("Wrong tournament id");
-                });
+        Optional<Tournament> optionalTournament = tournamentRepository.findById(id);
+        if (optionalTournament.isPresent()) {
+            registerEvent(EventRequest.actionType.GET, "/api/tournament-ms/tournaments", "200");
+            return optionalTournament.get();
+        } else {
+            registerEvent(EventRequest.actionType.GET, "/api/tournament-ms/tournaments", "400");
+            throw new BadRequestException("Wrong tournament id");
+        }
     }
 
     public List<Person> getLeaderboardForTournament(UUID id) {
