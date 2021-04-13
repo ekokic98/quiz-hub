@@ -1,8 +1,6 @@
 package com.quizhub.quiz.controllers;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.quizhub.property.exceptions.InternalErrorException;
 import com.quizhub.quiz.exceptions.BadRequestException;
 import com.quizhub.quiz.exceptions.ConflictException;
 import com.quizhub.quiz.model.Quiz;
@@ -68,7 +66,7 @@ public class QuizController {
     @DeleteMapping
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),
-            @ApiResponse(code = 500, message = "Internal server error", response = InternalErrorException.class),})
+    })
     public ResponseEntity<JSONObject> deleteQuizById (@RequestParam UUID id) {
         return new ResponseEntity<>(quizService.deleteQuizById(id), HttpStatus.OK);
     }

@@ -83,10 +83,9 @@
             <scope>compile</scope>
         </dependency>
 		<dependency>
-			<groupId>com.quizhub</groupId>
-			<artifactId>property</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>3.12.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.grpc</groupId>
