@@ -21,8 +21,6 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 public class Comment {
     @Id
     @Type(type = "uuid-char")
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
     @OnDelete(action = OnDeleteAction.CASCADE)

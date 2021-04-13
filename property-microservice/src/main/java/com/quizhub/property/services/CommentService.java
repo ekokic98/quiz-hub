@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -32,31 +33,28 @@ public class CommentService {
         this.restTemplate = restTemplate;
     }
 
-    public Iterable<Comment> getAllComments () {
+    public Iterable<Comment> getAllComments() {
         return commentRepository.findAll();
     }
 
-    //***************************************************************************************
     public Comment addComment(Comment newComment) {
-        System.out.println(newComment);
         Quiz quiz = null;
         Person person = null;
-        if (newComment.getPerson()==null || newComment.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
-        try {
-            //fetch quiz
-            quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + newComment.getQuiz().getId(), Quiz.class);
-            //fetch person - tvoj dio kerime
-            // person = restTemplate.getForObject("http://person-service/api/person-ms/person?id=" + newComment.getPerson().getId(), Person.class);
-            //mora postojati u lokalnoj bazi da bi uopce mogli dodati
-            // personRepository.save(person);
-            quizRepository.save(quiz);
+
+        if (newComment.getPerson() == null || newComment.getQuiz() == null) {
+            throw new BadRequestException("Quiz or person cannot be null");
         }
-        catch (Exception e) {
+        try {
+            quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + newComment.getQuiz().getId(), Quiz.class);
+            person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + newComment.getPerson().getId(), Person.class);
+            personRepository.save(person);
+            quizRepository.save(quiz);
+        } catch (Exception e) {
             e.printStackTrace();
             throw new BadRequestException("Quiz or person does not exist");
         }
-        // obavezno postaviti osobu i kviz koji se povuku iz drugog servisa
-       // newComment.setPerson(person);
+
+        newComment.setPerson(person);
         newComment.setQuiz(quiz);
         return commentRepository.save(newComment);
     }
@@ -75,11 +73,14 @@ public class CommentService {
     }
 
     @Transactional
-    public JSONObject deleteComment (UUID id) {
-        if (!commentRepository.existsById(id)) throw new BadRequestException("Comment with id " + id.toString() + " does not exist");
+    public JSONObject deleteComment(UUID id) {
+        if (!commentRepository.existsById(id))
+            throw new BadRequestException("Comment with id " + id.toString() + " does not exist");
         commentRepository.deleteById(id);
         if (commentRepository.existsById(id)) throw new BadRequestException("Comment was not deleted (database issue)");
-        JSONObject js = new JSONObject(new HashMap<String, String>() {{ put("message", "Comment with id " + id.toString() + " has been successfully deleted");}});
+        JSONObject js = new JSONObject(new HashMap<String, String>() {{
+            put("message", "Comment with id " + id.toString() + " has been successfully deleted");
+        }});
         return js;
     }
 }

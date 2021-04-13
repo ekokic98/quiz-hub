@@ -13,8 +13,6 @@ import java.util.UUID;
 public class Score {
     @Id
     @Type(type = "uuid-char")
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
