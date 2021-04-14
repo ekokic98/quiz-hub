@@ -1,23 +1,12 @@
 package com.quizhub.property.controllers;
 
-import com.quizhub.property.exceptions.BadRequestException;
-import com.quizhub.property.exceptions.InternalErrorException;
-import com.quizhub.property.model.Quiz;
-import com.quizhub.property.services.QuizService;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import org.json.simple.JSONObject;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.UUID;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/property-service/quizzes")
 public class QuizController {
-    final private QuizService quizService;
+/*    final private QuizService quizService;
 
     public QuizController (QuizService quizService) {
         this.quizService = quizService;
@@ -57,6 +46,6 @@ public class QuizController {
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),})
     public ResponseEntity<Quiz> updateComment(@RequestBody @Valid Quiz person) {
         return ResponseEntity.ok(quizService.updateQuiz(person));
-    }
+    } */
 }
 

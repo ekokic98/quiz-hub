@@ -1,21 +1,16 @@
 package com.quizhub.property.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import org.hibernate.annotations.*;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
-
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 @Entity
 public class Comment {
@@ -23,17 +18,11 @@ public class Comment {
     @Type(type = "uuid-char")
     private UUID id;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @ManyToOne
-    @JoinColumn(name = "person_id", nullable = false)
-    @JsonIgnoreProperties({"username", "imageUrl"})
-    private Person person;
+    @Type(type = "uuid-char")
+    private UUID person;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @ManyToOne
-    @JoinColumn(name="quiz_id", nullable = false)
-    @JsonIgnoreProperties({"person", "name", "timeLimit", "totalQuestions"})
-    private Quiz quiz;
+    @Type(type = "uuid-char")
+    private UUID quiz;
 
     @Column(nullable = false)
     @NotBlank
@@ -51,7 +40,7 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(UUID id, Person person, Quiz quiz, String content, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
+    public Comment(UUID id, UUID person, UUID quiz, String content, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
         this.id = id;
         this.quiz = quiz;
         this.person = person;
@@ -60,24 +49,28 @@ public class Comment {
         this.dateUpdated = dateUpdated;
     }
 
+    public UUID getPerson() {
+        return person;
+    }
+
+    public void setPerson(UUID person) {
+        this.person = person;
+    }
+
+    public UUID getQuiz() {
+        return quiz;
+    }
+
+    public void setQuiz(UUID quiz) {
+        this.quiz = quiz;
+    }
+
     public UUID getId() {
         return id;
     }
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public Quiz getQuiz() { return quiz; }
-
-    public void setQuiz(Quiz quiz) { this.quiz = quiz; }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
     }
 
     public String getContent() {

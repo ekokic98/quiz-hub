@@ -33,12 +33,12 @@ public class FavoriteController {
     public ResponseEntity<Favorite> getAllFavoritesById(@RequestParam UUID id) {
         return ResponseEntity.ok(favoriteService.getFavoriteById(id));
     }
-
+    /*
     @GetMapping("/all/user")
     public ResponseEntity<Iterable<Favorite>> getAllFavoritesByUser(@RequestParam String username) {
         return ResponseEntity.ok(favoriteService.getAllFavoritesByUser(username));
     }
-
+    */
     @GetMapping("/all/quiz")
     public ResponseEntity<Iterable<Favorite>> getAllFavoritesByQuiz(@RequestParam UUID id) {
         return ResponseEntity.ok(favoriteService.getAllFavoritesByQuiz(id));

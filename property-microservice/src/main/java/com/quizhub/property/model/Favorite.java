@@ -1,12 +1,9 @@
 package com.quizhub.property.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.UUID;
 
 @Entity
@@ -15,22 +12,17 @@ public class Favorite {
     @Type(type = "uuid-char")
     private UUID id;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @ManyToOne
-    @JoinColumn(name = "person_id", nullable = false)
-    @JsonIgnoreProperties({"username", "imageUrl"})
-    private Person person;
+    @Type(type = "uuid-char")
+    private UUID person;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @ManyToOne
-    @JoinColumn(name="quiz_id", nullable = false)
-    @JsonIgnoreProperties({"person", "name", "timeLimit", "totalQuestions"})
-    private Quiz quiz;
+    @Type(type = "uuid-char")
+    private UUID quiz;
+
 
     public Favorite() {
     }
 
-    public Favorite(UUID id, Quiz quiz, Person person) {
+    public Favorite(UUID id, UUID quiz, UUID person) {
         this.id = id;
         this.quiz = quiz;
         this.person = person;
@@ -45,19 +37,19 @@ public class Favorite {
     }
 
 
-    public Person getPerson() {
+    public UUID getPerson() {
         return person;
     }
 
-    public void setPerson(Person person) {
+    public void setPerson(UUID person) {
         this.person = person;
     }
 
-    public Quiz getQuiz() {
+    public UUID getQuiz() {
         return quiz;
     }
 
-    public void setQuiz(Quiz quiz) {
+    public void setQuiz(UUID quiz) {
         this.quiz = quiz;
     }
 }

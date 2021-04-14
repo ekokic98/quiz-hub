@@ -1,10 +1,11 @@
 package com.quizhub.property.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,17 +16,11 @@ public class Score {
     @Type(type = "uuid-char")
     private UUID id;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @ManyToOne
-    @JoinColumn(name = "person_id", nullable = false)
-    @JsonIgnoreProperties({"username", "imageUrl"})
-    private Person person;
+    @Type(type = "uuid-char")
+    private UUID person;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @ManyToOne
-    @JoinColumn(name="quiz_id", nullable = false)
-    @JsonIgnoreProperties({"person", "name", "timeLimit", "totalQuestions"})
-    private Quiz quiz;
+    @Type(type = "uuid-char")
+    private UUID quiz;
 
     @Column(nullable = false)
     @Min(value = 0, message = "Minimal value for total time is 0")
@@ -46,7 +41,7 @@ public class Score {
     public Score() {
     }
 
-    public Score(UUID id, Person person, Quiz quiz, int totalTime, int correctAnswers, int points, LocalDateTime dateScored) {
+    public Score(UUID id, UUID person, UUID quiz, int totalTime, int correctAnswers, int points, LocalDateTime dateScored) {
         this.id = id;
         this.quiz = quiz;
         this.person = person;
@@ -64,20 +59,20 @@ public class Score {
         this.id = id;
     }
 
-    public Quiz getQuiz() {
-        return quiz;
-    }
-
-    public void setQuiz(Quiz quiz) {
-        this.quiz = quiz;
-    }
-
-    public Person getPerson() {
+    public UUID getPerson() {
         return person;
     }
 
-    public void setPerson(Person person) {
+    public void setPerson(UUID person) {
         this.person = person;
+    }
+
+    public UUID getQuiz() {
+        return quiz;
+    }
+
+    public void setQuiz(UUID quiz) {
+        this.quiz = quiz;
     }
 
     public int getTotalTime() {

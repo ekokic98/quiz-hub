@@ -1,13 +1,10 @@
 package com.quizhub.property.services;
 
+import com.quizhub.property.dto.Person;
+import com.quizhub.property.dto.Quiz;
 import com.quizhub.property.exceptions.BadRequestException;
-import com.quizhub.property.exceptions.ConflictException;
 import com.quizhub.property.exceptions.InternalErrorException;
-import com.quizhub.property.model.Person;
-import com.quizhub.property.model.Quiz;
 import com.quizhub.property.model.Rating;
-import com.quizhub.property.repositories.PersonRepository;
-import com.quizhub.property.repositories.QuizRepository;
 import com.quizhub.property.repositories.RatingRepository;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
@@ -20,29 +17,25 @@ import java.util.UUID;
 @Service
 public class RatingService {
     private final RatingRepository ratingRepository;
-    private final PersonRepository personRepository;
-    private final QuizRepository quizRepository;
     private final RestTemplate restTemplate;
 
-    public RatingService(RatingRepository RatingRepository, PersonRepository personRepository, QuizRepository quizRepository, RestTemplate restTemplate) {
+    public RatingService(RatingRepository RatingRepository, RestTemplate restTemplate) {
         this.ratingRepository = RatingRepository;
-        this.personRepository = personRepository;
-        this.quizRepository = quizRepository;
         this.restTemplate = restTemplate;
     }
 
     public Iterable<Rating> getAllRatings() {
         return ratingRepository.findAll();
     }
-
+    /*
     public Iterable<Rating> getAllRatingsByUser(String username) {
         return ratingRepository.getRatingByPerson(personRepository.findByUsername(username).orElseThrow(() -> new BadRequestException("Person with username " +
                 username + " does not exist")));
     }
-
+    */
     public Iterable<Rating> getAllRatingsByQuiz(UUID id) {
-        return ratingRepository.getRatingByQuiz(quizRepository.findById(id).orElseThrow(() -> new BadRequestException("Quiz with id " +
-                id.toString() + " does not exist")));
+        return ratingRepository.getRatingByQuiz(id).orElseThrow(() -> new BadRequestException("Quiz with id " +
+                id + " does not exist"));
     }
 
     public Rating getRatingById(UUID id) {
@@ -55,16 +48,10 @@ public class RatingService {
         if (rating.getPerson()==null || rating.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
         try {
             //fetch quiz
-            quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + rating.getQuiz().getId(), Quiz.class);
+            quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + rating.getQuiz(), Quiz.class);
             //fetch person - tvoj dio kerime
             // person = restTemplate.getForObject("http://person-service/api/quiz-ms/person?id=" + rating.getPerson().getId(), Person.class);
             //mora postojati u lokalnoj bazi da bi uopce mogli dodati
-            if (!(personRepository.existsById(rating.getPerson().getId()))) {
-                // personRepository.save(person);
-            }
-            if (!(quizRepository.existsById(rating.getQuiz().getId())))  {
-                quizRepository.save(quiz);
-            }
             System.out.println(quiz.toString());
         }
         catch (Exception e) {
@@ -72,10 +59,10 @@ public class RatingService {
         }
         // obavezno postaviti osobu i kviz koji se povuku iz drugog servisa
        // rating.setPerson(person);
-        rating.setQuiz(quiz);
+       // rating.setQuiz(quiz);
 
-        if (ratingRepository.existsByQuizAndPerson(rating.getQuiz(), rating.getPerson()))
-            throw new ConflictException("Rating already exists");
+      /*  if (ratingRepository.existsByQuizAndPerson(rating.getQuiz(), rating.getPerson()))
+            throw new ConflictException("Rating already exists"); */
         return ratingRepository.save(rating);
     }
 
@@ -91,7 +78,7 @@ public class RatingService {
 
     @Transactional
     public JSONObject deleteRating(UUID id) {
-        if (!ratingRepository.existsById(id)) throw new BadRequestException("Rating with id " + id.toString() + " does not exist");
+        if (!ratingRepository.existsById(id)) throw new BadRequestException("Rating with id " + id + " does not exist");
         ratingRepository.deleteById(id);
         if (ratingRepository.existsById(id)) throw new InternalErrorException("Rating was not deleted (database issue)");
         JSONObject js = new JSONObject(new HashMap<String, String>() {{ put("message", "Rating with id " + id.toString() + " has been successfully deleted");}});

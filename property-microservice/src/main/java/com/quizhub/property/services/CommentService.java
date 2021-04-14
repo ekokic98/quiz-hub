@@ -1,35 +1,25 @@
 package com.quizhub.property.services;
 
+import com.quizhub.property.dto.Person;
+import com.quizhub.property.dto.Quiz;
 import com.quizhub.property.exceptions.BadRequestException;
 import com.quizhub.property.model.Comment;
-import com.quizhub.property.model.Person;
-import com.quizhub.property.model.Quiz;
 import com.quizhub.property.repositories.CommentRepository;
-import com.quizhub.property.repositories.PersonRepository;
-import com.quizhub.property.repositories.QuizRepository;
 import org.json.simple.JSONObject;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final PersonRepository personRepository;
-    private final QuizRepository quizRepository;
     private final RestTemplate restTemplate;
 
-    public CommentService(CommentRepository commentRepository, PersonRepository personRepository, QuizRepository quizRepository, RestTemplate restTemplate) {
+    public CommentService(CommentRepository commentRepository, RestTemplate restTemplate) {
         this.commentRepository = commentRepository;
-        this.personRepository = personRepository;
-        this.quizRepository = quizRepository;
         this.restTemplate = restTemplate;
     }
 
@@ -45,17 +35,12 @@ public class CommentService {
             throw new BadRequestException("Quiz or person cannot be null");
         }
         try {
-            quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + newComment.getQuiz().getId(), Quiz.class);
-            person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + newComment.getPerson().getId(), Person.class);
-            personRepository.save(person);
-            quizRepository.save(quiz);
+            person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + newComment.getPerson(), Person.class);
+            quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + newComment.getQuiz(), Quiz.class);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BadRequestException("Quiz or person does not exist");
         }
-
-        newComment.setPerson(person);
-        newComment.setQuiz(quiz);
         return commentRepository.save(newComment);
     }
 
@@ -75,7 +60,7 @@ public class CommentService {
     @Transactional
     public JSONObject deleteComment(UUID id) {
         if (!commentRepository.existsById(id))
-            throw new BadRequestException("Comment with id " + id.toString() + " does not exist");
+            throw new BadRequestException("Comment with id " + id + " does not exist");
         commentRepository.deleteById(id);
         if (commentRepository.existsById(id)) throw new BadRequestException("Comment was not deleted (database issue)");
         JSONObject js = new JSONObject(new HashMap<String, String>() {{

@@ -1,40 +1,17 @@
 package com.quizhub.property.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.quizhub.property.model.Comment;
-import com.quizhub.property.model.Person;
-import com.quizhub.property.model.Quiz;
-import com.quizhub.property.repositories.CommentRepository;
-import com.quizhub.property.repositories.PersonRepository;
-import com.quizhub.property.repositories.QuizRepository;
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.ResultMatcher.matchAll;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PersonControllerTest {
-    @Autowired
+/*    @Autowired
     private MockMvc mockMvc;
 
     private ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -147,5 +124,5 @@ public class PersonControllerTest {
     public void clearDatabase(@Autowired PersonRepository pR) {
         pR.deleteAll();
     }
-
+*/
 }

@@ -1,20 +1,10 @@
 package com.quizhub.property.services;
 
-import com.quizhub.property.exceptions.BadRequestException;
-import com.quizhub.property.exceptions.ConflictException;
-import com.quizhub.property.exceptions.InternalErrorException;
-import com.quizhub.property.model.Person;
-import com.quizhub.property.repositories.PersonRepository;
-import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.UUID;
 
 @Service
 public class PersonService {
-    private final PersonRepository personRepository;
+  /*  private final PersonRepository personRepository;
 
     public PersonService (PersonRepository personRepository) {
         this.personRepository = personRepository;
@@ -62,7 +52,7 @@ public class PersonService {
         if (personRepository.existsByUsernameIgnoreCase(username)) throw new InternalErrorException("Person was not deleted (database issue)");
         JSONObject js = new JSONObject(new HashMap<String, String>() {{ put("message", "Person with username " + username + " has been successfully deleted");}});
         return js;
-    }
+    } */
 }
 
 

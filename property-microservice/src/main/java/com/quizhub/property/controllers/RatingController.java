@@ -32,12 +32,12 @@ public class RatingController {
     public ResponseEntity<Rating> getAllRatingsById(@RequestParam UUID id) {
         return ResponseEntity.ok(ratingService.getRatingById(id));
     }
-
+    /*
     @GetMapping("/all/user")
     public ResponseEntity<Iterable<Rating>> getAllRatingsByUser(@RequestParam String username) {
         return ResponseEntity.ok(ratingService.getAllRatingsByUser(username));
     }
-
+    */
     @GetMapping("/all/quiz")
     public ResponseEntity<Iterable<Rating>> getAllRatingsByQuiz(@RequestParam UUID id) {
         return ResponseEntity.ok(ratingService.getAllRatingsByQuiz(id));

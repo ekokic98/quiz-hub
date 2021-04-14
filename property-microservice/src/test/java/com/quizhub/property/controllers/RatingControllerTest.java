@@ -1,40 +1,17 @@
 package com.quizhub.property.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.quizhub.property.model.Rating;
-import com.quizhub.property.model.Person;
-import com.quizhub.property.model.Quiz;
-import com.quizhub.property.repositories.RatingRepository;
-import com.quizhub.property.repositories.PersonRepository;
-import com.quizhub.property.repositories.QuizRepository;
-import com.quizhub.property.repositories.RatingRepository;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.ResultMatcher.matchAll;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RatingControllerTest {
-    @Autowired
+/*    @Autowired
     private MockMvc mockMvc;
 
     private List<Person> persons;
@@ -163,5 +140,5 @@ public class RatingControllerTest {
     public void clearDatabase(@Autowired PersonRepository pR) {
         pR.deleteAll();
     }
-
+*/
 }

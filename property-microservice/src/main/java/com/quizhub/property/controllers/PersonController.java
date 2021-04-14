@@ -1,23 +1,12 @@
 package com.quizhub.property.controllers;
 
-import com.quizhub.property.exceptions.BadRequestException;
-import com.quizhub.property.exceptions.InternalErrorException;
-import com.quizhub.property.model.Person;
-import com.quizhub.property.services.PersonService;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import org.json.simple.JSONObject;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.UUID;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/property-service/persons")
 public class PersonController {
-    private final PersonService personService;
+   /* private final PersonService personService;
 
     public PersonController(PersonService personService) {
         this.personService = personService;
@@ -66,5 +55,5 @@ public class PersonController {
             @ApiResponse(code = 501, message = "Internal server error", response = InternalErrorException.class),})
     public ResponseEntity<JSONObject> deletePersonByUsername (@RequestParam String username) {
         return new ResponseEntity<>(personService.deletePersonByUsername(username), HttpStatus.OK);
-    }
+    } */
 }
