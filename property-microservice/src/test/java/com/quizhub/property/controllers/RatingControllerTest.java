@@ -1,43 +1,53 @@
 package com.quizhub.property.controllers;
 
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestMethodOrder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.quizhub.property.model.Rating;
+import com.quizhub.property.repositories.RatingRepository;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.ResultMatcher.matchAll;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RatingControllerTest {
-/*    @Autowired
+    @Autowired
     private MockMvc mockMvc;
 
-    private List<Person> persons;
-    private List<Quiz> quizzes;
     private List<Rating> ratings;
     private ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
 
     @BeforeAll
-    public void init(@Autowired PersonRepository pR, @Autowired QuizRepository qR, @Autowired RatingRepository rR) {
-
-        Person  p1 = new Person(null, "Baueraa", null),
-                p2 = new Person(null, "Palmeraa", null),
-                p3 = new Person(null, "Dessleraa", null);
-        Quiz   q1 = new Quiz(null, p1, "RPR quizaa", 300, 5),
-                q2 = new Quiz(null, p1, "DM quizaa", 600, 10);
-        Rating c1 = new Rating(null, p1, q1, 5),
-                c2 =  new Rating(null, p2, q2, 2);
-        persons = Arrays.asList(p1, p2, p3); quizzes = Arrays.asList(q1, q2); ratings = Arrays.asList(c1, c2);
-        pR.saveAll(persons); qR.saveAll(quizzes); rR.saveAll(ratings);
+    public void init(@Autowired RatingRepository rR) {
+        Rating c1 = new Rating(UUID.randomUUID(), UUID.fromString("d72d5d78-97d7-11eb-a8b3-0242ac130003"), UUID.fromString("debb8e83-54ba-4320-b0a1-29779fc54648"), 3);
+        ratings = Arrays.asList(c1);
+        rR.saveAll(ratings);
     }
 
     @Order(1)
     @Test
     public void testAddRating () throws  Exception {
-        Rating c1 = new Rating(null, persons.get(2), quizzes.get(1), 5);
+        Rating c1 = new Rating(UUID.randomUUID(), UUID.fromString("b8181463-a15f-4eda-9d3b-e0e7ce2559a6"), UUID.fromString("a545e6a4-546e-45ad-880f-81bfda328b01"), 3);
         String json = ow.writeValueAsString(c1);
         mockMvc.perform(post("/api/property-service/ratings").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk()).andDo(print());
     }
@@ -45,8 +55,8 @@ public class RatingControllerTest {
     @Order(2)
     @Test
     public void testFailAddRatingWithInvalidData () throws  Exception {
-        Person p= new Person(UUID.randomUUID(), "Mauschen", null);  //person does not exist in database
-        Rating c1 = new Rating(null, p, quizzes.get(1), 5);
+        //unexisting quiz/person id
+        Rating c1 = new Rating(UUID.randomUUID(), UUID.fromString("b8888888-a15f-4eda-9d3b-e0e7ce2559a6"), UUID.fromString("debb8e88-88ba-4320-b0a1-29779fc54648"), 5);
         String json = ow.writeValueAsString(c1);
         mockMvc.perform(post("/api/property-service/ratings").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
     }
@@ -54,9 +64,9 @@ public class RatingControllerTest {
     @Order(3)
     @Test
     public void testGetAllRatings() throws Exception {
-        // should contain 3 Ratings since we added one in previous tests
+        // should contain 4 Ratings since we added 2 in previous tests + 2 are already in base (data.sql)
         this.mockMvc.perform(get("/api/property-service/ratings/all")).andExpect(matchAll(status().isOk(),
-                jsonPath("$.*", hasSize(3)))).andDo(print());
+                jsonPath("$.*", hasSize(4)))).andDo(print());
     }
 
     @Order(4)
@@ -71,7 +81,7 @@ public class RatingControllerTest {
     @Order(5)
     @Test
     public void testFailUpdateUnexistingRating() throws Exception {
-        Rating c1 = new Rating(null, persons.get(2), quizzes.get(1), 5);
+        Rating c1 = new Rating(UUID.randomUUID(),UUID.fromString("b8888888-a15f-4eda-9d3b-e0e7ce2559a6"), UUID.fromString("debb8e88-88ba-4320-b0a1-29779fc54648"), 5);
         String json = ow.writeValueAsString(c1);
         mockMvc.perform(put("/api/property-service/ratings").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isBadRequest()).andDo(print());
@@ -95,10 +105,10 @@ public class RatingControllerTest {
     @Order(8)
     @Test
     public void testDeleteRating() throws Exception {
-        // deleting Rating and checking if Rating was deleted (there should be only 2 Ratings in db)
+        // deleting Rating and checking if Rating was deleted (there should be only 3 Ratings in db)
         this.mockMvc.perform(delete("/api/property-service/ratings").param("id", ratings.get(0).getId().toString()))
                 .andExpect(status().isOk()).andDo(mvcResult -> mockMvc.perform(get("/api/property-service/ratings/all"))
-                .andExpect(matchAll(status().isOk(), jsonPath("$.*", hasSize(2)))));
+                .andExpect(matchAll(status().isOk(), jsonPath("$.*", hasSize(3)))));
     }
 
     @Order(9)
@@ -111,8 +121,8 @@ public class RatingControllerTest {
     @Test
     public void testRatingContentValidation() throws Exception {
         // rate value below 1 or above 5 is not allowed
-        Rating c1 = new Rating(null, persons.get(2), quizzes.get(1), 7);
-        Rating c2 = new Rating(null, persons.get(2), quizzes.get(1), -3);
+        Rating c1 = new Rating(UUID.randomUUID(), UUID.fromString("d234091b-41f8-45a5-927a-89f88e6d5da0"), UUID.fromString("debb8e83-54ba-4320-b0a1-29779fc54648"), 7);
+        Rating c2 = new Rating(UUID.randomUUID(), UUID.fromString("d234091b-41f8-45a5-927a-89f88e6d5da0"), UUID.fromString("debb8e83-54ba-4320-b0a1-29779fc54648"), -3);
         String json = ow.writeValueAsString(c1);
         String json2 = ow.writeValueAsString(c2);
         mockMvc.perform(post("/api/property-service/ratings").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest())
@@ -123,7 +133,7 @@ public class RatingControllerTest {
     @Test
     public void testRatingNotNullValidation() throws Exception {
         // randomly testing field with not-null property by passing null as argument
-        Rating c1 = new Rating(null, null, quizzes.get(1), 1);
+        Rating c1 = new Rating(UUID.randomUUID(), null, UUID.fromString("debb8e83-54ba-4320-b0a1-29779fc54648"), 1);
         String json = ow.writeValueAsString(c1);
         mockMvc.perform(post("/api/property-service/ratings").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
     }
@@ -131,14 +141,17 @@ public class RatingControllerTest {
     @Order(12)
     @Test
     public void testFailAddSameRating () throws  Exception {
-        Rating c1 = new Rating(null, persons.get(2), quizzes.get(1), 5);
+        Rating c1 = new Rating(UUID.randomUUID(),UUID.fromString("b8888888-a15f-4eda-9d3b-e0e7ce2559a6"), UUID.fromString("debb8e88-88ba-4320-b0a1-29779fc54648"), 5);
         String json = ow.writeValueAsString(c1);
         mockMvc.perform(post("/api/property-service/ratings").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().is4xxClientError()).andDo(print());
     }
 
-    @AfterAll
-    public void clearDatabase(@Autowired PersonRepository pR) {
-        pR.deleteAll();
+    @Order(13)
+    @Test
+    public void testGetFavoriteByUsername() throws Exception {
+        // person with id d72d5d78-97d7-11eb-a8b3-0242ac130003 is Anna5
+        this.mockMvc.perform(get("/api/property-service/ratings/all/user").param("username", "Anna5"))
+                .andExpect(status().isOk());
     }
-*/
+
 }

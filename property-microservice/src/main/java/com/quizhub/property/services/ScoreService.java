@@ -1,5 +1,6 @@
 package com.quizhub.property.services;
 
+import com.google.common.collect.Iterables;
 import com.quizhub.property.dto.Person;
 import com.quizhub.property.dto.Quiz;
 import com.quizhub.property.exceptions.BadRequestException;
@@ -12,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,13 +37,14 @@ public class ScoreService {
         } catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");
         }
-        return scoreRepository.getScoreByPerson(person.getId()).orElseThrow(() -> new BadRequestException("Person with username " +
-                username + " does not exist"));
+        Iterable<Score> t = scoreRepository.getScoresByPerson(person.getId()).orElseThrow(() -> new BadRequestException("Person with username " + username + " does not exist"));
+        if (Iterables.size(t) == 0)  throw new BadRequestException("Quiz or person does not exist");
+        return t;
     }
 
 
     public Iterable<Score> getAllScoresByQuiz(UUID id) {
-        return scoreRepository.getScoreByQuiz(id).orElseThrow(() -> new BadRequestException("Quiz with id " +
+        return scoreRepository.getScoresByQuiz(id).orElseThrow(() -> new BadRequestException("Quiz with id " +
                 id.toString() + " does not exist"));
     }
 
@@ -60,7 +63,7 @@ public class ScoreService {
         catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");
         }
-        if (quiz!= null && person!= null) throw new BadRequestException("Quiz or person cannot be null");
+        if (quiz== null || person== null) throw new BadRequestException("Quiz or person cannot be null");
         return scoreRepository.save(score);
     }
 

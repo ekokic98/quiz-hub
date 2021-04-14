@@ -119,9 +119,12 @@ public class FavoriteControllerTest {
     @Order(10)
     @Test
     public void testGetFavoriteByUsername() throws Exception {
+        // person with id d72d5d78-97d7-11eb-a8b3-0242ac130003 is Anna5
         this.mockMvc.perform(get("/api/property-service/favorites/all/user").param("username", "Anna5"))
                 .andExpect(status().isOk());
     }
+
+
 
 
 
