@@ -16,9 +16,11 @@ public class Score {
     @Type(type = "uuid-char")
     private UUID id;
 
+    @Column(name="person_id", nullable = false)
     @Type(type = "uuid-char")
     private UUID person;
 
+    @Column(name="quiz_id", nullable = false)
     @Type(type = "uuid-char")
     private UUID quiz;
 

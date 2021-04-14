@@ -38,7 +38,6 @@ public class CommentService {
             person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + newComment.getPerson(), Person.class);
             quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + newComment.getQuiz(), Quiz.class);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new BadRequestException("Quiz or person does not exist");
         }
         return commentRepository.save(newComment);

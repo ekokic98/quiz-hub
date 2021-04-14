@@ -2,6 +2,7 @@ package com.quizhub.property.model;
 
 import org.hibernate.annotations.Type;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.UUID;
@@ -12,9 +13,11 @@ public class Favorite {
     @Type(type = "uuid-char")
     private UUID id;
 
+    @Column(name="person_id", nullable = false)
     @Type(type = "uuid-char")
     private UUID person;
 
+    @Column(name="quiz_id", nullable = false)
     @Type(type = "uuid-char")
     private UUID quiz;
 

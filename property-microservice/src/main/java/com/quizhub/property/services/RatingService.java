@@ -3,6 +3,7 @@ package com.quizhub.property.services;
 import com.quizhub.property.dto.Person;
 import com.quizhub.property.dto.Quiz;
 import com.quizhub.property.exceptions.BadRequestException;
+import com.quizhub.property.exceptions.ConflictException;
 import com.quizhub.property.exceptions.InternalErrorException;
 import com.quizhub.property.model.Rating;
 import com.quizhub.property.repositories.RatingRepository;
@@ -47,22 +48,14 @@ public class RatingService {
         Person person = null;
         if (rating.getPerson()==null || rating.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
         try {
-            //fetch quiz
             quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + rating.getQuiz(), Quiz.class);
-            //fetch person - tvoj dio kerime
-            // person = restTemplate.getForObject("http://person-service/api/quiz-ms/person?id=" + rating.getPerson().getId(), Person.class);
-            //mora postojati u lokalnoj bazi da bi uopce mogli dodati
-            System.out.println(quiz.toString());
+            person = restTemplate.getForObject("http://person-service/api/quiz-ms/person?id=" + rating.getPerson(), Person.class);
         }
         catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");
         }
-        // obavezno postaviti osobu i kviz koji se povuku iz drugog servisa
-       // rating.setPerson(person);
-       // rating.setQuiz(quiz);
-
-      /*  if (ratingRepository.existsByQuizAndPerson(rating.getQuiz(), rating.getPerson()))
-            throw new ConflictException("Rating already exists"); */
+       if (ratingRepository.existsByQuizAndPerson(rating.getQuiz(), rating.getPerson()))
+            throw new ConflictException("Rating already exists");
         return ratingRepository.save(rating);
     }
 

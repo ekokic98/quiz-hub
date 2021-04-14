@@ -3,6 +3,7 @@ package com.quizhub.property.services;
 import com.quizhub.property.dto.Person;
 import com.quizhub.property.dto.Quiz;
 import com.quizhub.property.exceptions.BadRequestException;
+import com.quizhub.property.exceptions.ConflictException;
 import com.quizhub.property.exceptions.InternalErrorException;
 import com.quizhub.property.model.Favorite;
 import com.quizhub.property.repositories.FavoriteRepository;
@@ -39,7 +40,7 @@ public class FavoriteService {
     }
 
     public Favorite getFavoriteById (UUID id) {
-        return favoriteRepository.findById(id).orElseThrow(() -> new BadRequestException("Favorite with id " + id.toString() + " does not exist"));
+        return favoriteRepository.findById(id).orElseThrow(() -> new BadRequestException("Favorite with id " + id + " does not exist"));
     }
 
     public Favorite addFavorite (Favorite favorite) {
@@ -47,28 +48,21 @@ public class FavoriteService {
         Person person = null;
         if (favorite.getPerson()==null || favorite.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
         try {
-            //fetch quiz
             quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + favorite.getQuiz(), Quiz.class);
-            //fetch person - tvoj dio kerime
-            // person = restTemplate.getForObject("http://person-service/api/quiz-ms/person?id=" + favorite.getPerson().getId(), Person.class);
-            //mora postojati u lokalnoj bazi da bi uopce mogli dodati
-
-            System.out.println(quiz.toString());
+            person = restTemplate.getForObject("http://person-service/api/quiz-ms/person?id=" + favorite.getPerson(), Person.class);
         }
         catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");
         }
-        // obavezno postaviti osobu i kviz koji se povuku iz drugog servisa
-       // favorite.setPerson(person);
-       // favorite.setQuiz(quiz);
-       /* if (favoriteRepository.existsByQuizAndPerson(favorite.getQuiz(), favorite.getPerson()))
-            throw new ConflictException("Favorite already exists"); */
+        if (favoriteRepository.existsByQuizAndPerson(favorite.getQuiz(), favorite.getPerson()))
+            throw new ConflictException("Favorite already exists");
+
         return favoriteRepository.save(favorite);
     }
 
     @Transactional
     public JSONObject deleteFavorite(UUID id) {
-        if (!favoriteRepository.existsById(id)) throw new BadRequestException("Favorite with id " + id.toString() + " does not exist");
+        if (!favoriteRepository.existsById(id)) throw new BadRequestException("Favorite with id " + id+ " does not exist");
         favoriteRepository.deleteById(id);
         if (favoriteRepository.existsById(id)) throw new InternalErrorException("Favorite was not deleted (database issue)");
         JSONObject js = new JSONObject(new HashMap<String, String>() {{ put("message", "Favorite with id " + id.toString() + " has been successfully deleted");}});

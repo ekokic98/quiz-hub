@@ -48,20 +48,13 @@ public class ScoreService {
         Person person = null;
         if (score.getPerson()==null || score.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
         try {
-            //fetch quiz
             quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + score.getQuiz(), Quiz.class);
-            //fetch person - tvoj dio kerime
-            // person = restTemplate.getForObject("http://person-service/api/quiz-ms/person?id=" + score.getPerson().getId(), Person.class);
-            //mora postojati u lokalnoj bazi da bi uopce mogli dodati
-            System.out.println(quiz.toString());
+            person = restTemplate.getForObject("http://person-service/api/quiz-ms/person?id=" + score.getPerson(), Person.class);
         }
         catch (Exception e) {
-
             throw new BadRequestException("Quiz or person does not exist");
         }
-        // obavezno postaviti osobu i kviz koji se povuku iz drugog servisa
-       // score.setPerson(person);
-       // score.setQuiz(quiz);
+
         return scoreRepository.save(score);
     }
 

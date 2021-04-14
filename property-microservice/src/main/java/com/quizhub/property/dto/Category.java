@@ -7,11 +7,7 @@ import java.util.UUID;
 public class Category {
 
     private UUID id;
-
-
     private String name;
-
-
     private String imageUrl;
 
     public Category() {
@@ -45,5 +41,14 @@ public class Category {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }

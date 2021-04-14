@@ -106,4 +106,20 @@ public class Person {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", dateCreated=" + dateCreated +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }

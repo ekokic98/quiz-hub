@@ -84,5 +84,19 @@ public class Quiz {
     public void setTotalQuestions(int totalQuestions) {
         this.totalQuestions = totalQuestions;
     }
+
+    @Override
+    public String toString() {
+        return "Quiz{" +
+                "id=" + id +
+                ", personId=" + personId +
+                ", tournamentId=" + tournamentId +
+                ", category=" + category +
+                ", name='" + name + '\'' +
+                ", dateCreated=" + dateCreated +
+                ", timeLimit=" + timeLimit +
+                ", totalQuestions=" + totalQuestions +
+                '}';
+    }
 }
 
