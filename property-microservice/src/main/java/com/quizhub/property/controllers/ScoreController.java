@@ -33,12 +33,11 @@ public class ScoreController {
         return ResponseEntity.ok(scoreService.getScoreById(id));
     }
 
-    /*
     @GetMapping("/all/user")
     public ResponseEntity<Iterable<Score>> getAllScoresByUser (@RequestParam String username) {
         return ResponseEntity.ok(scoreService.getAllScoresByUser(username));
     }
-    */
+
 
     @GetMapping("/all/quiz")
     public ResponseEntity<Iterable<Score>> getAllScoresByQuiz (@RequestParam UUID id) {

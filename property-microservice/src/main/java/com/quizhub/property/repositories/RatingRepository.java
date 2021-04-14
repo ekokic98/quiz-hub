@@ -12,5 +12,6 @@ import java.util.UUID;
 @Repository
 public interface RatingRepository  extends CrudRepository<Rating, UUID> {
     Optional<List<Rating>> getRatingByQuiz(UUID q);
+    Optional<List<Rating>> getRatingByPerson(UUID u);
     boolean existsByQuizAndPerson (UUID q, UUID p);
 }

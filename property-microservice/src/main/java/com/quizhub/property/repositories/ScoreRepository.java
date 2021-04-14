@@ -10,6 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface ScoreRepository extends CrudRepository<Score, UUID> {
-    List<Score> getScoreByPerson(UUID p);
+    Optional<List<Score>> getScoreByPerson(UUID p);
     Optional<List<Score>> getScoreByQuiz(UUID q);
 }

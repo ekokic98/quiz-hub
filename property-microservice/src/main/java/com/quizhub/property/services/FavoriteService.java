@@ -28,12 +28,19 @@ public class FavoriteService {
     public Iterable<Favorite> getAllFavorites () {
         return favoriteRepository.findAll();
     }
-    /*
+
     public Iterable<Favorite> getAllFavoritesByUser (String username) {
-        return favoriteRepository.getFavoriteByPerson(personRepository.findByUsername(username).orElseThrow(() -> new BadRequestException("Person with username " +
-            username + " does not exist")));
+        Person person;
+        try {
+            person = restTemplate.getForObject("http://person-service/api/person-ms/persons/username?username=" + username, Person.class);
+        } catch (Exception e) {
+            throw new BadRequestException("Quiz or person does not exist");
+        }
+        System.out.println(person.getId());
+        return favoriteRepository.getFavoriteByPerson(person.getId()).orElseThrow(() -> new BadRequestException("Person with username " +
+            username + " does not exist"));
     }
-    */
+
     public Iterable<Favorite> getAllFavoritesByQuiz (UUID id) {
         return favoriteRepository.getFavoriteByQuiz(id).orElseThrow(() -> new BadRequestException("Quiz with id " +
                 id.toString() + " does not exist"));
@@ -44,8 +51,8 @@ public class FavoriteService {
     }
 
     public Favorite addFavorite (Favorite favorite) {
-        Quiz quiz = null;
-        Person person = null;
+        Quiz quiz;
+        Person person;
         if (favorite.getPerson()==null || favorite.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
         try {
             quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + favorite.getQuiz(), Quiz.class);
@@ -65,8 +72,7 @@ public class FavoriteService {
         if (!favoriteRepository.existsById(id)) throw new BadRequestException("Favorite with id " + id+ " does not exist");
         favoriteRepository.deleteById(id);
         if (favoriteRepository.existsById(id)) throw new InternalErrorException("Favorite was not deleted (database issue)");
-        JSONObject js = new JSONObject(new HashMap<String, String>() {{ put("message", "Favorite with id " + id.toString() + " has been successfully deleted");}});
-        return js;
+        return new JSONObject(new HashMap<String, String>() {{ put("message", "Favorite with id " + id.toString() + " has been successfully deleted");}});
     }
 }
 

@@ -28,28 +28,33 @@ public class RatingService {
     public Iterable<Rating> getAllRatings() {
         return ratingRepository.findAll();
     }
-    /*
+
     public Iterable<Rating> getAllRatingsByUser(String username) {
-        return ratingRepository.getRatingByPerson(personRepository.findByUsername(username).orElseThrow(() -> new BadRequestException("Person with username " +
-                username + " does not exist")));
+        Person person;
+        try {
+            person = restTemplate.getForObject("http://person-service/api/person-ms/persons/username?username=" + username, Person.class);
+        } catch (Exception e) {
+            throw new BadRequestException("Quiz or person does not exist");
+        }
+        return ratingRepository.getRatingByPerson(person.getId()).orElseThrow(() -> new BadRequestException("Person with username " + username + " does not exist"));
     }
-    */
+
     public Iterable<Rating> getAllRatingsByQuiz(UUID id) {
-        return ratingRepository.getRatingByQuiz(id).orElseThrow(() -> new BadRequestException("Quiz with id " +
-                id + " does not exist"));
+        return ratingRepository.getRatingByQuiz(id).orElseThrow(() -> new BadRequestException("Quiz with id " + id + " does not exist"));
     }
 
     public Rating getRatingById(UUID id) {
-        return ratingRepository.findById(id).orElseThrow(() -> new BadRequestException("Rating with id " + id.toString() + " does not exist"));
+        return ratingRepository.findById(id).orElseThrow(() -> new BadRequestException("Rating with id " + id + " does not exist"));
     }
 
     public Rating addRating (Rating rating) {
-        Quiz quiz = null;
-        Person person = null;
+        Quiz quiz;
+        Person person;
         if (rating.getPerson()==null || rating.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
         try {
             quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + rating.getQuiz(), Quiz.class);
             person = restTemplate.getForObject("http://person-service/api/quiz-ms/person?id=" + rating.getPerson(), Person.class);
+            if (quiz.getId()==null || person.getId()==null) throw new BadRequestException("Quiz or person cannot be null");
         }
         catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");
@@ -74,8 +79,7 @@ public class RatingService {
         if (!ratingRepository.existsById(id)) throw new BadRequestException("Rating with id " + id + " does not exist");
         ratingRepository.deleteById(id);
         if (ratingRepository.existsById(id)) throw new InternalErrorException("Rating was not deleted (database issue)");
-        JSONObject js = new JSONObject(new HashMap<String, String>() {{ put("message", "Rating with id " + id.toString() + " has been successfully deleted");}});
-        return js;
+        return new JSONObject(new HashMap<String, String>() {{ put("message", "Rating with id " + id.toString() + " has been successfully deleted");}});
     }
 
 

@@ -27,12 +27,18 @@ public class ScoreService {
     public Iterable<Score> getAllScores() {
         return scoreRepository.findAll();
     }
-    /*
+
     public Iterable<Score> getAllScoresByUser(String username) {
-        return scoreRepository.getScoreByPerson(personRepository.findByUsername(username).orElseThrow(() -> new BadRequestException("Person with username " +
-                username + " does not exist")));
+        Person person;
+        try {
+            person = restTemplate.getForObject("http://person-service/api/person-ms/persons/username?username=" + username, Person.class);
+        } catch (Exception e) {
+            throw new BadRequestException("Quiz or person does not exist");
+        }
+        return scoreRepository.getScoreByPerson(person.getId()).orElseThrow(() -> new BadRequestException("Person with username " +
+                username + " does not exist"));
     }
-    */
+
 
     public Iterable<Score> getAllScoresByQuiz(UUID id) {
         return scoreRepository.getScoreByQuiz(id).orElseThrow(() -> new BadRequestException("Quiz with id " +
@@ -44,8 +50,8 @@ public class ScoreService {
     }
 
     public Score addScore(Score score) {
-        Quiz quiz = null;
-        Person person = null;
+        Quiz quiz;
+        Person person;
         if (score.getPerson()==null || score.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
         try {
             quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + score.getQuiz(), Quiz.class);
@@ -54,7 +60,7 @@ public class ScoreService {
         catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");
         }
-
+        if (quiz!= null && person!= null) throw new BadRequestException("Quiz or person cannot be null");
         return scoreRepository.save(score);
     }
 
@@ -63,7 +69,6 @@ public class ScoreService {
         if (!scoreRepository.existsById(id)) throw new BadRequestException("Score with id " + id + " does not exist");
         scoreRepository.deleteById(id);
         if (scoreRepository.existsById(id)) throw new InternalErrorException("Score was not deleted (database issue)");
-        JSONObject js = new JSONObject(new HashMap<String, String>() {{ put("message", "Score with id " + id.toString() + " has been successfully deleted");}});
-        return js;
+        return new JSONObject(new HashMap<String, String>() {{ put("message", "Score with id " + id.toString() + " has been successfully deleted");}});
     }
 }
