@@ -54,8 +54,8 @@ public class ScoreService {
         Person person;
         if (score.getPerson()==null || score.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
         try {
+            person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + score.getPerson(), Person.class);
             quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + score.getQuiz(), Quiz.class);
-            person = restTemplate.getForObject("http://person-service/api/quiz-ms/person?id=" + score.getPerson(), Person.class);
         }
         catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");

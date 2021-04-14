@@ -36,7 +36,6 @@ public class FavoriteService {
         } catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");
         }
-        System.out.println(person.getId());
         return favoriteRepository.getFavoriteByPerson(person.getId()).orElseThrow(() -> new BadRequestException("Person with username " +
             username + " does not exist"));
     }
@@ -55,10 +54,11 @@ public class FavoriteService {
         Person person;
         if (favorite.getPerson()==null || favorite.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
         try {
+            person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + favorite.getPerson(), Person.class);
             quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + favorite.getQuiz(), Quiz.class);
-            person = restTemplate.getForObject("http://person-service/api/quiz-ms/person?id=" + favorite.getPerson(), Person.class);
         }
         catch (Exception e) {
+            e.printStackTrace();
             throw new BadRequestException("Quiz or person does not exist");
         }
         if (favoriteRepository.existsByQuizAndPerson(favorite.getQuiz(), favorite.getPerson()))

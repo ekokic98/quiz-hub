@@ -1,44 +1,55 @@
 package com.quizhub.property.controllers;
 
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestMethodOrder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.quizhub.property.model.Favorite;
+import com.quizhub.property.repositories.FavoriteRepository;
+import com.quizhub.property.repositories.ScoreRepository;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.ResultMatcher.matchAll;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class FavoriteControllerTest {
-/*    @Autowired
+    @Autowired
     private MockMvc mockMvc;
 
-    private List<Person> persons;
-    private List<Quiz> quizzes;
     private List<Favorite> favorites;
     private ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
 
     @BeforeAll
-    public void init(@Autowired PersonRepository pR, @Autowired QuizRepository qR, @Autowired FavoriteRepository fR) {
-
-        Person  p1 = new Person(null, "Reus", null),
-                p2 = new Person(null, "Saox", null),
-                p3 = new Person(null, "Dekler", null);
-        Quiz   q1 = new Quiz(null, p1, "uiz", 300, 5),
-                q2 = new Quiz(null, p1, "dDM quiz", 600, 10),
-                q3 = new Quiz(null, p2, "sPNWT quiz", 200, 3);
-        Favorite s1 = new Favorite(null, q1, p1), s2 = new Favorite(null, q2, p1);
-
-        persons = Arrays.asList(p1, p2, p3); quizzes = Arrays.asList(q1, q2, q3); favorites = Arrays.asList(s1, s2);
-        pR.saveAll(persons); qR.saveAll(quizzes); fR.saveAll(favorites);
+    public void init(@Autowired FavoriteRepository fR) {
+        fR.deleteAll();
+        Favorite s1 = new Favorite(UUID.randomUUID(),UUID.fromString("debb8e83-54ba-4320-b0a1-29779fc54648"), UUID.fromString("d234091b-41f8-45a5-927a-89f88e6d5da0")),
+                s2 = new Favorite(UUID.randomUUID(), UUID.fromString("debb8e83-54ba-4320-b0a1-29779fc54648"), UUID.fromString("b8181463-a15f-4eda-9d3b-e0e7ce2559a6"));
+        favorites = Arrays.asList(s1, s2);
+        fR.saveAll(favorites);
     }
 
     @Order(1)
     @Test
     public void testAddFavorite () throws  Exception {
-        Favorite s1 = new Favorite(null, quizzes.get(2), persons.get(2));
+        Favorite s1 = new Favorite(UUID.randomUUID(),  UUID.fromString("f1e252f0-737e-4fb0-87a8-2cd23a18b4f9"), UUID.fromString("d72d5d78-97d7-11eb-a8b3-0242ac130003"));
         String json = ow.writeValueAsString(s1);
         mockMvc.perform(post("/api/property-service/favorites").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk()).andDo(print());
     }
@@ -46,8 +57,7 @@ public class FavoriteControllerTest {
     @Order(2)
     @Test
     public void testFailAddFavoriteWithInvalidData () throws  Exception {
-        Person  p1 = new Person(UUID.randomUUID(), "Reussen", null); //person does not exist in database
-        Favorite s1 = new Favorite(null, quizzes.get(0), p1);
+        Favorite s1 = new Favorite(UUID.randomUUID(),UUID.fromString("debb8e82-54ba-4320-b0a1-29779fc54638"), UUID.fromString("debb8e82-54ba-4320-b0a1-29779fc54638"));
         String json = ow.writeValueAsString(s1);
         mockMvc.perform(post("/api/property-service/favorites").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
     }
@@ -93,7 +103,7 @@ public class FavoriteControllerTest {
     @Order(8)
     @Test
     public void testFavoriteNotNullValidation() throws Exception {
-        Favorite s1 = new Favorite(null, quizzes.get(0), null);
+        Favorite s1 = new Favorite(UUID.randomUUID(), UUID.randomUUID(), null);
         String json = ow.writeValueAsString(s1);
         mockMvc.perform(post("/api/property-service/favorites").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
     }
@@ -101,16 +111,20 @@ public class FavoriteControllerTest {
     @Order(9)
     @Test
     public void testFailAddExistingFavorite () throws  Exception {
-        Favorite s1 = new Favorite(null, quizzes.get(2), persons.get(2));
+        Favorite s1 = new Favorite(UUID.randomUUID(), UUID.fromString("d234091b-41f8-45a5-927a-89f88e6d5da0"),UUID.fromString("debb8e83-54ba-4320-b0a1-29779fc54648"));
         String json = ow.writeValueAsString(s1);
         mockMvc.perform(post("/api/property-service/favorites").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().is4xxClientError()).andDo(print());
     }
 
-    @AfterAll
-    public void clearDatabase(@Autowired PersonRepository pR, @Autowired QuizRepository qR) {
-        pR.deleteAll(); qR.deleteAll();
+    @Order(10)
+    @Test
+    public void testGetFavoriteByUsername() throws Exception {
+        this.mockMvc.perform(get("/api/property-service/favorites/all/user").param("username", "Anna5"))
+                .andExpect(status().isOk());
     }
 
-*/
+
+
+
 
 }
