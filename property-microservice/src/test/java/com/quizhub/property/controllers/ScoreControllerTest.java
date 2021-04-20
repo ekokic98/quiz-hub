@@ -50,7 +50,7 @@ public class ScoreControllerTest {
     public void testAddScore () throws  Exception {
         Score s1 = new Score(UUID.randomUUID(), UUID.fromString("d234091b-41f8-45a5-927a-89f88e6d5da0"), UUID.fromString("f1e252f0-737e-4fb0-87a8-2cd23a18b4f9"), 120, 5, 15, null);
         String json = ow.writeValueAsString(s1);
-        mockMvc.perform(post("/api/property-service/scores").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk()).andDo(print());
+        mockMvc.perform(post("/api/property-ms/scores").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk()).andDo(print());
     }
 
     @Order(2)
@@ -59,28 +59,28 @@ public class ScoreControllerTest {
         //quiz does not exist in database
         Score s1 = new Score(UUID.randomUUID(), UUID.fromString("4c50e7ec-8754-48d4-a2fb-bf3045901340"), UUID.fromString("9c99e9ec-8754-48d4-a2fb-bf3045901340"), 120, 5, 15, null);
         String json = ow.writeValueAsString(s1);
-        mockMvc.perform(post("/api/property-service/scores").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
+        mockMvc.perform(post("/api/property-ms/scores").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
     }
 
     @Order(3)
     @Test
     public void testGetAllScores() throws Exception {
         // should contain 4 scores since we added one in previous tests
-        this.mockMvc.perform(get("/api/property-service/scores/all")).andExpect(matchAll(status().isOk(),
+        this.mockMvc.perform(get("/api/property-ms/scores/all")).andExpect(matchAll(status().isOk(),
                 jsonPath("$.*", hasSize(4)))).andDo(print());
     }
 
     @Order(4)
     @Test
     public void testGetScore() throws Exception {
-        this.mockMvc.perform(get("/api/property-service/scores").param("id", scores.get(0).getId().toString()))
+        this.mockMvc.perform(get("/api/property-ms/scores").param("id", scores.get(0).getId().toString()))
                 .andExpect(status().isOk());
     }
 
     @Order(5)
     @Test
     public void testFailGetUnexistingScore() throws Exception {
-        this.mockMvc.perform(get("/api/property-service/scores").param("id", UUID.randomUUID().toString()))
+        this.mockMvc.perform(get("/api/property-ms/scores").param("id", UUID.randomUUID().toString()))
                 .andExpect(status().isBadRequest()).andDo(print());
     }
 
@@ -88,15 +88,15 @@ public class ScoreControllerTest {
     @Test
     public void testDeleteScore() throws Exception {
         // deleting score and checking if score was deleted (there should be only 3 scores in db)
-        this.mockMvc.perform(delete("/api/property-service/scores").param("id", scores.get(0).getId().toString()))
-                .andExpect(status().isOk()).andDo(mvcResult -> mockMvc.perform(get("/api/property-service/scores/all"))
+        this.mockMvc.perform(delete("/api/property-ms/scores").param("id", scores.get(0).getId().toString()))
+                .andExpect(status().isOk()).andDo(mvcResult -> mockMvc.perform(get("/api/property-ms/scores/all"))
                 .andExpect(matchAll(status().isOk(), jsonPath("$.*", hasSize(3)))));
     }
 
     @Order(7)
     @Test
     public void testFailDeleteRemovedScore() throws Exception {
-        this.mockMvc.perform(delete("/api/property-service/scores").param("username", scores.get(0).getId().toString())).andExpect(status().isBadRequest());
+        this.mockMvc.perform(delete("/api/property-ms/scores").param("username", scores.get(0).getId().toString())).andExpect(status().isBadRequest());
     }
 
     @Order(8)
@@ -105,7 +105,7 @@ public class ScoreControllerTest {
         // totalTime, correctAnswers and points have same validation tags, it's sufficient to test with one integer attribute
         Score s1 = new Score(UUID.randomUUID(), UUID.fromString("4c50e7ec-8754-48d4-a2fb-bf3045901340"), UUID.fromString("f1e252f0-737e-4fb0-87a8-2cd23a18b4f9"), -120, 5, 15, null);
         String json = ow.writeValueAsString(s1);
-        mockMvc.perform(post("/api/property-service/scores").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
+        mockMvc.perform(post("/api/property-ms/scores").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
     }
 
     @Order(9)
@@ -113,14 +113,14 @@ public class ScoreControllerTest {
     public void testScoreNotNullValidation() throws Exception {
         Score s1 = new Score(null, null, null, -120, 5, 15, null);
         String json = ow.writeValueAsString(s1);
-        mockMvc.perform(post("/api/property-service/scores").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
+        mockMvc.perform(post("/api/property-ms/scores").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
     }
 
     @Order(10)
     @Test
     public void testGetScoreByUsername() throws Exception {
         // person with id d72d5d78-97d7-11eb-a8b3-0242ac130003 is Ben5
-        this.mockMvc.perform(get("/api/property-service/scores/all/user").param("username", "John5"))
+        this.mockMvc.perform(get("/api/property-ms/scores/all/user").param("username", "John5"))
                 .andExpect(status().isOk());
     }
 
@@ -128,7 +128,7 @@ public class ScoreControllerTest {
     @Test
     public void testFailGetScoreByUnexistingUsername() throws Exception {
         // person with id d72d5d78-97d7-11eb-a8b3-0242ac130003 is Anna5
-        this.mockMvc.perform(get("/api/property-service/scores/all/user").param("username", "Fake name"))
+        this.mockMvc.perform(get("/api/property-ms/scores/all/user").param("username", "Fake name"))
                 .andExpect(status().isBadRequest()).andDo(print());
     }
 
