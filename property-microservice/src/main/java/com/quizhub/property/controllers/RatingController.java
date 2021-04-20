@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/property-service/ratings")
+@RequestMapping("/api/property-ms/ratings")
 public class RatingController {
     private final RatingService ratingService;
 

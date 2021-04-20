@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path="/api/property-service/scores")
+@RequestMapping(path="/api/property-ms/scores")
 public class ScoreController {
     private final ScoreService scoreService;
 

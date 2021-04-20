@@ -3,6 +3,7 @@ package com.quizhub.property.services;
 import com.google.common.collect.Iterables;
 import com.quizhub.property.dto.Person;
 import com.quizhub.property.dto.Quiz;
+import com.quizhub.property.event.EventRequest;
 import com.quizhub.property.exceptions.BadRequestException;
 import com.quizhub.property.exceptions.InternalErrorException;
 import com.quizhub.property.model.Score;
@@ -16,17 +17,20 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.quizhub.property.services.PropertyService.registerEvent;
+
 @Service
 public class ScoreService {
     private final ScoreRepository scoreRepository;
     private final RestTemplate restTemplate;
 
-    public ScoreService (ScoreRepository scoreRepository, RestTemplate restTemplate) {
+    public ScoreService(ScoreRepository scoreRepository, RestTemplate restTemplate) {
         this.scoreRepository = scoreRepository;
         this.restTemplate = restTemplate;
     }
 
     public Iterable<Score> getAllScores() {
+        registerEvent(EventRequest.actionType.GET, "/api/property-ms/scores/all", "200");
         return scoreRepository.findAll();
     }
 
@@ -38,7 +42,7 @@ public class ScoreService {
             throw new BadRequestException("Quiz or person does not exist");
         }
         Iterable<Score> t = scoreRepository.getScoresByPerson(person.getId()).orElseThrow(() -> new BadRequestException("Person with username " + username + " does not exist"));
-        if (Iterables.size(t) == 0)  throw new BadRequestException("Quiz or person does not exist");
+        if (Iterables.size(t) == 0) throw new BadRequestException("Quiz or person does not exist");
         return t;
     }
 
@@ -55,23 +59,25 @@ public class ScoreService {
     public Score addScore(Score score) {
         Quiz quiz;
         Person person;
-        if (score.getPerson()==null || score.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
+        if (score.getPerson() == null || score.getQuiz() == null)
+            throw new BadRequestException("Quiz or person cannot be null");
         try {
             person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + score.getPerson(), Person.class);
             quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + score.getQuiz(), Quiz.class);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");
         }
-        if (quiz== null || person== null) throw new BadRequestException("Quiz or person cannot be null");
+        if (quiz == null || person == null) throw new BadRequestException("Quiz or person cannot be null");
         return scoreRepository.save(score);
     }
 
     @Transactional
-    public JSONObject deleteScore (UUID id) {
+    public JSONObject deleteScore(UUID id) {
         if (!scoreRepository.existsById(id)) throw new BadRequestException("Score with id " + id + " does not exist");
         scoreRepository.deleteById(id);
         if (scoreRepository.existsById(id)) throw new InternalErrorException("Score was not deleted (database issue)");
-        return new JSONObject(new HashMap<String, String>() {{ put("message", "Score with id " + id.toString() + " has been successfully deleted");}});
+        return new JSONObject(new HashMap<String, String>() {{
+            put("message", "Score with id " + id.toString() + " has been successfully deleted");
+        }});
     }
 }

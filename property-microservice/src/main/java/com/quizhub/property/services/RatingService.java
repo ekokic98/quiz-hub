@@ -2,6 +2,7 @@ package com.quizhub.property.services;
 
 import com.quizhub.property.dto.Person;
 import com.quizhub.property.dto.Quiz;
+import com.quizhub.property.event.EventRequest;
 import com.quizhub.property.exceptions.BadRequestException;
 import com.quizhub.property.exceptions.ConflictException;
 import com.quizhub.property.exceptions.InternalErrorException;
@@ -15,6 +16,8 @@ import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static com.quizhub.property.services.PropertyService.registerEvent;
+
 @Service
 public class RatingService {
     private final RatingRepository ratingRepository;
@@ -26,6 +29,7 @@ public class RatingService {
     }
 
     public Iterable<Rating> getAllRatings() {
+        registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings/all", "200");
         return ratingRepository.findAll();
     }
 
@@ -47,19 +51,20 @@ public class RatingService {
         return ratingRepository.findById(id).orElseThrow(() -> new BadRequestException("Rating with id " + id + " does not exist"));
     }
 
-    public Rating addRating (Rating rating) {
+    public Rating addRating(Rating rating) {
         Quiz quiz;
         Person person;
-        if (rating.getPerson()==null || rating.getQuiz()==null) throw new BadRequestException("Quiz or person cannot be null");
+        if (rating.getPerson() == null || rating.getQuiz() == null)
+            throw new BadRequestException("Quiz or person cannot be null");
         try {
             person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + rating.getPerson(), Person.class);
             quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + rating.getQuiz(), Quiz.class);
-            if (quiz.getId()==null || person.getId()==null) throw new BadRequestException("Quiz or person cannot be null");
-        }
-        catch (Exception e) {
+            if (quiz.getId() == null || person.getId() == null)
+                throw new BadRequestException("Quiz or person cannot be null");
+        } catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");
         }
-       if (ratingRepository.existsByQuizAndPerson(rating.getQuiz(), rating.getPerson()))
+        if (ratingRepository.existsByQuizAndPerson(rating.getQuiz(), rating.getPerson()))
             throw new ConflictException("Rating already exists");
         return ratingRepository.save(rating);
     }
@@ -78,8 +83,11 @@ public class RatingService {
     public JSONObject deleteRating(UUID id) {
         if (!ratingRepository.existsById(id)) throw new BadRequestException("Rating with id " + id + " does not exist");
         ratingRepository.deleteById(id);
-        if (ratingRepository.existsById(id)) throw new InternalErrorException("Rating was not deleted (database issue)");
-        return new JSONObject(new HashMap<String, String>() {{ put("message", "Rating with id " + id.toString() + " has been successfully deleted");}});
+        if (ratingRepository.existsById(id))
+            throw new InternalErrorException("Rating was not deleted (database issue)");
+        return new JSONObject(new HashMap<String, String>() {{
+            put("message", "Rating with id " + id.toString() + " has been successfully deleted");
+        }});
     }
 
 

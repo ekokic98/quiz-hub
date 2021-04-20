@@ -11,14 +11,14 @@ import org.springframework.web.client.RestTemplate;
 @EnableDiscoveryClient
 public class PropertyApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PropertyApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(PropertyApplication.class, args);
+    }
 
-	@LoadBalanced
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
+    @LoadBalanced
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
 }

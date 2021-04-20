@@ -2,6 +2,7 @@ package com.quizhub.property.services;
 
 import com.quizhub.property.dto.Person;
 import com.quizhub.property.dto.Quiz;
+import com.quizhub.property.event.EventRequest;
 import com.quizhub.property.exceptions.BadRequestException;
 import com.quizhub.property.model.Comment;
 import com.quizhub.property.repositories.CommentRepository;
@@ -13,8 +14,11 @@ import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static com.quizhub.property.services.PropertyService.registerEvent;
+
 @Service
 public class CommentService {
+
     private final CommentRepository commentRepository;
     private final RestTemplate restTemplate;
 
@@ -24,6 +28,7 @@ public class CommentService {
     }
 
     public Iterable<Comment> getAllComments() {
+        registerEvent(EventRequest.actionType.GET, "/api/property-ms/comments/all", "200");
         return commentRepository.findAll();
     }
 
