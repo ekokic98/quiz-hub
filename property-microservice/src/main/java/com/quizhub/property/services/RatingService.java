@@ -20,6 +20,7 @@ import static com.quizhub.property.services.PropertyService.registerEvent;
 
 @Service
 public class RatingService {
+
     private final RatingRepository ratingRepository;
     private final RestTemplate restTemplate;
 
@@ -33,6 +34,15 @@ public class RatingService {
         return ratingRepository.findAll();
     }
 
+    public Rating getRatingById(UUID id) {
+        registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings", "200");
+        return ratingRepository.findById(id)
+                .orElseThrow(() -> {
+                    registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings", "400");
+                    return new BadRequestException("Rating with id " + id + " does not exist");
+                });
+    }
+
     public Iterable<Rating> getAllRatingsByUser(String username) {
         Person person;
         try {
@@ -40,55 +50,86 @@ public class RatingService {
         } catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");
         }
-        return ratingRepository.getRatingByPerson(person.getId()).orElseThrow(() -> new BadRequestException("Person with username " + username + " does not exist"));
+        registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings/all/user", "200");
+        return ratingRepository.getRatingByPerson(person.getId())
+                .orElseThrow(() -> {
+                    registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings/all/user", "400");
+                    return new BadRequestException("Person with username " + username + " does not exist");
+                });
     }
 
     public Iterable<Rating> getAllRatingsByQuiz(UUID id) {
-        return ratingRepository.getRatingByQuiz(id).orElseThrow(() -> new BadRequestException("Quiz with id " + id + " does not exist"));
-    }
-
-    public Rating getRatingById(UUID id) {
-        return ratingRepository.findById(id).orElseThrow(() -> new BadRequestException("Rating with id " + id + " does not exist"));
+        registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings/all/quiz", "200");
+        return ratingRepository.getRatingByQuiz(id)
+                .orElseThrow(() -> {
+                    registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings/all/quiz", "400");
+                    return new BadRequestException("Quiz with id " + id + " does not exist");
+                });
     }
 
     public Rating addRating(Rating rating) {
-        Quiz quiz;
-        Person person;
-        if (rating.getPerson() == null || rating.getQuiz() == null)
-            throw new BadRequestException("Quiz or person cannot be null");
         try {
-            person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + rating.getPerson(), Person.class);
-            quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + rating.getQuiz(), Quiz.class);
-            if (quiz.getId() == null || person.getId() == null)
+            Quiz quiz;
+            Person person;
+            if (rating.getPerson() == null || rating.getQuiz() == null) {
                 throw new BadRequestException("Quiz or person cannot be null");
-        } catch (Exception e) {
-            throw new BadRequestException("Quiz or person does not exist");
+            }
+            try {
+                person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + rating.getPerson(), Person.class);
+                quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + rating.getQuiz(), Quiz.class);
+                if (quiz.getId() == null || person.getId() == null) {
+                    throw new BadRequestException("Quiz or person cannot be null");
+                }
+            } catch (Exception e) {
+                throw new BadRequestException("Quiz or person does not exist");
+            }
+            if (ratingRepository.existsByQuizAndPerson(rating.getQuiz(), rating.getPerson())) {
+                throw new ConflictException("Rating already exists");
+            }
+            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/ratings", "200");
+            return ratingRepository.save(rating);
+        } catch (ConflictException exception) {
+            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/ratings", "409");
+            throw exception;
+        } catch (BadRequestException exception) {
+            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/ratings", "400");
+            throw exception;
         }
-        if (ratingRepository.existsByQuizAndPerson(rating.getQuiz(), rating.getPerson()))
-            throw new ConflictException("Rating already exists");
-        return ratingRepository.save(rating);
     }
 
-
     public Rating updateRating(Rating rating) {
-        if (rating.getId() == null)
-            throw new BadRequestException("Id cannot be null");
-        Rating existingRating = ratingRepository.findById(rating.getId())
-                .orElseThrow(() -> new BadRequestException("Rating ID is either incorrect or rating does not exist"));
-        existingRating.setRate(rating.getRate());
-        return ratingRepository.save(existingRating);
+        try {
+            if (rating.getId() == null) {
+                throw new BadRequestException("Id cannot be null");
+            }
+            Rating existingRating = ratingRepository.findById(rating.getId())
+                    .orElseThrow(() -> new BadRequestException("Rating ID is either incorrect or rating does not exist"));
+            existingRating.setRate(rating.getRate());
+            registerEvent(EventRequest.actionType.UPDATE, "/api/property-ms/ratings", "200");
+            return ratingRepository.save(existingRating);
+        } catch (BadRequestException exception) {
+            registerEvent(EventRequest.actionType.UPDATE, "/api/property-ms/ratings", "400");
+            throw exception;
+        }
     }
 
     @Transactional
     public JSONObject deleteRating(UUID id) {
-        if (!ratingRepository.existsById(id)) throw new BadRequestException("Rating with id " + id + " does not exist");
-        ratingRepository.deleteById(id);
-        if (ratingRepository.existsById(id))
-            throw new InternalErrorException("Rating was not deleted (database issue)");
-        return new JSONObject(new HashMap<String, String>() {{
-            put("message", "Rating with id " + id.toString() + " has been successfully deleted");
-        }});
+        try {
+            if (!ratingRepository.existsById(id)) {
+                throw new BadRequestException("Rating with id " + id + " does not exist");
+            }
+            ratingRepository.deleteById(id);
+            if (ratingRepository.existsById(id)) {
+                throw new InternalErrorException("Rating was not deleted (database issue)");
+            }
+            registerEvent(EventRequest.actionType.DELETE, "/api/property-ms/ratings", "200");
+            return new JSONObject(new HashMap<String, String>() {{
+                put("message", "Rating with id " + id.toString() + " has been successfully deleted");
+            }});
+        } catch (BadRequestException exception) {
+            registerEvent(EventRequest.actionType.DELETE, "/api/property-ms/ratings", "400");
+            throw exception;
+        }
     }
-
-
 }

@@ -25,7 +25,7 @@ public class FavoriteController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Iterable<Favorite>> getAllScores() {
+    public ResponseEntity<Iterable<Favorite>> getAllFavorites() {
         return ResponseEntity.ok(favoriteService.getAllFavorites());
     }
 

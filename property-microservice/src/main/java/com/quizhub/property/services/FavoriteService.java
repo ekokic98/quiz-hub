@@ -20,6 +20,7 @@ import static com.quizhub.property.services.PropertyService.registerEvent;
 
 @Service
 public class FavoriteService {
+
     private final FavoriteRepository favoriteRepository;
     private final RestTemplate restTemplate;
 
@@ -33,6 +34,15 @@ public class FavoriteService {
         return favoriteRepository.findAll();
     }
 
+    public Favorite getFavoriteById(UUID id) {
+        registerEvent(EventRequest.actionType.GET, "/api/property-ms/favorites", "200");
+        return favoriteRepository.findById(id)
+                .orElseThrow(() -> {
+                    registerEvent(EventRequest.actionType.GET, "/api/property-ms/favorite", "400");
+                    return new BadRequestException("Favorite with id " + id + " does not exist");
+                });
+    }
+
     public Iterable<Favorite> getAllFavoritesByUser(String username) {
         Person person;
         try {
@@ -40,47 +50,68 @@ public class FavoriteService {
         } catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");
         }
-        return favoriteRepository.getFavoriteByPerson(person.getId()).orElseThrow(() -> new BadRequestException("Person with username " +
-                username + " does not exist"));
+        registerEvent(EventRequest.actionType.GET, "/api/property-ms/favorites/all/user", "200");
+        return favoriteRepository.getFavoriteByPerson(person.getId())
+                .orElseThrow(() -> {
+                    registerEvent(EventRequest.actionType.GET, "/api/property-ms/favorites/all/user", "400");
+                    return new BadRequestException("Person with username " + username + " does not exist");
+                });
     }
 
     public Iterable<Favorite> getAllFavoritesByQuiz(UUID id) {
-        return favoriteRepository.getFavoriteByQuiz(id).orElseThrow(() -> new BadRequestException("Quiz with id " +
-                id.toString() + " does not exist"));
-    }
-
-    public Favorite getFavoriteById(UUID id) {
-        return favoriteRepository.findById(id).orElseThrow(() -> new BadRequestException("Favorite with id " + id + " does not exist"));
+        registerEvent(EventRequest.actionType.GET, "/api/property-ms/favorites/all/quiz", "200");
+        return favoriteRepository.getFavoriteByPerson(id)
+                .orElseThrow(() -> {
+                    registerEvent(EventRequest.actionType.GET, "/api/property-ms/favorites/all/quiz", "400");
+                    return new BadRequestException("Quiz with id " + id.toString() + " does not exist");
+                });
     }
 
     public Favorite addFavorite(Favorite favorite) {
-        Quiz quiz;
-        Person person;
-        if (favorite.getPerson() == null || favorite.getQuiz() == null)
-            throw new BadRequestException("Quiz or person cannot be null");
         try {
-            person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + favorite.getPerson(), Person.class);
-            quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + favorite.getQuiz(), Quiz.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BadRequestException("Quiz or person does not exist");
+            Quiz quiz;
+            Person person;
+            if (favorite.getPerson() == null || favorite.getQuiz() == null) {
+                throw new BadRequestException("Quiz or person cannot be null");
+            }
+            try {
+                person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + favorite.getPerson(), Person.class);
+                quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + favorite.getQuiz(), Quiz.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new BadRequestException("Quiz or person does not exist");
+            }
+            if (favoriteRepository.existsByQuizAndPerson(favorite.getQuiz(), favorite.getPerson())) {
+                throw new ConflictException("Favorite already exists");
+            }
+            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/favorites", "200");
+            return favoriteRepository.save(favorite);
+        } catch (ConflictException exception) {
+            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/favorites", "409");
+            throw exception;
+        } catch (BadRequestException exception) {
+            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/favorites", "400");
+            throw exception;
         }
-        if (favoriteRepository.existsByQuizAndPerson(favorite.getQuiz(), favorite.getPerson()))
-            throw new ConflictException("Favorite already exists");
-
-        return favoriteRepository.save(favorite);
     }
 
     @Transactional
     public JSONObject deleteFavorite(UUID id) {
-        if (!favoriteRepository.existsById(id))
-            throw new BadRequestException("Favorite with id " + id + " does not exist");
-        favoriteRepository.deleteById(id);
-        if (favoriteRepository.existsById(id))
-            throw new InternalErrorException("Favorite was not deleted (database issue)");
-        return new JSONObject(new HashMap<String, String>() {{
-            put("message", "Favorite with id " + id.toString() + " has been successfully deleted");
-        }});
+        try {
+            if (!favoriteRepository.existsById(id)) {
+                throw new BadRequestException("Favorite with id " + id + " does not exist");
+            }
+            favoriteRepository.deleteById(id);
+            if (favoriteRepository.existsById(id)) {
+                throw new InternalErrorException("Favorite was not deleted (database issue)");
+            }
+            registerEvent(EventRequest.actionType.DELETE, "/api/property-ms/favorites", "200");
+            return new JSONObject(new HashMap<String, String>() {{
+                put("message", "Favorite with id " + id.toString() + " has been successfully deleted");
+            }});
+        } catch (BadRequestException exception) {
+            registerEvent(EventRequest.actionType.DELETE, "/api/property-ms/favorites", "400");
+            throw exception;
+        }
     }
 }
-
