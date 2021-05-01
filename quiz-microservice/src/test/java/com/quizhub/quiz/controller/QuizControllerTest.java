@@ -20,8 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -38,7 +37,7 @@ public class QuizControllerTest {
     public void addQuizCommunicationTest() throws Exception {
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/quiz-ms/quizzes")
+                .post("/api/quizzes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"personId\": \"d234091b-41f8-45a5-927a-89f88e6d5da0\",\n" +
@@ -64,7 +63,7 @@ public class QuizControllerTest {
         JSONObject jsonObject = new JSONObject(content);
         String addedPersonId = jsonObject.getString("personId");
 
-        ResponseEntity<String> response = restTemplate.getForEntity("http://person-service/api/person-ms/persons?id=" + addedPersonId, String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("http://person-service/api/persons?id=" + addedPersonId, String.class);
         Assert.assertNotNull(response.getBody());
 
         JSONObject jsonResponse = new JSONObject(response.getBody());
@@ -74,7 +73,7 @@ public class QuizControllerTest {
     @Test
     public void getAllQuizzesTest() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/quiz-service/quizzes/all")
+                .get("/api/quizzes/all")
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
@@ -87,7 +86,7 @@ public class QuizControllerTest {
         String id = (String) addQuiz("Quiz 1").get("id");
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/quiz-ms/quizzes")
+                .get("/api/quizzes")
                 .param("id", id)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -98,7 +97,7 @@ public class QuizControllerTest {
     }
     private Map addQuiz(String name) throws Exception {
         RequestBuilder postRequest = MockMvcRequestBuilders
-                .post("/api/quiz-ms/quizzes")
+                .post("/api/quizzes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"personId\": \"d234091b-41f8-45a5-927a-89f88e6d5da0\",\n" +
@@ -119,5 +118,18 @@ public class QuizControllerTest {
         String json = mvcResult.getResponse().getContentAsString();
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, Map.class);
+    }
+
+    @Test
+    public void getQuizzesForTournamentTest() throws Exception {
+        RequestBuilder request = MockMvcRequestBuilders
+                .get("/api/quizzes/tournament")
+                .param("id", "112e4019-c5ec-49a2-9be4-4871dcebe89f")
+                .accept(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().string("[]"))
+                .andReturn();
     }
 }

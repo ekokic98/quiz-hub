@@ -1,21 +1,21 @@
 package com.quizhub.quiz.controller;
 
-        import com.fasterxml.jackson.databind.ObjectMapper;
-        import org.junit.jupiter.api.MethodOrderer;
-        import org.junit.jupiter.api.Test;
-        import org.junit.jupiter.api.TestMethodOrder;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-        import org.springframework.boot.test.context.SpringBootTest;
-        import org.springframework.http.MediaType;
-        import org.springframework.test.web.servlet.MockMvc;
-        import org.springframework.test.web.servlet.MvcResult;
-        import org.springframework.test.web.servlet.RequestBuilder;
-        import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-        import java.util.Map;
+import java.util.Map;
 
-        import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,7 +28,7 @@ public class CategoryControllerTest {
     @Test
     public void getAllCategoriesTest() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/quiz-service/categories/all")
+                .get("/api/categories/all")
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
@@ -38,10 +38,10 @@ public class CategoryControllerTest {
 
     @Test
     public void getCategoryTest() throws Exception {
-        String id = (String) addCategory("Category 5").get("id");
+        String id = (String) addCategory("Category 10").get("id");
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/quiz-service/categories")
+                .get("/api/categories")
                 .param("id", id)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -52,11 +52,11 @@ public class CategoryControllerTest {
 
     private Map addCategory(String name) throws Exception {
         RequestBuilder postRequest = MockMvcRequestBuilders
-                .post("/api/quiz-service/categories")
+                .post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
-                        "    \"name\": \"" + name + "\"\n" +
-                        "    \"imageUrl\": null\n" +
+                        "    \"name\": \"" + name + "\",\n" +
+                        "    \"imageUrl\": \"https://picsum.photos/200\"\n" +
                         "}");
 
         MvcResult mvcResult = mockMvc.perform(postRequest)

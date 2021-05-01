@@ -30,15 +30,15 @@ public class ScoreService {
     }
 
     public Iterable<Score> getAllScores() {
-        registerEvent(EventRequest.actionType.GET, "/api/property-ms/scores/all", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/scores/all", "200");
         return scoreRepository.findAll();
     }
 
     public Score getScoreById(UUID id) {
-        registerEvent(EventRequest.actionType.GET, "/api/property-ms/scores", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/scores", "200");
         return scoreRepository.findById(id)
                 .orElseThrow(() -> {
-                    registerEvent(EventRequest.actionType.GET, "/api/property-ms/scores", "400");
+                    registerEvent(EventRequest.actionType.GET, "/api/scores", "400");
                     return new BadRequestException("Score with id " + id + " does not exist");
                 });
     }
@@ -46,14 +46,14 @@ public class ScoreService {
     public Iterable<Score> getAllScoresByUser(String username) {
         Person person;
         try {
-            person = restTemplate.getForObject("http://person-service/api/person-ms/persons/username?username=" + username, Person.class);
+            person = restTemplate.getForObject("http://person-service/api/persons/username?username=" + username, Person.class);
         } catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");
         }
-        registerEvent(EventRequest.actionType.GET, "/api/property-ms/scores/all/user", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/scores/all/user", "200");
         Iterable<Score> t = scoreRepository.getScoresByPerson(person.getId())
                 .orElseThrow(() -> {
-                    registerEvent(EventRequest.actionType.GET, "/api/property-ms/scores/all/user", "400");
+                    registerEvent(EventRequest.actionType.GET, "/api/scores/all/user", "400");
                     return new BadRequestException("Person with username " + username + " does not exist");
                 });
         if (Iterables.size(t) == 0) {
@@ -64,10 +64,10 @@ public class ScoreService {
 
 
     public Iterable<Score> getAllScoresByQuiz(UUID id) {
-        registerEvent(EventRequest.actionType.GET, "/api/property-ms/scores/all/user", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/scores/all/user", "200");
         return scoreRepository.getScoresByQuiz(id)
                 .orElseThrow(() -> {
-                    registerEvent(EventRequest.actionType.GET, "/api/property-ms/scores/all/user", "400");
+                    registerEvent(EventRequest.actionType.GET, "/api/scores/all/user", "400");
                     return new BadRequestException("Person with username " + id + " does not exist");
                 });
     }
@@ -80,21 +80,21 @@ public class ScoreService {
                 throw new BadRequestException("Quiz or person cannot be null");
             }
             try {
-                person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + score.getPerson(), Person.class);
-                quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + score.getQuiz(), Quiz.class);
+                person = restTemplate.getForObject("http://person-service/api/persons?id=" + score.getPerson(), Person.class);
+                quiz = restTemplate.getForObject("http://quiz-service/api/quizzes?id=" + score.getQuiz(), Quiz.class);
             } catch (Exception e) {
                 throw new BadRequestException("Quiz or person does not exist");
             }
             if (quiz == null || person == null) {
                 throw new BadRequestException("Quiz or person cannot be null");
             }
-            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/scores", "200");
+            registerEvent(EventRequest.actionType.CREATE, "/api/scores", "200");
             return scoreRepository.save(score);
         } catch (ConflictException exception) {
-            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/scores", "409");
+            registerEvent(EventRequest.actionType.CREATE, "/api/scores", "409");
             throw exception;
         } catch (BadRequestException exception) {
-            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/scores", "400");
+            registerEvent(EventRequest.actionType.CREATE, "/api/scores", "400");
             throw exception;
         }
     }
@@ -109,12 +109,12 @@ public class ScoreService {
             if (scoreRepository.existsById(id)) {
                 throw new InternalErrorException("Score was not deleted (database issue)");
             }
-            registerEvent(EventRequest.actionType.DELETE, "/api/property-ms/scores", "200");
+            registerEvent(EventRequest.actionType.DELETE, "/api/scores", "200");
             return new JSONObject(new HashMap<String, String>() {{
                 put("message", "Score with id " + id.toString() + " has been successfully deleted");
             }});
         } catch (BadRequestException exception) {
-            registerEvent(EventRequest.actionType.DELETE, "/api/property-ms/scores", "400");
+            registerEvent(EventRequest.actionType.DELETE, "/api/scores", "400");
             throw exception;
         }
     }

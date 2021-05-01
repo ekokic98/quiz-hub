@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/property-ms/comments")
+@RequestMapping("/api/comments")
 public class CommentController {
     private final CommentService commentService;
 

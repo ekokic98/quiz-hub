@@ -22,26 +22,26 @@ public class CategoryService {
     }
 
     public List<Category> getAllCategories() {
-        registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/categories/all", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/categories/all", "200");
         return categoryRepository.findAll();
     }
 
     public Category add(Category category) {
         if (categoryRepository.existsByName(category.getName())) {
-            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/categories", "409");
+            registerEvent(EventRequest.actionType.GET, "/api/categories", "409");
             throw new ConflictException("Name already in use");
         }
-        registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/categories", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/categories", "200");
         return categoryRepository.save(category);
     }
 
     public Category getCategory(UUID id) {
         Optional<Category> optionalCategory = categoryRepository.findById(id);
         if (optionalCategory.isPresent()) {
-            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/categories", "200");
+            registerEvent(EventRequest.actionType.GET, "/api/categories", "200");
             return optionalCategory.get();
         } else {
-            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/categories", "400");
+            registerEvent(EventRequest.actionType.GET, "/api/categories", "400");
             throw new BadRequestException("Wrong category id");
         }
     }

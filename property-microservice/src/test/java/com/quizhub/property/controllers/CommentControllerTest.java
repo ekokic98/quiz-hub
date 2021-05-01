@@ -57,7 +57,7 @@ public class CommentControllerTest {
     public void testAddComment () throws  Exception {
         Comment c1 = new Comment(UUID.randomUUID(), UUID.fromString("b8181463-a15f-4eda-9d3b-e0e7ce2559a6"), UUID.fromString("debb8e83-54ba-4320-b0a1-29779fc54648"), "Testing my comment", null, null);
         String json = ow.writeValueAsString(c1);
-        mockMvc.perform(post("/api/property-ms/comments").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk()).andDo(print());
+        mockMvc.perform(post("/api/comments").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk()).andDo(print());
     }
 
     @Order(2)
@@ -66,14 +66,14 @@ public class CommentControllerTest {
         // unexisting person/quiz id
         Comment c1 = new Comment(UUID.randomUUID(), UUID.fromString("f8181463-a15f-4eda-9d3b-e0e7ce2559a5"), UUID.fromString("febb8e83-54ba-4320-b0a1-29779fc54348"), "Testing my comment 2", null, null);
         String json = ow.writeValueAsString(c1);
-        mockMvc.perform(post("/api/property-ms/comments").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
+        mockMvc.perform(post("/api/comments").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
     }
 
     @Order(3)
     @Test
     public void testGetAllComments() throws Exception {
         // should contain 4 comments since we added one in previous tests
-        this.mockMvc.perform(get("/api/property-ms/comments/all")).andExpect(matchAll(status().isOk(),
+        this.mockMvc.perform(get("/api/comments/all")).andExpect(matchAll(status().isOk(),
                 jsonPath("$.*", hasSize(4)))).andDo(print());
     }
 
@@ -85,7 +85,7 @@ public class CommentControllerTest {
         //localdatetime causes weird json parsing pattern so dates are nulled
         c.setDateCreated(null); c.setDateUpdated(null);
         String json = ow.writeValueAsString(comments.get(0));
-        mockMvc.perform(put("/api/property-ms/comments").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk());
+        mockMvc.perform(put("/api/comments").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk());
     }
 
     @Order(5)
@@ -93,7 +93,7 @@ public class CommentControllerTest {
     public void testFailUpdateUnexistingComment() throws Exception {
         Comment c1 = new Comment(UUID.randomUUID(),UUID.fromString("f8181463-a15f-4eda-9d3b-e0e7ce2559a5"), UUID.fromString("febb8e83-54ba-4320-b0a1-29779fc54348"), "Fake comment", null, null);
         String json = ow.writeValueAsString(c1);
-        mockMvc.perform(put("/api/property-ms/comments").contentType(MediaType.APPLICATION_JSON).content(json))
+        mockMvc.perform(put("/api/comments").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isBadRequest()).andDo(print());
     }
 
@@ -101,14 +101,14 @@ public class CommentControllerTest {
     @Test
     public void testGetComment() throws Exception {
         // passing id of comment that we just updated and checking if contains "Update test" in content field
-        this.mockMvc.perform(get("/api/property-ms/comments").param("id", comments.get(0).getId().toString()))
+        this.mockMvc.perform(get("/api/comments").param("id", comments.get(0).getId().toString()))
                 .andExpect(matchAll(status().isOk(), jsonPath("$.content", is("Update comment test")))).andDo(print());
     }
 
     @Order(7)
     @Test
     public void testFailGetUnexistingComment() throws Exception {
-        this.mockMvc.perform(get("/api/property-ms/comments").param("id", UUID.randomUUID().toString()))
+        this.mockMvc.perform(get("/api/comments").param("id", UUID.randomUUID().toString()))
                 .andExpect(status().isBadRequest()).andDo(print());
     }
 
@@ -116,15 +116,15 @@ public class CommentControllerTest {
     @Test
     public void testDeleteComment() throws Exception {
         // deleting comment and checking if comment was deleted (there should be only 2 comments in db)
-        this.mockMvc.perform(delete("/api/property-ms/comments").param("id", comments.get(0).getId().toString()))
-                .andExpect(status().isOk()).andDo(mvcResult -> mockMvc.perform(get("/api/property-ms/comments/all"))
+        this.mockMvc.perform(delete("/api/comments").param("id", comments.get(0).getId().toString()))
+                .andExpect(status().isOk()).andDo(mvcResult -> mockMvc.perform(get("/api/comments/all"))
                 .andExpect(matchAll(status().isOk(), jsonPath("$.*", hasSize(3)))));
     }
 
     @Order(9)
     @Test
     public void testFailDeleteRemovedComment() throws Exception {
-        this.mockMvc.perform(delete("/api/property-ms/comments").param("username",comments.get(0).getId().toString())).andExpect(status().isBadRequest());
+        this.mockMvc.perform(delete("/api/comments").param("username",comments.get(0).getId().toString())).andExpect(status().isBadRequest());
     }
 
     @Order(10)
@@ -133,7 +133,7 @@ public class CommentControllerTest {
         String stringWith300Chars = new String(new char[300]).replace('\0', 'x');
         Comment c1 = new Comment(null, UUID.fromString("b8181463-a15f-4eda-9d3b-e0e7ce2559a6"), UUID.fromString("debb8e83-54ba-4320-b0a1-29779fc54648"), stringWith300Chars, null, null);
         String json = ow.writeValueAsString(c1);
-        mockMvc.perform(post("/api/property-ms/comments").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
+        mockMvc.perform(post("/api/comments").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
     }
 
     @Order(11)
@@ -142,7 +142,7 @@ public class CommentControllerTest {
         // randomly testing field with not-null property by passing null as argument
         Comment c1 = new Comment(UUID.randomUUID(), null, UUID.fromString("debb8e83-54ba-4320-b0a1-29779fc54648"), null, null, null);
         String json = ow.writeValueAsString(c1);
-        mockMvc.perform(post("/api/property-ms/comments").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
+        mockMvc.perform(post("/api/comments").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isBadRequest()).andDo(print());
     }
 
 

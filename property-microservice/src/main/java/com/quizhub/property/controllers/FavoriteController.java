@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path="/api/property-ms/favorites")
+@RequestMapping(path="/api/favorites")
 public class FavoriteController {
 
     private FavoriteService favoriteService;

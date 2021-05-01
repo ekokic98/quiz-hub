@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/quiz-ms/questions")
+@RequestMapping("/api/questions")
 public class QuestionController {
 
     private final QuestionService questionService;

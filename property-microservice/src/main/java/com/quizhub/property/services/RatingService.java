@@ -30,15 +30,15 @@ public class RatingService {
     }
 
     public Iterable<Rating> getAllRatings() {
-        registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings/all", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/ratings/all", "200");
         return ratingRepository.findAll();
     }
 
     public Rating getRatingById(UUID id) {
-        registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/ratings", "200");
         return ratingRepository.findById(id)
                 .orElseThrow(() -> {
-                    registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings", "400");
+                    registerEvent(EventRequest.actionType.GET, "/api/ratings", "400");
                     return new BadRequestException("Rating with id " + id + " does not exist");
                 });
     }
@@ -46,23 +46,23 @@ public class RatingService {
     public Iterable<Rating> getAllRatingsByUser(String username) {
         Person person;
         try {
-            person = restTemplate.getForObject("http://person-service/api/person-ms/persons/username?username=" + username, Person.class);
+            person = restTemplate.getForObject("http://person-service/api/persons/username?username=" + username, Person.class);
         } catch (Exception e) {
             throw new BadRequestException("Quiz or person does not exist");
         }
-        registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings/all/user", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/ratings/all/user", "200");
         return ratingRepository.getRatingByPerson(person.getId())
                 .orElseThrow(() -> {
-                    registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings/all/user", "400");
+                    registerEvent(EventRequest.actionType.GET, "/api/ratings/all/user", "400");
                     return new BadRequestException("Person with username " + username + " does not exist");
                 });
     }
 
     public Iterable<Rating> getAllRatingsByQuiz(UUID id) {
-        registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings/all/quiz", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/ratings/all/quiz", "200");
         return ratingRepository.getRatingByQuiz(id)
                 .orElseThrow(() -> {
-                    registerEvent(EventRequest.actionType.GET, "/api/property-ms/ratings/all/quiz", "400");
+                    registerEvent(EventRequest.actionType.GET, "/api/ratings/all/quiz", "400");
                     return new BadRequestException("Quiz with id " + id + " does not exist");
                 });
     }
@@ -75,8 +75,8 @@ public class RatingService {
                 throw new BadRequestException("Quiz or person cannot be null");
             }
             try {
-                person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + rating.getPerson(), Person.class);
-                quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + rating.getQuiz(), Quiz.class);
+                person = restTemplate.getForObject("http://person-service/api/persons?id=" + rating.getPerson(), Person.class);
+                quiz = restTemplate.getForObject("http://quiz-service/api/quizzes?id=" + rating.getQuiz(), Quiz.class);
                 if (quiz.getId() == null || person.getId() == null) {
                     throw new BadRequestException("Quiz or person cannot be null");
                 }
@@ -86,13 +86,13 @@ public class RatingService {
             if (ratingRepository.existsByQuizAndPerson(rating.getQuiz(), rating.getPerson())) {
                 throw new ConflictException("Rating already exists");
             }
-            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/ratings", "200");
+            registerEvent(EventRequest.actionType.CREATE, "/api/ratings", "200");
             return ratingRepository.save(rating);
         } catch (ConflictException exception) {
-            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/ratings", "409");
+            registerEvent(EventRequest.actionType.CREATE, "/api/ratings", "409");
             throw exception;
         } catch (BadRequestException exception) {
-            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/ratings", "400");
+            registerEvent(EventRequest.actionType.CREATE, "/api/ratings", "400");
             throw exception;
         }
     }
@@ -105,10 +105,10 @@ public class RatingService {
             Rating existingRating = ratingRepository.findById(rating.getId())
                     .orElseThrow(() -> new BadRequestException("Rating ID is either incorrect or rating does not exist"));
             existingRating.setRate(rating.getRate());
-            registerEvent(EventRequest.actionType.UPDATE, "/api/property-ms/ratings", "200");
+            registerEvent(EventRequest.actionType.UPDATE, "/api/ratings", "200");
             return ratingRepository.save(existingRating);
         } catch (BadRequestException exception) {
-            registerEvent(EventRequest.actionType.UPDATE, "/api/property-ms/ratings", "400");
+            registerEvent(EventRequest.actionType.UPDATE, "/api/ratings", "400");
             throw exception;
         }
     }
@@ -123,12 +123,12 @@ public class RatingService {
             if (ratingRepository.existsById(id)) {
                 throw new InternalErrorException("Rating was not deleted (database issue)");
             }
-            registerEvent(EventRequest.actionType.DELETE, "/api/property-ms/ratings", "200");
+            registerEvent(EventRequest.actionType.DELETE, "/api/ratings", "200");
             return new JSONObject(new HashMap<String, String>() {{
                 put("message", "Rating with id " + id.toString() + " has been successfully deleted");
             }});
         } catch (BadRequestException exception) {
-            registerEvent(EventRequest.actionType.DELETE, "/api/property-ms/ratings", "400");
+            registerEvent(EventRequest.actionType.DELETE, "/api/ratings", "400");
             throw exception;
         }
     }

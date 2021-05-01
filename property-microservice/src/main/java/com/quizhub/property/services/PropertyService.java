@@ -6,6 +6,7 @@ import com.quizhub.property.event.EventResponse;
 import com.quizhub.property.event.EventServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -37,16 +38,21 @@ public class PropertyService {
         Instant time = Instant.now();
         Timestamp timestamp = Timestamp.newBuilder().setSeconds(time.getEpochSecond()).setNanos(time.getNano()).build();
 
-        EventResponse eventResponse = stub.log(EventRequest.newBuilder()
-                .setDate(timestamp)
-                .setMicroservice("Property service")
-                .setUser("Unknown")
-                .setAction(actionType)
-                .setResource(resource)
-                .setStatus(status)
-                .build());
+        try {
+            EventResponse eventResponse = stub.log(EventRequest.newBuilder()
+                    .setDate(timestamp)
+                    .setMicroservice("Property service")
+                    .setUser("Unknown")
+                    .setAction(actionType)
+                    .setResource(resource)
+                    .setStatus(status)
+                    .build());
 
-        System.out.println(eventResponse.getMessage());
+            System.out.println(eventResponse.getMessage());
+        } catch (StatusRuntimeException e) {
+            System.out.println("System event microservice not running");
+        }
+
         channel.shutdown();
     }
 }

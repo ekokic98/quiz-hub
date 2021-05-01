@@ -29,15 +29,15 @@ public class CommentService {
     }
 
     public Iterable<Comment> getAllComments() {
-        registerEvent(EventRequest.actionType.GET, "/api/property-ms/comments/all", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/comments/all", "200");
         return commentRepository.findAll();
     }
 
     public Comment getComment(UUID id) {
-        registerEvent(EventRequest.actionType.GET, "/api/property-ms/comments", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/comments", "200");
         return commentRepository.findById(id)
                 .orElseThrow(() -> {
-                    registerEvent(EventRequest.actionType.GET, "/api/property-ms/comments", "400");
+                    registerEvent(EventRequest.actionType.GET, "/api/comments", "400");
                     return new BadRequestException("Comment ID is either incorrect or comment does not exist.");
                 });
     }
@@ -50,18 +50,18 @@ public class CommentService {
                 throw new BadRequestException("Quiz or person cannot be null");
             }
             try {
-                person = restTemplate.getForObject("http://person-service/api/person-ms/persons?id=" + newComment.getPerson(), Person.class);
-                quiz = restTemplate.getForObject("http://quiz-service/api/quiz-ms/quizzes?id=" + newComment.getQuiz(), Quiz.class);
+                person = restTemplate.getForObject("http://person-service/api/persons?id=" + newComment.getPerson(), Person.class);
+                quiz = restTemplate.getForObject("http://quiz-service/api/quizzes?id=" + newComment.getQuiz(), Quiz.class);
             } catch (Exception e) {
                 throw new BadRequestException("Quiz or person does not exist");
             }
-            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/comments", "200");
+            registerEvent(EventRequest.actionType.CREATE, "/api/comments", "200");
             return commentRepository.save(newComment);
         } catch (ConflictException exception) {
-            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/comments", "409");
+            registerEvent(EventRequest.actionType.CREATE, "/api/comments", "409");
             throw exception;
         } catch (BadRequestException exception) {
-            registerEvent(EventRequest.actionType.CREATE, "/api/property-ms/comments", "400");
+            registerEvent(EventRequest.actionType.CREATE, "/api/comments", "400");
             throw exception;
         }
     }
@@ -74,10 +74,10 @@ public class CommentService {
             Comment existingComment = commentRepository.findById(comment.getId())
                     .orElseThrow(() -> new BadRequestException("Comment ID is either incorrect or comment does not exist"));
             existingComment.setContent(comment.getContent());
-            registerEvent(EventRequest.actionType.UPDATE, "/api/property-ms/comments", "200");
+            registerEvent(EventRequest.actionType.UPDATE, "/api/comments", "200");
             return commentRepository.save(existingComment);
         } catch (BadRequestException exception) {
-            registerEvent(EventRequest.actionType.UPDATE, "/api/property-ms/comments", "400");
+            registerEvent(EventRequest.actionType.UPDATE, "/api/comments", "400");
             throw exception;
         }
     }
@@ -92,12 +92,12 @@ public class CommentService {
             if (commentRepository.existsById(id)) {
                 throw new BadRequestException("Comment was not deleted (database issue)");
             }
-            registerEvent(EventRequest.actionType.DELETE, "/api/property-ms/comments", "200");
+            registerEvent(EventRequest.actionType.DELETE, "/api/comments", "200");
             return new JSONObject(new HashMap<String, String>() {{
                 put("message", "Comment with id " + id.toString() + " has been successfully deleted");
             }});
         } catch (BadRequestException exception) {
-            registerEvent(EventRequest.actionType.DELETE, "/api/property-ms/comments", "400");
+            registerEvent(EventRequest.actionType.DELETE, "/api/comments", "400");
             throw exception;
         }
     }
