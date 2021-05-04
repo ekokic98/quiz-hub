@@ -129,7 +129,15 @@ public class ScoreControllerTest {
     public void testFailGetScoreByUnexistingUsername() throws Exception {
         // person with id d72d5d78-97d7-11eb-a8b3-0242ac130003 is Anna5
         this.mockMvc.perform(get("/api/property-service/scores/all/user").param("username", "Fake name"))
-                .andExpect(status().isBadRequest()).andDo(print());
+                .andExpect(status().is4xxClientError()).andDo(print());
+    }
+
+    @Order(12)
+    @Test
+    public void testGetScoreByQuiz() throws Exception {
+        // person with id d72d5d78-97d7-11eb-a8b3-0242ac130003 is Ben5
+        this.mockMvc.perform(get("/api/property-service/scores/all/quiz").param("id", "debb8e83-54ba-4320-b0a1-29779fc54648"))
+                .andExpect(status().isOk());
     }
 
 
