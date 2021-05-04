@@ -24,7 +24,7 @@ public class PersonControllerTest {
     @Test
     public void getPersons() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/person-service/persons/all")
+                .get("/api/persons/all")
                 .accept(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
@@ -35,7 +35,7 @@ public class PersonControllerTest {
     @Test
     public void getPersonByUsername() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/person-service/persons?username=username")
+                .get("/api/persons?username=username")
                 .accept(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
@@ -46,7 +46,7 @@ public class PersonControllerTest {
     @Test
     public void getPersonByid() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/person-service/persons?id=id123")
+                .get("/api/persons?id=id123")
                 .accept(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
@@ -57,19 +57,19 @@ public class PersonControllerTest {
     @Test
     public void addPerson() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/person-service/persons")
+                .post("/api/persons")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"city\": \"\",\n" +
                         "  \"country\": \"\",\n" +
                         "  \"dateCreated\": \"2021-03-24T11:08:46.299Z\",\n" +
-                        "  \"email\": \"john.doe@gmail.com\",\n" +
+                        "  \"email\": \"john.doe2@gmail.com\",\n" +
                         "  \"firstName\": \"John\",\n" +
                         "  \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n" +
                         "  \"imageUrl\": \"\",\n" +
                         "  \"lastName\": \"Doe\",\n" +
                         "  \"password\": \"John12!\",\n" +
-                        "  \"username\": \"John5\"\n" +
+                        "  \"username\": \"John52\"\n" +
                         "}");
 
         mockMvc.perform(request)
@@ -80,7 +80,7 @@ public class PersonControllerTest {
     @Test
     public void addPersonInvalidEmail() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/person-service/persons")
+                .post("/api/persons")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"city\": \"\",\n" +

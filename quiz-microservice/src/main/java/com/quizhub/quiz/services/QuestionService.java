@@ -24,21 +24,21 @@ public class QuestionService {
     public Question getQuestion(UUID id) {
         Optional<Question> optionalQuestion = questionRepository.findById(id);
         if (optionalQuestion.isPresent()) {
-            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/questions/quiz", "200");
+            registerEvent(EventRequest.actionType.GET, "/api/questions/quiz", "200");
             return optionalQuestion.get();
         } else {
-            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/questions/quiz", "400");
+            registerEvent(EventRequest.actionType.GET, "/api/questions/quiz", "400");
             throw new BadRequestException("Wrong question id");
         }
     }
 
     public Question add(Question question) {
-        registerEvent(EventRequest.actionType.CREATE, "/api/quiz-ms/questions", "200");
+        registerEvent(EventRequest.actionType.CREATE, "/api/questions", "200");
         return questionRepository.save(question);
     }
 
     public List<Question> getQuestionsByQuizId(UUID id) {
-        registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/questions/quiz", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/questions/quiz", "200");
         return questionRepository.findAllByQuizId(id);
     }
 }

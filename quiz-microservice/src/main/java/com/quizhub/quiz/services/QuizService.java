@@ -20,6 +20,7 @@ import com.quizhub.quiz.repositories.QuestionRepository;
 import com.quizhub.quiz.repositories.QuizRepository;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,7 @@ public class QuizService {
     }
 
     public List<Quiz> getAllQuizzes() {
-        registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes/all", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/quizzes/all", "200");
         return quizRepository.findAll();
     }
 
@@ -74,16 +75,16 @@ public class QuizService {
 
         try {
             person = restTemplate.getForObject(
-                "http://person-service/api/person-ms/persons?id=" + quiz.getPersonId().toString(),
+                "http://person-service/api/persons?id=" + quiz.getPersonId().toString(),
                 Person.class
             );
         } catch (ResourceAccessException exception) {
-            registerEvent(EventRequest.actionType.CREATE, "/api/quiz-ms/quizzes", "503");
+            registerEvent(EventRequest.actionType.CREATE, "/api/quizzes", "503");
             throw new ServiceUnavailableException("Error while communicating with another microservice.");
         }
 
         if (quizRepository.existsByName(quiz.getName())) {
-            registerEvent(EventRequest.actionType.CREATE, "/api/quiz-ms/quizzes", "409");
+            registerEvent(EventRequest.actionType.CREATE, "/api/quizzes", "409");
             throw new ConflictException("Name already in use");
         }
 
@@ -93,7 +94,7 @@ public class QuizService {
 
         if (savedCategory.isEmpty()) {
             if (categoryRepository.existsByName(quiz.getCategory().getName())) {
-                registerEvent(EventRequest.actionType.CREATE, "/api/quiz-ms/quizzes", "400");
+                registerEvent(EventRequest.actionType.CREATE, "/api/quizzes", "400");
                 throw new BadRequestException("Category name already exists.");
             }
             quizCategory = categoryRepository.save(quiz.getCategory());
@@ -101,7 +102,7 @@ public class QuizService {
             quizCategory = savedCategory.get();
         }
 
-        registerEvent(EventRequest.actionType.CREATE, "/api/quiz-ms/quizzes", "200");
+        registerEvent(EventRequest.actionType.CREATE, "/api/quizzes", "200");
         return quizRepository.save(new Quiz(
                 quiz.getId(),
                 person.getId(),
@@ -117,31 +118,31 @@ public class QuizService {
     public Quiz getQuiz(UUID id) {
         Optional<Quiz> optionalQuiz = quizRepository.findById(id);
         if (optionalQuiz.isPresent()) {
-            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes", "200");
+            registerEvent(EventRequest.actionType.GET, "/api/quizzes", "200");
             return optionalQuiz.get();
         } else {
-            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes", "400");
+            registerEvent(EventRequest.actionType.GET, "/api/quizzes", "400");
             throw new BadRequestException("Wrong quiz id");
         }
     }
 
     public List<Quiz> getQuizzesByCategory(UUID id) {
-        registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes/category", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/quizzes/category", "200");
         return quizRepository.findAllByCategoryId(id);
     }
 
     public List<Quiz> getQuizzesByName(String name) {
-        registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes/search", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/quizzes/search", "200");
         return quizRepository.getQuizzesByName(name);
     }
 
     public Quiz getRandomQuiz() {
         Optional<Quiz> optionalQuiz = quizRepository.getRandomQuiz();
         if (optionalQuiz.isPresent()) {
-            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes/random", "200");
+            registerEvent(EventRequest.actionType.GET, "/api/quizzes/random", "200");
             return optionalQuiz.get();
         } else {
-            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes/random", "400");
+            registerEvent(EventRequest.actionType.GET, "/api/quizzes/random", "400");
             throw new BadRequestException("No active quizzes in database");
         }
     }
@@ -149,10 +150,10 @@ public class QuizService {
     @Transactional
     public JSONObject deleteQuizById(UUID id) {
         if (!quizRepository.existsById(id)) {
-            registerEvent(EventRequest.actionType.DELETE, "/api/quiz-ms/quizzes", "400");
+            registerEvent(EventRequest.actionType.DELETE, "/api/quizzes", "400");
             throw new BadRequestException("Quiz with id " + id.toString() + " does not exist");
         }
-        registerEvent(EventRequest.actionType.DELETE, "/api/quiz-ms/quizzes", "200");
+        registerEvent(EventRequest.actionType.DELETE, "/api/quizzes", "200");
         quizRepository.deleteById(id);
         return new JSONObject(new HashMap<String, String>() {{
             put("message", "Quiz with id " + id.toString() + " has been successfully deleted");
@@ -173,12 +174,12 @@ public class QuizService {
                 answerRepository.save(new Answer(savedQuestion, answer, false));
             }
         }
-        registerEvent(EventRequest.actionType.CREATE, "/api/quiz-ms/quizzes/tournament", "200");
+        registerEvent(EventRequest.actionType.CREATE, "/api/quizzes/tournament", "200");
         return savedQuiz;
     }
 
     public List<Quiz> getQuizzesForTournament(UUID id) {
-        registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/quizzes/tournament", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/quizzes/tournament", "200");
         return quizRepository.findAllByTournamentId(id);
     }
 
@@ -192,16 +193,21 @@ public class QuizService {
         Instant time = Instant.now();
         Timestamp timestamp = Timestamp.newBuilder().setSeconds(time.getEpochSecond()).setNanos(time.getNano()).build();
 
-        EventResponse eventResponse = stub.log(EventRequest.newBuilder()
-                .setDate(timestamp)
-                .setMicroservice("Quiz service")
-                .setUser("Unknown")
-                .setAction(actionType)
-                .setResource(resource)
-                .setStatus(status)
-                .build());
+        try {
+            EventResponse eventResponse = stub.log(EventRequest.newBuilder()
+                    .setDate(timestamp)
+                    .setMicroservice("Quiz service")
+                    .setUser("Unknown")
+                    .setAction(actionType)
+                    .setResource(resource)
+                    .setStatus(status)
+                    .build());
 
-        System.out.println(eventResponse.getMessage());
+            System.out.println(eventResponse.getMessage());
+        } catch (StatusRuntimeException e) {
+            System.out.println("System event microservice not running");
+        }
+
         channel.shutdown();
     }
 

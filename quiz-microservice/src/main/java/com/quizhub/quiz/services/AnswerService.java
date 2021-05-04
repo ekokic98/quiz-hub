@@ -24,21 +24,21 @@ public class AnswerService {
     public Answer getAnswer(UUID id) {
         Optional<Answer> optionalAnswer = answerRepository.findById(id);
         if (optionalAnswer.isPresent()) {
-            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/answers", "200");
+            registerEvent(EventRequest.actionType.GET, "/api/answers", "200");
             return optionalAnswer.get();
         } else {
-            registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/answers", "400");
+            registerEvent(EventRequest.actionType.GET, "/api/answers", "400");
             throw new BadRequestException("Wrong answer id");
         }
     }
 
     public List<Answer> getAnswersByQuestionId(UUID id) {
-        registerEvent(EventRequest.actionType.GET, "/api/quiz-ms/answers/question", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/answers/question", "200");
         return answerRepository.findAllByQuestionId(id);
     }
 
     public Answer add(Answer answer) {
-        registerEvent(EventRequest.actionType.CREATE, "/api/quiz-ms/answers", "200");
+        registerEvent(EventRequest.actionType.CREATE, "/api/answers", "200");
         return answerRepository.save(answer);
     }
 }

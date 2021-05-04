@@ -10,6 +10,7 @@ import com.quizhub.person.model.Person;
 import com.quizhub.person.repository.PersonRepository;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,7 @@ public class PersonService {
     }
 
     public List<Person> getAllPersons() {
-        registerEvent(EventRequest.actionType.GET, "/api/person-ms/persons/all", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/persons/all", "200");
         return personRepository.findAll();
     }
 
@@ -51,31 +52,31 @@ public class PersonService {
             if (personRepository.existsByEmail(person.getUsername())) {
                 throw new ConflictException("Email already taken.");
             }
-            registerEvent(EventRequest.actionType.CREATE, "/api/person-ms/persons", "200");
+            registerEvent(EventRequest.actionType.CREATE, "/api/persons", "200");
             return personRepository.save(person);
         } catch (ConflictException exception) {
-            registerEvent(EventRequest.actionType.CREATE, "/api/person-ms/persons", "409");
+            registerEvent(EventRequest.actionType.CREATE, "/api/persons", "409");
             throw exception;
         } catch (BadRequestException exception) {
-            registerEvent(EventRequest.actionType.CREATE, "/api/person-ms/persons", "400");
+            registerEvent(EventRequest.actionType.CREATE, "/api/persons", "400");
             throw exception;
         }
     }
 
     public Person getPersonById(UUID id) {
-        registerEvent(EventRequest.actionType.GET, "/api/person-ms/persons", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/persons", "200");
         return personRepository.findById(id)
                 .orElseThrow(() -> {
-                    registerEvent(EventRequest.actionType.GET, "/api/person-ms/persons", "400");
+                    registerEvent(EventRequest.actionType.GET, "/api/persons", "400");
                     return new BadRequestException("Person with id " + id.toString() + " does not exist.");
                 });
     }
 
     public Person getPersonByUsername(String username) {
-        registerEvent(EventRequest.actionType.GET, "/api/person-ms/persons/username", "200");
+        registerEvent(EventRequest.actionType.GET, "/api/persons/username", "200");
         return personRepository.findByUsername(username)
                 .orElseThrow(() -> {
-                    registerEvent(EventRequest.actionType.GET, "/api/person-ms/persons/username", "400");
+                    registerEvent(EventRequest.actionType.GET, "/api/persons/username", "400");
                     return new BadRequestException("Person with username " + username + " does not exist.");
                 });
     }
@@ -90,16 +91,21 @@ public class PersonService {
         Instant time = Instant.now();
         Timestamp timestamp = Timestamp.newBuilder().setSeconds(time.getEpochSecond()).setNanos(time.getNano()).build();
 
-        EventResponse eventResponse = stub.log(EventRequest.newBuilder()
-                .setDate(timestamp)
-                .setMicroservice("Person service")
-                .setUser("Unknown")
-                .setAction(actionType)
-                .setResource(resource)
-                .setStatus(status)
-                .build());
+        try {
+            EventResponse eventResponse = stub.log(EventRequest.newBuilder()
+                    .setDate(timestamp)
+                    .setMicroservice("Person service")
+                    .setUser("Unknown")
+                    .setAction(actionType)
+                    .setResource(resource)
+                    .setStatus(status)
+                    .build());
 
-        System.out.println(eventResponse.getMessage());
+            System.out.println(eventResponse.getMessage());
+        } catch (StatusRuntimeException e) {
+            System.out.println("System event microservice not running");
+        }
+
         channel.shutdown();
     }
 }

@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path="/api/property-service/favorites")
+@RequestMapping(path="/api/favorites")
 public class FavoriteController {
 
     private FavoriteService favoriteService;
@@ -25,7 +25,7 @@ public class FavoriteController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Iterable<Favorite>> getAllScores() {
+    public ResponseEntity<Iterable<Favorite>> getAllFavorites() {
         return ResponseEntity.ok(favoriteService.getAllFavorites());
     }
 

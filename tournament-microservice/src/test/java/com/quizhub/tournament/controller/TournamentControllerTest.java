@@ -44,7 +44,7 @@ public class TournamentControllerTest {
         String id = addTournament("Example service communication").get("id");
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/tournament-ms/tournaments/quiz")
+                .post("/api/tournaments/quiz")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"tournamentId\": \"" + id + "\",\n" +
@@ -61,7 +61,7 @@ public class TournamentControllerTest {
         JSONObject jsonObject = new JSONObject(content);
         String addedQuizId = jsonObject.getString("id");
 
-        ResponseEntity<String> response = restTemplate.getForEntity("http://quiz-service/api/quiz-ms/quizzes?id=" + addedQuizId, String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("http://quiz-service/api/quizzes?id=" + addedQuizId, String.class);
         Assert.assertNotNull(response.getBody());
 
         JSONObject jsonResponse = new JSONObject(response.getBody());
@@ -73,7 +73,7 @@ public class TournamentControllerTest {
     @Test
     public void addBadRequestTest() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/tournament-ms/tournaments")
+                .post("/api/tournaments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"dateStart\": \"2020-11-29T15:50:05.609\",\n" +
@@ -83,7 +83,7 @@ public class TournamentControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.path", equalTo("/api/tournament-ms/tournaments")))
+                .andExpect(jsonPath("$.path", equalTo("/api/tournaments")))
                 .andExpect(jsonPath("$.message", equalTo("name must not be blank")))
                 .andReturn();
     }
@@ -91,7 +91,7 @@ public class TournamentControllerTest {
     @Test
     public void addBadRequest2Test() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/tournament-ms/tournaments")
+                .post("/api/tournaments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"dateStart\": \"2022-11-29T15:50:05.609\",\n" +
@@ -107,7 +107,7 @@ public class TournamentControllerTest {
     @Test
     public void addTest() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/tournament-ms/tournaments")
+                .post("/api/tournaments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"dateStart\": \"2020-11-29T15:50:05.609\",\n" +
@@ -127,7 +127,7 @@ public class TournamentControllerTest {
         String id = addTournament("Example 0").get("id");
 
         RequestBuilder updateRequest = MockMvcRequestBuilders
-                .put("/api/tournament-ms/tournaments")
+                .put("/api/tournaments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"id\": \"" + id + "\",\n" +
@@ -145,7 +145,7 @@ public class TournamentControllerTest {
     @Test
     public void getAllTournamentsTest() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/tournament-ms/tournaments/all")
+                .get("/api/tournaments/all")
                 .accept(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
@@ -158,7 +158,7 @@ public class TournamentControllerTest {
         String id = addTournament("Example 2").get("id");
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/tournament-ms/tournaments")
+                .get("/api/tournaments")
                 .param("id", id)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -169,26 +169,11 @@ public class TournamentControllerTest {
     }
 
     @Test
-    public void getQuizzesForTournamentTest() throws Exception {
-        String id = addTournament("Example 3").get("id");
-
-        RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/tournament-ms/tournaments/quizzes")
-                .param("id", id)
-                .accept(MediaType.APPLICATION_JSON);
-
-        mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andExpect(content().string("[]"))
-                .andReturn();
-    }
-
-    @Test
     public void getLeaderboardForTournamentTest() throws Exception {
         String id = addTournament("Example 4").get("id");
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/tournament-ms/tournaments/leaderboard")
+                .get("/api/tournaments/leaderboard")
                 .param("id", id)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -201,7 +186,7 @@ public class TournamentControllerTest {
     @Test
     public void getLeaderboardForTournamentBadRequestTest() throws Exception {
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/tournament-ms/tournaments/leaderboard")
+                .get("/api/tournaments/leaderboard")
                 .param("id", "wrong")
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -214,7 +199,7 @@ public class TournamentControllerTest {
 
     private Map<String, String> addTournament(String name) throws Exception {
         RequestBuilder postRequest = MockMvcRequestBuilders
-                .post("/api/tournament-ms/tournaments")
+                .post("/api/tournaments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "    \"dateStart\": \"2020-11-29T15:50:05.609\",\n" +
