@@ -1,6 +1,7 @@
 package com.quizhub.person.repository;
 
 import com.quizhub.person.model.Person;
+import com.quizhub.person.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,6 @@ public interface PersonRepository extends JpaRepository<Person, UUID> {
     boolean existsByUsernameIgnoreCase(String username);
 
     boolean existsByEmail(String email);
+
+
 }

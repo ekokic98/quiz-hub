@@ -4,14 +4,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -58,11 +58,14 @@ public class Person {
 
     private String imageUrl;
 
+    @Enumerated(EnumType.STRING)
+    private Role roles; //korisnik moze biti ili user ili admin
+
     public Person() {
     }
 
-    public Person(UUID id, LocalDateTime dateCreated, String firstName, String lastName, String username, String email,
-                  String password, String city, String country, String imageUrl) {
+    public Person(UUID id, LocalDateTime dateCreated, String firstName, String lastName,
+                  String username, String email, String password, String city, String country, String imageUrl, Role roles) {
         this.id = id;
         this.dateCreated = dateCreated;
         this.firstName = firstName;
@@ -73,6 +76,7 @@ public class Person {
         this.city = city;
         this.country = country;
         this.imageUrl = imageUrl;
+        this.roles = roles;
     }
 
     public UUID getId() {
@@ -154,4 +158,8 @@ public class Person {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public Role getRoles() { return roles; }
+
+    public void setRoles(Role roles) { this.roles = roles; }
 }
