@@ -59,24 +59,17 @@ public class Person {
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)
-    private Role roles; //korisnik moze biti ili user ili admin
+    private Role role;
 
     public Person() {
     }
 
-    public Person(UUID id, LocalDateTime dateCreated, String firstName, String lastName,
-                  String username, String email, String password, String city, String country, String imageUrl, Role roles) {
-        this.id = id;
-        this.dateCreated = dateCreated;
+    public Person(String firstName, String lastName, String email, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.username = username;
         this.email = email;
+        this.username = username;
         this.password = password;
-        this.city = city;
-        this.country = country;
-        this.imageUrl = imageUrl;
-        this.roles = roles;
     }
 
     public UUID getId() {
@@ -159,7 +152,11 @@ public class Person {
         this.imageUrl = imageUrl;
     }
 
-    public Role getRoles() { return roles; }
+    public Role getRole() {
+        return role;
+    }
 
-    public void setRoles(Role roles) { this.roles = roles; }
+    public void setRoles(Role role) {
+        this.role = role;
+    }
 }
