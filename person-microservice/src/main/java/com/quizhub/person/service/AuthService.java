@@ -2,6 +2,7 @@ package com.quizhub.person.service;
 
 import com.quizhub.person.exception.ConflictException;
 import com.quizhub.person.model.Person;
+import com.quizhub.person.model.Role;
 import com.quizhub.person.repository.PersonRepository;
 import com.quizhub.person.request.LoginRequest;
 import com.quizhub.person.request.SignupRequest;
@@ -27,13 +28,15 @@ public class AuthService {
         if (personRepository.existsByEmail(signupRequest.getEmail())) {
             throw new ConflictException("Email is already taken");
         }
-        Person person = personRepository.save(new Person(
+        Person p = new Person(
                 signupRequest.getFirstName(),
                 signupRequest.getLastName(),
                 signupRequest.getEmail(),
                 signupRequest.getUsername(),
-                passwordEncoder.encode(signupRequest.getPassword()))
-        );
+                passwordEncoder.encode(signupRequest.getPassword()));
+        // postavka role
+        p.setRoles(Role.ROLE_USER);
+        Person person = personRepository.save(p);
         person.setPassword(null);
         return person;
     }

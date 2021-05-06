@@ -4,7 +4,7 @@ import com.quizhub.person.model.Person;
 
 import java.util.UUID;
 
-public class LoginResponse {
+public class LoginResponseBody {
 
     private String jwt;
     private UUID id;
@@ -12,11 +12,13 @@ public class LoginResponse {
     private String lastName;
     private String email;
     private String username;
+    private String tokenType;
 
-    public LoginResponse() {
+    public LoginResponseBody() {
     }
 
-    public LoginResponse(String jwt, UUID id, String firstName, String lastName, String email, String username) {
+    public LoginResponseBody(String tokenType, String jwt, UUID id, String firstName, String lastName, String email, String username) {
+        this.tokenType = tokenType;
         this.jwt = jwt;
         this.id = id;
         this.firstName = firstName;
@@ -63,6 +65,14 @@ public class LoginResponse {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
     }
 
     public String getUsername() {

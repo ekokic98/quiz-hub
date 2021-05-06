@@ -3,11 +3,12 @@ package com.quizhub.person.controller;
 import com.quizhub.person.model.Person;
 import com.quizhub.person.request.LoginRequest;
 import com.quizhub.person.request.SignupRequest;
-import com.quizhub.person.response.LoginResponse;
+import com.quizhub.person.response.LoginResponseBody;
 import com.quizhub.person.response.SignupResponse;
 import com.quizhub.person.security.JwtUtils;
 import com.quizhub.person.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,15 +42,18 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponseBody> login(@RequestBody @Valid LoginRequest loginRequest) {
         Person person = personService.login(loginRequest);
-        return ResponseEntity.ok(new LoginResponse(
-                jwtTokenUtil.generateToken(person),
+        String token = jwtTokenUtil.generateToken(person);
+        ResponseEntity<LoginResponseBody> re = ResponseEntity.ok().body(new LoginResponseBody(
+                "Bearer",
+                token,
                 person.getId(),
                 person.getFirstName(),
                 person.getLastName(),
                 person.getEmail(),
-                person.getUsername()
-        ));
+                person.getUsername()));
+       // re.getHeaders().add("Authorization", token);
+        return re;
     }
 }

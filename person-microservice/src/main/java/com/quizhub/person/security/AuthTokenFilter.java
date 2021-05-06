@@ -14,11 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     private final PersonDetailsService personDetailsService;
     private final JwtUtils jwtUtils;
+    private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
     public AuthTokenFilter(PersonDetailsService personDetailsService, JwtUtils jwtUtils) {
         this.personDetailsService = personDetailsService;
@@ -28,6 +32,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String headerAuth = request.getHeader("Authorization");
+
         String username = null;
         String jwtToken = null;
 
@@ -55,5 +60,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             }
         }
         chain.doFilter(request, response);
+
     }
+
 }
