@@ -23,10 +23,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtUtils jwtUtils;
 
-    private final String[] protectedRoutes = {"/api/**"};
+    private final String[] adminRoutes = {"/person-service/api/**"};
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        System.out.println(http.toString());
         http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 .and()
@@ -37,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // allow all who are accessing "auth" service
                 .antMatchers(HttpMethod.POST, "/person-service/api/auth/**").permitAll()
                 // must be an admin if trying to access admin area (authentication is also required here)
-                .antMatchers(protectedRoutes).hasRole("USER")
+                .antMatchers(adminRoutes).hasRole("ADMIN")
                 // Any other request must be authenticated
                 .anyRequest().authenticated();
     }

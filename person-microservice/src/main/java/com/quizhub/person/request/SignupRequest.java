@@ -3,6 +3,7 @@ package com.quizhub.person.request;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 
 public class SignupRequest {
 
@@ -25,6 +26,7 @@ public class SignupRequest {
     @NotBlank(message = "Password can't be blank")
     @Size(min = 8, max = 128, message = "Password must contain between 8 and 128 characters")
     private String password;
+
 
     public SignupRequest() {
     }
@@ -76,4 +78,5 @@ public class SignupRequest {
     public void setUsername(String username) {
         this.username = username;
     }
+
 }

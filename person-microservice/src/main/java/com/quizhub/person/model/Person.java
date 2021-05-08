@@ -3,6 +3,8 @@ package com.quizhub.person.model;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -11,8 +13,10 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 public class Person {
@@ -158,5 +162,13 @@ public class Person {
 
     public void setRoles(Role role) {
         this.role = role;
+    }
+
+    public List<GrantedAuthority> fetchAuthorities() {
+        Set<Role> rl = new HashSet<>();
+        rl.add(this.getRole());
+        if (this.getRole() == Role.ROLE_ADMIN)  rl.add(Role.ROLE_ADMIN);
+        // reserved for future roles
+        return rl.stream().map(role -> new SimpleGrantedAuthority(role.name())).collect(Collectors.toList());
     }
 }

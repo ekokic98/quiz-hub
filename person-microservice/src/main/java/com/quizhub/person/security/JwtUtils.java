@@ -5,13 +5,16 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtils implements Serializable {
@@ -43,15 +46,14 @@ public class JwtUtils implements Serializable {
     }
 
     public String generateToken(Person person) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, person.getUsername());
+        return createToken(person.fetchAuthorities(), person.getUsername());
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    private String createToken(List<GrantedAuthority> claims, String subject) {
         final long now = System.currentTimeMillis();
         return Jwts.builder()
-                .setClaims(claims)
                 .setSubject(subject)
+                .claim("authorities", claims/*.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())*/)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + jwtExpirationMilliseconds))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();

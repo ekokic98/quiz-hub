@@ -1,19 +1,30 @@
 package com.quizhub.person.security;
 
+import com.quizhub.person.model.Role;
 import org.springframework.security.core.GrantedAuthority;
 import com.quizhub.person.model.Person;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PersonDetails implements UserDetails {
 
     private final Person person;
+    private Collection<? extends GrantedAuthority> authorities;
 
     public PersonDetails(Person person) {
         this.person = person;
+    }
+
+    public PersonDetails(Person person, Collection<? extends GrantedAuthority> authorities) {
+        this.person = person;
+        this.authorities = authorities;
+    }
+
+    public static PersonDetails build (Person person) {
+        return new PersonDetails(person, person.fetchAuthorities());
     }
 
     @Override

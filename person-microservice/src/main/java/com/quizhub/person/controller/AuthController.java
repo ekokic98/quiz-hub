@@ -1,6 +1,7 @@
 package com.quizhub.person.controller;
 
 import com.quizhub.person.model.Person;
+import com.quizhub.person.model.Role;
 import com.quizhub.person.request.LoginRequest;
 import com.quizhub.person.request.SignupRequest;
 import com.quizhub.person.response.LoginResponseBody;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -33,11 +35,13 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<SignupResponse> signup(@RequestBody @Valid SignupRequest signupRequest) {
         Person person = personService.signup(signupRequest);
+        ArrayList<String> roles = new ArrayList<String>(); roles.add("ROLE_USER");
         return ResponseEntity.ok(new SignupResponse(
                 person.getFirstName(),
                 person.getLastName(),
                 person.getEmail(),
-                person.getUsername()
+                person.getUsername(),
+                roles
         ));
     }
 
@@ -45,6 +49,11 @@ public class AuthController {
     public ResponseEntity<LoginResponseBody> login(@RequestBody @Valid LoginRequest loginRequest) {
         Person person = personService.login(loginRequest);
         String token = jwtTokenUtil.generateToken(person);
+        ArrayList<String> roles = new ArrayList<>();
+        roles.add(person.getRole().name());
+        if (person.getRole() == Role.ROLE_ADMIN) {
+            roles.add("ROLE_USER");
+        }
         ResponseEntity<LoginResponseBody> re = ResponseEntity.ok().body(new LoginResponseBody(
                 "Bearer",
                 token,
@@ -52,7 +61,8 @@ public class AuthController {
                 person.getFirstName(),
                 person.getLastName(),
                 person.getEmail(),
-                person.getUsername()));
+                person.getUsername(),
+                roles));
        // re.getHeaders().add("Authorization", token);
         return re;
     }

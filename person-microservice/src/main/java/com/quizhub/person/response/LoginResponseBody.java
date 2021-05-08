@@ -2,6 +2,7 @@ package com.quizhub.person.response;
 
 import com.quizhub.person.model.Person;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class LoginResponseBody {
@@ -13,11 +14,12 @@ public class LoginResponseBody {
     private String email;
     private String username;
     private String tokenType;
+    private ArrayList<String> roles;
 
     public LoginResponseBody() {
     }
 
-    public LoginResponseBody(String tokenType, String jwt, UUID id, String firstName, String lastName, String email, String username) {
+    public LoginResponseBody(String tokenType, String jwt, UUID id, String firstName, String lastName, String email, String username, ArrayList<String> roles) {
         this.tokenType = tokenType;
         this.jwt = jwt;
         this.id = id;
@@ -25,6 +27,7 @@ public class LoginResponseBody {
         this.lastName = lastName;
         this.email = email;
         this.username = username;
+        this.roles = roles;
     }
 
     public String getJwt() {
@@ -81,5 +84,13 @@ public class LoginResponseBody {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public ArrayList<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(ArrayList<String> roles) {
+        this.roles = roles;
     }
 }

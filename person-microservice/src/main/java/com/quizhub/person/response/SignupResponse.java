@@ -1,5 +1,6 @@
 package com.quizhub.person.response;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class SignupResponse {
@@ -8,15 +9,17 @@ public class SignupResponse {
     private String lastName;
     private String email;
     private String username;
+    private ArrayList<String> roles;
 
     public SignupResponse() {
     }
 
-    public SignupResponse(String firstName, String lastName, String email, String username) {
+    public SignupResponse(String firstName, String lastName, String email, String username, ArrayList<String> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.username = username;
+        this.roles = roles;
     }
 
     public String getFirstName() {
@@ -49,5 +52,13 @@ public class SignupResponse {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public ArrayList<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(ArrayList<String> roles) {
+        this.roles = roles;
     }
 }
