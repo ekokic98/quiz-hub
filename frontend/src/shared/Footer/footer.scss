@@ -1,0 +1,16 @@
+@import "src/assets/scss/variables";
+
+.footer-container {
+  background: $tertiary;
+  position: absolute;
+  bottom: 0;
+  min-height: 50px;
+  padding-right: 3%;
+  padding-left: 3%;
+  width: 100%;
+
+  .project-names {
+    display: flex;
+    justify-content: space-evenly;
+  }
+}
