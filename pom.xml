@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.quizhub</groupId>
+    <artifactId>com-quizhub</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>api-gateway</module>
+        <module>config-server</module>
+        <module>eureka</module>
+        <module>person-microservice</module>
+        <module>property-microservice</module>
+        <module>system-events</module>
+        <module>quiz-microservice</module>
+        <module>tournament-microservice</module>
+    </modules>
+
+</project>
