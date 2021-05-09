@@ -44,6 +44,10 @@ public class Tournament {
     public Tournament() {
     }
 
+    public Tournament(String id) {
+        this.id = UUID.fromString(id);
+    }
+
     public Tournament(UUID id, LocalDateTime dateCreated, LocalDateTime dateStart, LocalDateTime dateEnd, String name) {
         this.id = id;
         this.dateCreated = dateCreated;

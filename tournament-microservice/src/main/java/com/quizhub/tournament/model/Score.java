@@ -1,6 +1,7 @@
 package com.quizhub.tournament.model;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -12,8 +13,6 @@ import java.util.UUID;
 public class Score {
     @Id
     @Type(type = "uuid-char")
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
     @ManyToOne
@@ -30,24 +29,25 @@ public class Score {
 
     @Column(nullable = false)
     @Min(value = 0, message = "Minimal value for nr of answers is 0")
-    private int correctAnswersNum;
+    private int correctAnswers;
 
     @Column(nullable = false)
     @Min(value = 0, message = "Minimal value for nr of points is 0")
     private int points;
 
     @Column(nullable = false)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateScored;
 
     public Score() {
     }
 
-    public Score(UUID id, Quiz quiz, Person person, @Min(value = 0, message = "Minimal value for total time is 0") int totalTime, @Min(value = 0, message = "Minimal value for nr of answers is 0") int correctAnswersNum, @Min(value = 0, message = "Minimal value for nr of points is 0") int points, LocalDateTime dateScored) {
+    public Score(UUID id, Quiz quiz, Person person, @Min(value = 0, message = "Minimal value for total time is 0") int totalTime, @Min(value = 0, message = "Minimal value for nr of answers is 0") int correctAnswers, @Min(value = 0, message = "Minimal value for nr of points is 0") int points, LocalDateTime dateScored) {
         this.id = id;
         this.quiz = quiz;
         this.person = person;
         this.totalTime = totalTime;
-        this.correctAnswersNum = correctAnswersNum;
+        this.correctAnswers = correctAnswers;
         this.points = points;
         this.dateScored = dateScored;
     }
@@ -84,12 +84,12 @@ public class Score {
         this.totalTime = totalTime;
     }
 
-    public int getCorrectAnswersNum() {
-        return correctAnswersNum;
+    public int getCorrectAnswers() {
+        return correctAnswers;
     }
 
-    public void setCorrectAnswersNum(int correctAnswersNum) {
-        this.correctAnswersNum = correctAnswersNum;
+    public void setCorrectAnswers(int correctAnswers) {
+        this.correctAnswers = correctAnswers;
     }
 
     public int getPoints() {

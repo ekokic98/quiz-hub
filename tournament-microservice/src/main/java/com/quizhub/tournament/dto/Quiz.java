@@ -5,7 +5,6 @@ import java.util.UUID;
 
 public class Quiz {
     private UUID id;
-    private UUID personId;
     private Category category;
     private String name;
     private LocalDateTime dateCreated;
@@ -15,9 +14,8 @@ public class Quiz {
     public Quiz() {
     }
 
-    public Quiz(UUID id, UUID personId, Category category, String name, LocalDateTime dateCreated, int timeLimit, int totalQuestions) {
+    public Quiz(UUID id, Category category, String name, LocalDateTime dateCreated, int timeLimit, int totalQuestions) {
         this.id = id;
-        this.personId = personId;
         this.category = category;
         this.name = name;
         this.dateCreated = dateCreated;
@@ -31,14 +29,6 @@ public class Quiz {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public UUID getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(UUID personId) {
-        this.personId = personId;
     }
 
     public Category getCategory() {

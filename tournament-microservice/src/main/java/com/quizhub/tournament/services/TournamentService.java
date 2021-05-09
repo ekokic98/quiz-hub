@@ -10,10 +10,10 @@ import com.quizhub.tournament.event.EventServiceGrpc;
 import com.quizhub.tournament.exceptions.BadRequestException;
 import com.quizhub.tournament.exceptions.ConflictException;
 import com.quizhub.tournament.exceptions.ServiceUnavailableException;
-import com.quizhub.tournament.model.Person;
+import com.quizhub.tournament.model.Score;
 import com.quizhub.tournament.model.Tournament;
-import com.quizhub.tournament.repositories.PersonRepository;
 import com.quizhub.tournament.repositories.QuizRepository;
+import com.quizhub.tournament.repositories.ScoreRepository;
 import com.quizhub.tournament.repositories.TournamentRepository;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -39,7 +39,7 @@ import java.util.UUID;
 public class TournamentService {
 
     private final TournamentRepository tournamentRepository;
-    private final PersonRepository personRepository;
+    private final ScoreRepository scoreRepository;
     private final RestTemplate restTemplate;
     private final RestTemplate restTemplateBasic;
 
@@ -62,9 +62,9 @@ public class TournamentService {
         TournamentService.grpcPort = grpcPort;
     }
 
-    public TournamentService(TournamentRepository tournamentRepository, QuizRepository quizRepository, PersonRepository personRepository, @LoadBalanced RestTemplate restTemplate, RestTemplate restTemplateBasic) {
+    public TournamentService(TournamentRepository tournamentRepository, QuizRepository quizRepository, ScoreRepository scoreRepository, @LoadBalanced RestTemplate restTemplate, RestTemplate restTemplateBasic) {
         this.tournamentRepository = tournamentRepository;
-        this.personRepository = personRepository;
+        this.scoreRepository = scoreRepository;
         this.restTemplate = restTemplate;
         this.restTemplateBasic = restTemplateBasic;
     }
@@ -122,13 +122,13 @@ public class TournamentService {
         }
     }
 
-    public List<Person> getLeaderboardForTournament(UUID id) {
+    public List<Score> getLeaderboardForTournament(UUID id) {
         if (!tournamentRepository.existsById(id)) {
             registerEvent(EventRequest.actionType.GET, "/api/tournaments/leaderboard", "400");
             throw new BadRequestException("Wrong tournament id");
         }
         registerEvent(EventRequest.actionType.GET, "/api/tournaments/leaderboard", "200");
-        return personRepository.getLeaderboardForTournament(id.toString());
+        return scoreRepository.getLeaderboardForTournament(id.toString());
     }
 
     public Quiz addGeneratedQuizToTournament(TournamentController.QuizParams quizParams) {

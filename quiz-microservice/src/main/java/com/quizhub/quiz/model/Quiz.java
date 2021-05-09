@@ -76,6 +76,14 @@ public class Quiz {
         this.personId = personId;
     }
 
+    public UUID getTournamentId() {
+        return tournamentId;
+    }
+
+    public void setTournamentId(UUID tournamentId) {
+        this.tournamentId = tournamentId;
+    }
+
     public Category getCategory() {
         return category;
     }

@@ -1,5 +1,6 @@
 package com.quizhub.property.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.quizhub.property.exceptions.BadRequestException;
 import com.quizhub.property.exceptions.InternalErrorException;
 import com.quizhub.property.model.Score;
@@ -46,7 +47,7 @@ public class ScoreController {
 
     @PostMapping
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),})
-    public ResponseEntity<Score> addScore(@RequestBody @Valid Score score) {
+    public ResponseEntity<Score> addScore(@RequestBody @Valid Score score) throws JsonProcessingException {
         return ResponseEntity.ok(scoreService.addScore(score));
     }
 

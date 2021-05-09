@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.quizhub.tournament.dto.Quiz;
 import com.quizhub.tournament.exceptions.BadRequestException;
 import com.quizhub.tournament.exceptions.ConflictException;
-import com.quizhub.tournament.model.Person;
+import com.quizhub.tournament.model.Score;
 import com.quizhub.tournament.model.Tournament;
 import com.quizhub.tournament.services.TournamentService;
 import io.swagger.annotations.ApiResponse;
@@ -70,7 +70,7 @@ public class TournamentController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),
     })
-    public ResponseEntity<List<Person>> getLeaderboardForTournament(@RequestParam UUID id) {
+    public ResponseEntity<List<Score>> getLeaderboardForTournament(@RequestParam UUID id) {
         return ResponseEntity.ok(tournamentService.getLeaderboardForTournament(id));
     }
 

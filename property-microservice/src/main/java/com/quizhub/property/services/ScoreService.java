@@ -1,6 +1,8 @@
 package com.quizhub.property.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Iterables;
+import com.quizhub.property.dto.LeaderboardInfo;
 import com.quizhub.property.dto.Person;
 import com.quizhub.property.dto.Quiz;
 import com.quizhub.property.event.EventRequest;
@@ -8,6 +10,7 @@ import com.quizhub.property.exceptions.BadRequestException;
 import com.quizhub.property.exceptions.ConflictException;
 import com.quizhub.property.exceptions.InternalErrorException;
 import com.quizhub.property.model.Score;
+import com.quizhub.property.rabbitmq.RabbitMQSender;
 import com.quizhub.property.repositories.ScoreRepository;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
@@ -23,10 +26,12 @@ import static com.quizhub.property.services.PropertyService.registerEvent;
 public class ScoreService {
     private final ScoreRepository scoreRepository;
     private final RestTemplate restTemplate;
+    private final RabbitMQSender rabbitMQSender;
 
-    public ScoreService(ScoreRepository scoreRepository, RestTemplate restTemplate) {
+    public ScoreService(ScoreRepository scoreRepository, RestTemplate restTemplate, RabbitMQSender rabbitMQSender) {
         this.scoreRepository = scoreRepository;
         this.restTemplate = restTemplate;
+        this.rabbitMQSender = rabbitMQSender;
     }
 
     public Iterable<Score> getAllScores() {
@@ -72,7 +77,7 @@ public class ScoreService {
                 });
     }
 
-    public Score addScore(Score score) {
+    public Score addScore(Score score) throws JsonProcessingException {
         try {
             Quiz quiz;
             Person person;
@@ -88,8 +93,18 @@ public class ScoreService {
             if (quiz == null || person == null) {
                 throw new BadRequestException("Quiz or person cannot be null");
             }
+            Score savedScore = scoreRepository.save(score);
+            if (quiz.getTournamentId() != null) {
+                try {
+                    rabbitMQSender.send(new LeaderboardInfo(person, quiz, savedScore));
+                } catch (JsonProcessingException exception) {
+                    registerEvent(EventRequest.actionType.CREATE, "/api/scores", "500");
+                    scoreRepository.deleteById(savedScore.getId());
+                    throw exception;
+                }
+            }
             registerEvent(EventRequest.actionType.CREATE, "/api/scores", "200");
-            return scoreRepository.save(score);
+            return savedScore;
         } catch (ConflictException exception) {
             registerEvent(EventRequest.actionType.CREATE, "/api/scores", "409");
             throw exception;
