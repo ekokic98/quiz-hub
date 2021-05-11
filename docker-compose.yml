@@ -4,8 +4,9 @@ services:
   rabbitmq:
      image: rabbitmq:latest
      container_name: rabbitmq
+     ports:
+        - "5672:5672"
      expose:
-        - "5672"
         - "15672"
      networks:
         - quiz-hub
@@ -29,15 +30,14 @@ services:
     container_name: config-ms
     build:
       context: ./config-server
+    ports:
+      - "8888:8888"
     networks:
       - quiz-hub
     environment:
       - CONFIG_REPO_USERNAME=quizhub
       - CONFIG_REPO_PASSWORD=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
-      - CONFIG_REPO_URI=https://github.com/quizhub/quizhub-cloud-config-docker.git
-    depends_on:
-      - psql-ms
-      - rabbitmq
+      - CONFIG_REPO_URI=https://github.com/quizhub/quizhub-cloud-config-docker
       
 
   eureka:
@@ -66,8 +66,8 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 5s
-        max_attempts: 2
+        max_attempts: 5
+        delay: 8s
         window: 5s
         
   person-service:
@@ -84,8 +84,8 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 5s
-        max_attempts: 2
+        max_attempts: 5
+        delay: 8s
         window: 5s
 
   property-service:
@@ -102,8 +102,8 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        max_attempts: 2
-        delay: 5s
+        max_attempts: 5
+        delay: 8s
         window: 5s
       
   quiz-service:
@@ -120,8 +120,8 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        max_attempts: 2
-        delay: 5s
+        max_attempts: 5
+        delay: 8s
         window: 5s
 
   tournament-service:
@@ -138,8 +138,8 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        max_attempts: 2
-        delay: 5s
+        max_attempts: 5
+        delay: 8s
         window: 5s
 
   api-gateway-service:
@@ -151,14 +151,18 @@ services:
       - quiz-hub
     environment:
       - CONFIG_SERVER_URI=optional:configserver:http://config-ms:8888
+    ports:
+      - "8086:8086"
     depends_on:
       - tournament-service
     deploy:
       restart_policy:
         condition: on-failure
-        max_attempts: 2
-        delay: 5s
+        max_attempts: 5
+        delay: 8s
         window: 5s
+
+# reserved for frontend ###
 
 
 
