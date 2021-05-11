@@ -1,42 +1,169 @@
 version: '2'
 
 services:
-  db:
+  rabbitmq:
+     image: rabbitmq:latest
+     container_name: rabbitmq
+     expose:
+        - "5672"
+        - "15672"
+     networks:
+        - quiz-hub
+
+  psql-ms:
     image: 'postgres:latest'
     container_name: psql-ms
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     networks:
-      - none
+        - quiz-hub
+    volumes:
+      - ./db-entrypoint.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
     environment:
-      - POSTGRES_USER=demo
-      - POSTGRES_PASSWORD=demo
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
 
-  backend:
-    image: 'backend:latest'
-    container_name: backend-c
-    build:
-      context: ./backend
-    ports:
-      - "8080:8080"
-    networks:
-      - none
-    environment:
-      - JDBC_DATABASE_URL=jdbc:postgresql://ll:5432/demo
 
-  react:
-    image: 'react:latest'
-    container_name: react-c
+  config-ms:
+    image: 'config-ms:latest'
+    container_name: config-ms
     build:
-      context: ./frontend
-    ports:
-      - "9000:3000"
+      context: ./config-server
     networks:
-      - none
+      - quiz-hub
     environment:
-      - PORT=3000
+      - CONFIG_REPO_USERNAME=quizhub
+      - CONFIG_REPO_PASSWORD=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
+      - CONFIG_REPO_URI=https://github.com/quizhub/quizhub-cloud-config-docker.git
+    depends_on:
+      - psql-ms
+      - rabbitmq
+      
+
+  eureka:
+    image: 'eureka:latest'
+    container_name: eureka
+    build:
+      context: ./eureka
+    networks:
+      - quiz-hub
+    depends_on:
+      - psql-ms
+      - rabbitmq
+
+
+  system-events-service:
+    image: 'system-events-service:latest'
+    container_name: system-events-service
+    build:
+      context: ./system-events
+    networks:
+      - quiz-hub
+    environment:
+      - CONFIG_SERVER_URI=optional:configserver:http://config-ms:8888
+    depends_on:
+      - config-ms
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 5s
+        
+  person-service:
+    image: 'person-service:latest'
+    container_name: person-service
+    build:
+      context: ./person-microservice
+    networks:
+      - quiz-hub
+    environment:
+      - CONFIG_SERVER_URI=optional:configserver:http://config-ms:8888
+    depends_on:
+      - system-events-service
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 5s
+
+  property-service:
+    image: 'property-service:latest'
+    container_name: property-service
+    build:
+      context: ./property-microservice
+    networks:
+      - quiz-hub
+    environment:
+      - CONFIG_SERVER_URI=optional:configserver:http://config-ms:8888
+    depends_on:
+      - person-service
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 2
+        delay: 5s
+        window: 5s
+      
+  quiz-service:
+    image: 'quiz-service:latest'
+    container_name: quiz-service
+    build:
+      context: ./quiz-microservice
+    networks:
+      - quiz-hub
+    environment:
+      - CONFIG_SERVER_URI=optional:configserver:http://config-ms:8888
+    depends_on:
+      - property-service
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 2
+        delay: 5s
+        window: 5s
+
+  tournament-service:
+    image: 'tournament-service:latest'
+    container_name: tournament-service
+    build:
+      context: ./tournament-microservice
+    networks:
+      - quiz-hub
+    environment:
+      - CONFIG_SERVER_URI=optional:configserver:http://config-ms:8888
+    depends_on:
+      - quiz-service
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 2
+        delay: 5s
+        window: 5s
+
+  api-gateway-service:
+    image: 'api-gateway-service:latest'
+    container_name: api-gateway-service
+    build:
+      context: ./api-gateway
+    networks:
+      - quiz-hub
+    environment:
+      - CONFIG_SERVER_URI=optional:configserver:http://config-ms:8888
+    depends_on:
+      - tournament-service
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 2
+        delay: 5s
+        window: 5s
+
+
+
 
 
 networks:
-  auctions:
+  quiz-hub:
     driver: bridge
