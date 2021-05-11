@@ -1,5 +1,3 @@
 spring:
   application:
     name: api-gateway-service
-  config:
-    import: ${CONFIG_SERVER_URI}
