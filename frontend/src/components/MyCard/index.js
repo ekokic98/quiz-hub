@@ -1,10 +1,17 @@
 import React from 'react';
+import { Card } from "antd";
 
-const MyCard = () => {
+const { Meta } = Card;
+
+const MyCard = ({ imgSrc, style, title, description }) => {
     return (
-        <>
-            MY CARD
-        </>
+        <Card
+            hoverable
+            style={style}
+            cover={<img alt={title} src={imgSrc} />}
+        >
+            <Meta title={title} description={description} />
+        </Card>
     );
 }
 

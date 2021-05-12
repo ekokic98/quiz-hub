@@ -23,7 +23,6 @@ public class Category {
     @Size(max = 255)
     private String name;
 
-    @Column(unique = true)
     @URL
     @Size(max = 255)
     private String imageUrl;
