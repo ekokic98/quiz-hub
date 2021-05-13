@@ -1,18 +1,20 @@
 import React from 'react'
 import '../../assets/css/Answer.css'
 
-const Answers = () => {
+const Answers = ({answers}) => {
+
     const loadAnswers = (list) => {
+        console.log(list)
         let answerButtons = []
         list.forEach(element => {
-            answerButtons.push(<button class="ansButtons">{element}</button>)
+            answerButtons.push(<button class="ansButtons" onClick={answers.onSelectedAnswer}>{element}</button>)
         });
         return answerButtons
     }
     return (
         <div id="answer">
             <div id="answerSection">
-            {loadAnswers(["Most likely", "Nothing really", "Provided answer might not be.."])}
+            {loadAnswers(answers.all)}
             </div>
         </div>
     )
