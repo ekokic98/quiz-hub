@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import React from 'react'
 import '../../assets/css/QuizDetails.css'
-import Timer from "react-compound-timer";
+import Timer from "react-compound-timer"
+import ReactDOM from "react-dom"
 
 
-const QuizDetails = () => {
+const QuizDetails = ({details}) => {
     const [qsNum, setNum] = useState(1)
     const [totalQsNum, setTotalQs] = useState(10)
     const [totalTime, setTotalTime] = useState(3300000)
@@ -11,9 +13,13 @@ const QuizDetails = () => {
 
     const createGrid = (v) => {
         var gridArr = []
-        for (let i = 0; i < v; i++)
-            gridArr.push( <div className="qBox">{i + 1}</div>)
-        return gridArr;
+        for (let i = 0; i < v; i++) {
+            var style_classes = "qBox "
+            if (details.answerHistory.length != 0 && i < details.answerHistory.length)
+               style_classes += details.answerHistory[i] ? "gBox" : "rBox"
+            gridArr.push( <div key={i} className={style_classes}>{i + 1}</div>)
+        }
+        return gridArr; 
     }
 
     return (

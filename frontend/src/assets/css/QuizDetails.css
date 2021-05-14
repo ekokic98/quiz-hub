@@ -56,4 +56,15 @@
     height: 30px;
     background-color: white;
     border: black solid 2px;
+    font-weight: bold;
+}
+
+.gBox {
+    background-color: lightgreen;
+    color: white;
+}
+
+.rBox {
+    background-color: lightcoral;
+    color: white;
 }
