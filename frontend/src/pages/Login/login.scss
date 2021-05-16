@@ -1,3 +1,17 @@
-.login-container {
+@import "src/assets/scss/variables";
 
+.login-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.login-title {
+  font-size: 22px;
+  padding: 5.5%;
+}
+
+#login-form-button {
+  background: $primary;
+  border: $primary;
+  width: 100%;
 }
