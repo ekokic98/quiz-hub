@@ -21,3 +21,7 @@
     background-color: lightgreen;
     color: white;
 }
+
+.btnLock {
+    pointer-events: none;
+}

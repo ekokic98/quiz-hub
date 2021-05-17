@@ -4,31 +4,26 @@ import '../../assets/css/QuizDetails.css'
 import Timer from "react-compound-timer"
 
 
-
-const QuizDetails = ({ details, quizHandler }) => {
+const QuizDetails = ({ details, quizHandler, nextQuestion }) => {
     const [qsNum, setNum] = useState(1)
-    const [totalQsNum, setTotalQs] = useState(details.totalQuestions)
- //   const [totalTime, setTotalTime] = useState(3300000)
-    const [score, setScore] = useState(0) 
     const timerRef = useRef(null)
-    const [pauseTimer, setPauseTimer] = useState(details.pauseTimer)
     
-    useEffect(() => {
-        if (pauseTimer == true) {
+    // timer pausing if pauseTimer signal is set
+    useEffect(() => { 
+        if (details.pauseTimer == true) {
             timerRef.current.pause()
-            setTimeout(function() {
-                console.log(timerRef.current)
-                timerRef.current.resume()
-                console.log("resumed")
-                setPauseTimer(false)
-            }, 3000)
-        }
 
-      }, [pauseTimer]);
+            setTimeout(function() {
+                timerRef.current.resume()
+                details.pauseTimer = false
+                nextQuestion()
+            }, 2800)
+        }
+      }, [details]);
+
 
     const createGrid = (v) => {
         var gridArr = []
-        console.log(details.answerHistory.length)
         for (let i = 0; i < v; i++) {
             var style_classes = "qBox "
             if (details.answerHistory[i] != null)
@@ -38,27 +33,20 @@ const QuizDetails = ({ details, quizHandler }) => {
         return gridArr;
     }
 
-    useEffect(() => {
-     console.log("....")
-    })
 
     const handleExpire = () => {
-        console.log("time has expired")
-        // callback
-        quizHandler(score)
+        // time has expired..
+        quizHandler() // callback
     }
-
-
 
     return (
         <div id="quiz-details">
             <div id="top">
-                <p>Question {qsNum} of {totalQsNum} </p>
+                <p>Question {qsNum} of {details.totalQuestions} </p>
             </div>
             <div id="mid">
                 <p className="timer"> Timer </p>
-                <br />
-                <Timer initialTime={10000} direction="backward"  formatValue={value => `${value < 10 ? `0${value}` : value}`} ref={timerRef}
+                <Timer initialTime={30000} direction="backward"  formatValue={value => `${value < 10 ? `0${value}` : value}`} ref={timerRef}
                     checkpoints={[{time: 0, callback: () => handleExpire(), } ]}>
                     <p className="timer countdown">
                         <Timer.Minutes />:<Timer.Seconds /> 
@@ -68,10 +56,10 @@ const QuizDetails = ({ details, quizHandler }) => {
             <div id="bot">
                 <p className="timer" id="score">Score:
                 <br />
-                    {score}
+                    {details.score}
                 </p>
                 <div id="qGrid">
-                    {createGrid(totalQsNum)}
+                    {createGrid(details.totalQuestions)}
                 </div>
             </div>
      
@@ -79,11 +67,4 @@ const QuizDetails = ({ details, quizHandler }) => {
     )
 }
 
-export default QuizDetails;
-
-
-/*                <Timer initialTime={totalTime} startImmediately={true} direction="backward" formatValue={value => `${value < 10 ? `0${value}` : value}`}>
-                    <p1 className="timer countdown">
-                        <Timer.Minutes />:<Timer.Seconds />
-                    </p1>
-                </Timer> */
+export default QuizDetails
