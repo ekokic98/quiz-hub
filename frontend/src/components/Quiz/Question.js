@@ -5,10 +5,10 @@ const Question = ({question}) => {
     return (
         <div id = "question">
             <div id="quizDiv">
-                <p1 id= "quizTitle">Countries and cities</p1>
+                <p id= "quizTitle">Countries and cities</p>
             </div>
             <div id="qTextArea">
-                <p1>{question}</p1>
+                <p>{question}</p>
             </div>
         </div>
     )

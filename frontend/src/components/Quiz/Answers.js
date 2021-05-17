@@ -2,8 +2,6 @@ import React from 'react'
 import '../../assets/css/Answer.css'
 import { useState, useEffect } from 'react'
 
-
-
 const Answers = ({answers}) => {
      const [correctInx, setCorrect] = useState(-1)
      const [pickedInx, setPicked] = useState(-1)
@@ -21,7 +19,7 @@ const Answers = ({answers}) => {
     }
 
     useEffect(() => {
-        if (pickedInx != -1) {
+        if (pickedInx !== -1) {
             setTimeout(function() {
                 setPicked(-1)
                 setCorrect(-1)
