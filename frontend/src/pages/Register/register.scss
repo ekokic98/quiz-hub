@@ -1,3 +1,22 @@
-.register-container {
+@import "src/assets/scss/variables";
 
+.register-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.register-title {
+  font-size: 22px;
+  padding: 5.5%;
+}
+
+#registration-button {
+  background: $primary;
+  border: $primary;
+  width: 100%;
+}
+
+label {
+  width: 150px;
+  display: inline-block;
 }
