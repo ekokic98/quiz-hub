@@ -27,8 +27,8 @@ public class QuizController {
     }
 
     @GetMapping(path = "/all")
-    public ResponseEntity<List<Quiz>> getAllQuizzes() {
-        return ResponseEntity.ok(quizService.getAllQuizzes());
+    public ResponseEntity<List<Quiz>> getAllQuizzes(@RequestParam(required = false) Boolean tournament) {
+        return ResponseEntity.ok(quizService.getAllQuizzes(tournament));
     }
 
     @GetMapping("/search")

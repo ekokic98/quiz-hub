@@ -1,11 +1,12 @@
 import React from 'react'
-import '../../assets/css/QuizContainer.css'
-import QuizDetails from './QuizDetails'
-import Question from './Question'
-import Answers from './Answers'
-import * as tmp from './tempConstants'
+import QuizDetails from 'components/Quiz/QuizDetails'
+import Question from 'components/Quiz/Question'
+import Answers from 'components/Quiz/Answers'
+import * as tmp from 'components/Quiz/tempConstants'
 import { useState } from 'react'
 import { useHistory } from "react-router-dom"
+
+import './quizContainer.scss'
 
 const QuizContainer = () => {
     const history = useHistory()

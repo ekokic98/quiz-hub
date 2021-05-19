@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../assets/css/Answer.css'
+import './answer.scss'
 import { useState, useEffect } from 'react'
 
 const Answers = ({answers}) => {

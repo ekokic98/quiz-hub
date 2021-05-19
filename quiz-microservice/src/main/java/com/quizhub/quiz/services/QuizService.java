@@ -65,9 +65,16 @@ public class QuizService {
         this.restTemplate = restTemplate;
     }
 
-    public List<Quiz> getAllQuizzes() {
+    public List<Quiz> getAllQuizzes(Boolean tournament) {
         registerEvent(EventRequest.actionType.GET, "/api/quizzes/all", "200");
-        return quizRepository.findAll();
+        if (tournament == null) {
+            return quizRepository.findAll();
+        }
+        if (tournament) {
+            return quizRepository.findAllByTournamentIdIsNotNull();
+        } else {
+            return quizRepository.findAllByTournamentIdIsNull();
+        }
     }
 
     public Quiz add(Quiz quiz) {

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import React from 'react'
-import '../../assets/css/QuizDetails.css'
+import './quizDetails.scss'
 import Timer from "react-compound-timer"
 
 

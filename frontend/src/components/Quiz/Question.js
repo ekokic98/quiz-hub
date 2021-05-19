@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../assets/css/Question.css'
+import './question.scss'
 
 const Question = ({question}) => {
     return (
