@@ -5,9 +5,9 @@ services:
      image: rabbitmq:latest
      container_name: rabbitmq
      ports:
-        - "5672:5672"
+        - "15672:15672"
      expose:
-        - "15672"
+        - "5672"
      networks:
         - quiz-hub
 
@@ -67,8 +67,7 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 5
-        delay: 8s
-        window: 5s
+
         
   person-service:
     image: 'person-service:latest'
@@ -85,8 +84,7 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 5
-        delay: 8s
-        window: 5s
+
 
   property-service:
     image: 'property-service:latest'
@@ -103,8 +101,7 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 5
-        delay: 8s
-        window: 5s
+
       
   quiz-service:
     image: 'quiz-service:latest'
@@ -121,8 +118,7 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 5
-        delay: 8s
-        window: 5s
+
 
   tournament-service:
     image: 'tournament-service:latest'
@@ -139,8 +135,7 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 5
-        delay: 8s
-        window: 5s
+
 
   api-gateway-service:
     image: 'api-gateway-service:latest'
@@ -159,13 +154,25 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 5
-        delay: 8s
-        window: 5s
-
-# reserved for frontend ###
 
 
-
+  react:
+    image: 'react-c:latest'
+    container_name: react-c
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - quiz-hub
+    environment:
+      - REACT_APP_HOST_URL=http://api-gateway-service:8086
+    depends_on:
+      - api-gateway-service
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
 
 
 networks:
