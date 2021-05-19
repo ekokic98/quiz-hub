@@ -1,13 +1,29 @@
-import React from 'react';
-import {Form, Input, Button, Tooltip} from 'antd';
-import {QuestionCircleOutlined} from '@ant-design/icons';
+import React, { useState } from 'react';
+import { useHistory } from "react-router-dom";
+import { Form, Input, Button, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { signUp } from "api/person/auth";
+import { setSession } from "utilities/localStorage";
+import { useUserContext } from "AppContext";
 
 import "./register.scss";
 
 const Register = () => {
+    const history = useHistory();
+    const { setLoggedIn } = useUserContext();
 
-    const onFinish = () => {
-        console.log('Received values of form.');
+    const [loading, setLoading] = useState(false);
+
+    const onFinish = async (values) => {
+        try {
+            setLoading(true);
+            const response = await signUp(values);
+            setLoading(false);
+            setSession(response);
+            history.goBack();
+            setLoggedIn(true);
+        } catch (ignored) {
+        }
     };
 
     return (
@@ -149,7 +165,7 @@ const Register = () => {
                 </Form.Item>
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" id="registration-button">
+                    <Button loading={loading} type="primary" htmlType="submit" id="registration-button">
                         Register
                     </Button>
                 </Form.Item>

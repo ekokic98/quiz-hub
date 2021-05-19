@@ -9,7 +9,12 @@ const Categories = () => {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        const fetchData = async () => setCategories(await getAllCategories())
+        const fetchData = async () => {
+            try {
+                setCategories(await getAllCategories());
+            } catch (ignored) {
+            }
+        }
 
         fetchData();
     }, [])

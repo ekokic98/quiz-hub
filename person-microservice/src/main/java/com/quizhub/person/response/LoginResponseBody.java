@@ -1,7 +1,5 @@
 package com.quizhub.person.response;
 
-import com.quizhub.person.model.Person;
-
 import java.util.ArrayList;
 import java.util.UUID;
 

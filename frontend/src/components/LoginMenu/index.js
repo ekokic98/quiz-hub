@@ -8,7 +8,7 @@ import "./loginMenu.scss";
 const LoginMenu = ({ history }) => {
     return (
         <div className='login-menu'>
-            <Row align='middle' justify='space-around' className='login-menu-title'>
+            <Row align='middle' justify='space-around'>
                 <img src={Logo} alt="Logo" height={50}/>
                 <div>Create QuizHub Account</div>
             </Row>

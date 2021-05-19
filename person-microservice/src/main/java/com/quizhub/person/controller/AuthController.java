@@ -5,11 +5,9 @@ import com.quizhub.person.model.Role;
 import com.quizhub.person.request.LoginRequest;
 import com.quizhub.person.request.SignupRequest;
 import com.quizhub.person.response.LoginResponseBody;
-import com.quizhub.person.response.SignupResponse;
 import com.quizhub.person.security.JwtUtils;
 import com.quizhub.person.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,10 +31,15 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponse> signup(@RequestBody @Valid SignupRequest signupRequest) {
+    public ResponseEntity<LoginResponseBody> signup(@RequestBody @Valid SignupRequest signupRequest) {
         Person person = personService.signup(signupRequest);
-        ArrayList<String> roles = new ArrayList<String>(); roles.add("ROLE_USER");
-        return ResponseEntity.ok(new SignupResponse(
+        ArrayList<String> roles = new ArrayList<>();
+        roles.add("ROLE_USER");
+        String token = jwtTokenUtil.generateToken(person);
+        return ResponseEntity.ok().body(new LoginResponseBody(
+                "Bearer",
+                token,
+                person.getId(),
                 person.getFirstName(),
                 person.getLastName(),
                 person.getEmail(),
@@ -54,7 +57,7 @@ public class AuthController {
         if (person.getRole() == Role.ROLE_ADMIN) {
             roles.add("ROLE_USER");
         }
-        ResponseEntity<LoginResponseBody> re = ResponseEntity.ok().body(new LoginResponseBody(
+        return ResponseEntity.ok().body(new LoginResponseBody(
                 "Bearer",
                 token,
                 person.getId(),
@@ -62,8 +65,7 @@ public class AuthController {
                 person.getLastName(),
                 person.getEmail(),
                 person.getUsername(),
-                roles));
-       // re.getHeaders().add("Authorization", token);
-        return re;
+                roles
+        ));
     }
 }
