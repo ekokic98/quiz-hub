@@ -13,4 +13,3 @@ export const getCategory = async (id) => {
 export const addCategory = async (category) => {
     return await post(categoriesUrl, category);
 }
-
