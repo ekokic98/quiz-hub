@@ -1,5 +1,33 @@
 spring:
   application:
     name: api-gateway-service
-  config:
-    import: ${CONFIG_SERVER_URI}
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 20000
+zuul:
+  host:
+    connect-timeout-millis: 10000
+    socket-timeout-millis: 60000
+  routes:
+    person:
+      service-id: person-service
+      person-service:
+        sensitive-headers: 'Cookie,Set-Cookie'
+    property:
+      service-id: property-service
+    quiz:
+      service-id: quiz-service
+    tournament:
+      service-id: tournament-service
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI}
+server:
+  port: 8086
+  error:
+    include-message: always
+    include-stacktrace: never
+app:
+  jwtSecret: ThursdailyJWTKey
+  jwtExpiration: 43200000
