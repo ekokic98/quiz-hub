@@ -3,8 +3,8 @@ import './answer.scss'
 import { useState, useEffect } from 'react'
 
 const Answers = ({answers}) => {
-     const [correctInx, setCorrect] = useState(-1)
-     const [pickedInx, setPicked] = useState(-1)
+    const [correctInx, setCorrectInx] = useState(-1)
+    const [pickedInx, setPickedInx] = useState(-1)
 
 
     const turnColor = (i) => {
@@ -14,7 +14,7 @@ const Answers = ({answers}) => {
                 return "gButton"
             }
             if (i === pickedInx && pickedInx !== correctInx)
-                return "rButton" 
+                return "rButton"
         }
         return ""
     }
@@ -26,27 +26,29 @@ const Answers = ({answers}) => {
             answers.onSelectedAnswer(correct)
 
             // show user's answers for 3 seconds
-            setTimeout(function() {
-                setPicked(-1)
-                setCorrect(-1)
+            setTimeout(function () {
+                setPickedInx(-1)
+                setCorrectInx(-1)
             }, 3000)
         }
-      }, [pickedInx])
+    }, [pickedInx, correctInx, answers])
 
-    
-    const handleAnswers = (i) => { 
+
+    const handleAnswers = (i) => {
         // if answer is chosen, set picked index and index of correct answer (which triggers field coloring)
-        setCorrect(answers.all.findIndex((item) => item === answers.correctAnswer)) 
-        setPicked(i)
+        setCorrectInx(answers.all.findIndex((item) => item === answers.correctAnswer))
+        setPickedInx(i)
     }
 
     const lockButton = () => pickedInx !== -1 ? " btnLock" : ""  // lock buttons after choosing answers
- 
+
     return (
         <div id="answer">
             <div id="answerSection">
-            { answers.all.map((element, i) => <button key={i} className={"ansButtons " + turnColor(i) + lockButton()} 
-              onClick={() => handleAnswers(i)}>{element}</button>)}
+                { answers.all.map((element, i) =>
+                    <button key={ i }
+                            className={ "ansButtons " + turnColor(i) + lockButton() }
+                            onClick={ () => handleAnswers(i) }>{ element }</button>) }
             </div>
         </div>
     )

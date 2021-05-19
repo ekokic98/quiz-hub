@@ -30,9 +30,9 @@ const QuizContainer = () => {
     }
 
 
-    const onTimeExpired = (currentScore) => {
+    const onTimeExpired = () => {
         // all unanswered questions (null) are replaced with false     
-        let answerHistoryCopy = finalAnswer.answerHistory.map(n => n == null ? false : n )
+        finalAnswer.answerHistory.map(n => n == null ? false : n );
         console.log("processing your results...")
         history.push("/") // process results and invoke callback to store results to database and return to main screen  TODO
     }

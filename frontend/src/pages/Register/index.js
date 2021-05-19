@@ -8,14 +8,15 @@ import { useUserContext } from "AppContext";
 
 import "./register.scss";
 
-const Register = () => {
+const Register = ({initialValues = {}, registerMode = true}) => {
     const history = useHistory();
-    const { setLoggedIn } = useUserContext();
+    const {setLoggedIn} = useUserContext();
 
     const [loading, setLoading] = useState(false);
 
     const onFinish = async (values) => {
         try {
+            if (!registerMode && JSON.stringify(values) === JSON.stringify(initialValues)) return;
             setLoading(true);
             const response = await signUp(values);
             setLoading(false);
@@ -28,13 +29,11 @@ const Register = () => {
 
     return (
         <div className="register-container">
-            <div className="register-title">
-                REGISTER
-            </div>
+            { registerMode && <div className="register-title">REGISTER</div> }
 
             <Form
                 name="register"
-                onFinish={onFinish}
+                onFinish={ onFinish }
                 scrollToFirstError
                 size="large"
                 className="registration-form"
@@ -42,7 +41,8 @@ const Register = () => {
                 <Form.Item
                     name="firstName"
                     label="First name"
-                    rules={[
+                    initialValue={ initialValues?.firstName }
+                    rules={ [
                         {
                             required: true,
                             message: 'Please input your first name!',
@@ -55,7 +55,7 @@ const Register = () => {
                                 return Promise.reject('First name should contain between 2 and 50 characters!');
                             }
                         })
-                    ]}
+                    ] }
                 >
                     <Input/>
                 </Form.Item>
@@ -63,7 +63,8 @@ const Register = () => {
                 <Form.Item
                     name="lastName"
                     label="Last name"
-                    rules={[
+                    initialValue={ initialValues?.lastName }
+                    rules={ [
                         {
                             required: true,
                             message: 'Please input your last name!',
@@ -76,7 +77,7 @@ const Register = () => {
                                 return Promise.reject('Last name should contain between 2 and 50 characters!');
                             }
                         })
-                    ]}
+                    ] }
                 >
                     <Input/>
                 </Form.Item>
@@ -84,7 +85,8 @@ const Register = () => {
                 <Form.Item
                     name="email"
                     label="E-mail"
-                    rules={[
+                    initialValue={ initialValues?.email }
+                    rules={ [
                         {
                             type: 'email',
                             message: 'The input is not valid E-mail!',
@@ -93,13 +95,14 @@ const Register = () => {
                             required: true,
                             message: 'Please input your E-mail!',
                         }
-                    ]}
+                    ] }
                 >
                     <Input/>
                 </Form.Item>
 
                 <Form.Item
                     name="username"
+                    initialValue={ initialValues?.username }
                     label={
                         <span>
                         Username&nbsp;
@@ -108,21 +111,21 @@ const Register = () => {
                         </Tooltip>
                     </span>
                     }
-                    rules={[
+                    rules={ [
                         {
                             required: true,
                             message: 'Please input your username!',
                             whitespace: true
                         },
-                    ]}
+                    ] }
                 >
                     <Input/>
                 </Form.Item>
 
-                <Form.Item
+                { registerMode && <Form.Item
                     name="password"
                     label="Password"
-                    rules={[
+                    rules={ [
                         {
                             required: true,
                             message: 'Please input your password!',
@@ -135,18 +138,19 @@ const Register = () => {
                                 return Promise.reject('Password should contain between 8 and 128 characters!');
                             }
                         })
-                    ]}
+                    ] }
                     hasFeedback
                 >
                     <Input.Password/>
                 </Form.Item>
+                }
 
-                <Form.Item
+                { registerMode && <Form.Item
                     name="confirm"
                     label="Confirm Password"
-                    dependencies={['password']}
+                    dependencies={ ['password'] }
                     hasFeedback
-                    rules={[
+                    rules={ [
                         {
                             required: true,
                             message: 'Please confirm your password!',
@@ -159,14 +163,14 @@ const Register = () => {
                                 return Promise.reject('The two passwords that you entered do not match!');
                             },
                         }),
-                    ]}
+                    ] }
                 >
                     <Input.Password/>
                 </Form.Item>
-
+                }
                 <Form.Item>
-                    <Button loading={loading} type="primary" htmlType="submit" id="registration-button">
-                        Register
+                    <Button loading={ loading } type="primary" htmlType="submit" id="registration-button">
+                        { registerMode ? "Register" : "Update" }
                     </Button>
                 </Form.Item>
             </Form>

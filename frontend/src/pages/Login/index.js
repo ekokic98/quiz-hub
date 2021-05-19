@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Link, useHistory } from "react-router-dom";
 import {Form, Input, Button, Checkbox} from 'antd';
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
+import { registerUrl } from "utilities/appUrls";
 import { login } from "api/person/auth";
 import { getRememberInfo, removeRememberInfo, setRememberInfo, setSession } from "utilities/localStorage";
-import { registerUrl } from "utilities/appUrls";
 import { useUserContext } from "AppContext";
 
 import "./login.scss";

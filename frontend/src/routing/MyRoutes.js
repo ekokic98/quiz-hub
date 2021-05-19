@@ -7,6 +7,8 @@ import Categories from 'pages/Categories';
 import Login from 'pages/Login';
 import Register from 'pages/Register';
 import PageNotFound from 'pages/PageNotFound';
+import PrivateRoute from "routing/PrivateRoute";
+import MyAccount from "pages/MyAccount";
 import QuizContainer  from 'pages/QuizContainer/QuizContainer';
 
 const MyRoutes = () => {
@@ -18,6 +20,7 @@ const MyRoutes = () => {
             <Route path="/quiz/*" component={QuizContainer}/>
             <GuestRoute path="/login" component={Login}/>
             <GuestRoute path="/register" component={Register}/>
+            <PrivateRoute path="/my-account" component={MyAccount}/>
             <Route component={PageNotFound}/>
         </Switch>
     );
