@@ -1,29 +1,30 @@
 #top {
-    height: 8%;
+    height: 6%;
     background-color: #424444;
     border: 2pt solid #424444;
     overflow: none;
-    padding: 6%;
+    padding-top: 3%;
+    overflow:hidden;
 }
 
 #mid{
-    height: 25.5%;
+    height: 25%;
     background-color: #bdc3c5;
     border: 2pt solid #bdbdbd;
     padding: 18%;
 }
 
 #bot{
-    height: 66.5%;
+    height: 69%;
     background-color: #DDE5E7;
-    border: 2pt solid #bdbdbd;
+ /*   border: 2pt solid #bdbdbd; */
     padding-top: 10%;
     display:block;
     overflow: auto;
 }
 
 #top > p {
-    font-size: 18px;
+    font-size: 15px;
     color: white;
     font-style: oblique;
     line-height: 20px;
@@ -48,15 +49,16 @@
     gap: 3px;
     margin-left: 5%;
     margin-right: 5%;
-    overflow-y: scroll; 
+   /* overflow-y: scroll;  */
 }
 
 .qBox {
     padding: 1px;
-    height: 30px;
+    height: 30px; 
     background-color: white;
     border: black solid 2px;
     font-weight: bold;
+    width: 90%;
 }
 
 .gBox {

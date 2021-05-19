@@ -45,10 +45,10 @@ const QuizDetails = ({ details, quizHandler, nextQuestion }) => {
                 <p>Question {qsNum} of {details.totalQuestions} </p>
             </div>
             <div id="mid">
-                <p className="timer"> Timer </p>
-                <Timer initialTime={30000} direction="backward"  formatValue={value => `${value < 10 ? `0${value}` : value}`} ref={timerRef}
+                <Timer initialTime={930000} direction="backward"  formatValue={value => `${value < 10 ? `0${value}` : value}`} ref={timerRef}
                     checkpoints={[{time: 0, callback: () => handleExpire(), } ]}>
-                    <p className="timer countdown">
+                    <p className="timer">
+                        Timer <br/>
                         <Timer.Minutes />:<Timer.Seconds /> 
                     </p>
                 </Timer>

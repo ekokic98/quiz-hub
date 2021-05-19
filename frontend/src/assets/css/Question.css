@@ -3,20 +3,31 @@
     font-size: 18px;
     color: white;
     font-style: oblique;
-    line-height: 20px;
+    line-height: 10px;
     display: block;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
 } 
 
 
 #quizDiv {
     background-color: #424444;
     border: 2pt solid #424444;
-    padding: 2%;
-    height: 23.5%;
+  /*  padding: 2%;*/
+
+    height: 19%;
+
 } 
 
 #qTextArea {
-    padding: 10%;
+    padding-left: 2%;
+    padding-right: 2%;
+    position: relative;
+    top: 35%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-40%);
 }
 
 #qTextArea > p {
