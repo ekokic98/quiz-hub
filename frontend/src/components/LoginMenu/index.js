@@ -1,10 +1,11 @@
 import React from 'react';
+import { loginUrl, registerUrl } from "utilities/appUrls";
 import Logo from 'assets/images/Logo.svg';
 import { Button, Col, Row } from "antd";
 
 import "./loginMenu.scss";
 
-const LoginMenu = () => {
+const LoginMenu = ({ history }) => {
     return (
         <div className='login-menu'>
             <Row align='middle' justify='space-around' className='login-menu-title'>
@@ -16,10 +17,10 @@ const LoginMenu = () => {
             </Row>
             <Row>
                 <Col span={16}>
-                    <Button>Create account</Button>
+                    <Button onClick={() => history.push(registerUrl)}>Create account</Button>
                 </Col>
                 <Col span={8}>
-                    <Button>Login</Button>
+                    <Button onClick={() => history.push(loginUrl)}>Login</Button>
                 </Col>
             </Row>
         </div>
