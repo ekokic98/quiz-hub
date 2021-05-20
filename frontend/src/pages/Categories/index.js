@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Col, Row} from "antd";
 import MyCard from "components/MyCard";
-import { getAllCategories } from "api/quiz/categories";
+import { getAllCategories } from "api/quiz/category";
 import { categoriesUrl, quizUrl } from "utilities/appUrls";
 import { useHistory } from "react-router-dom";
 import { getQuizzesByCategory } from "api/quiz/quiz";

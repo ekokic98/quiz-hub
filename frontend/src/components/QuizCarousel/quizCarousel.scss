@@ -1,0 +1,16 @@
+@import "src/assets/scss/variables";
+
+.quiz-carousel-container {
+  .quiz-carousel {
+    margin: 0 20px;
+  }
+}
+
+.BrainhubCarousel__arrows {
+  background-color: $primary;
+  border-radius: 50%;
+}
+
+.BrainhubCarousel__arrows:hover:enabled {
+  background-color: $primary-dark-10;
+}

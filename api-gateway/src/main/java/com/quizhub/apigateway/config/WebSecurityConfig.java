@@ -52,6 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/person/api/auth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/quiz/api/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/tournament/api/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/property/api/**").permitAll()
                 // must be an admin if trying to access admin area (authentication is also required here)
                 .antMatchers(adminRoutes).hasRole("ADMIN")
                 // Any other request must be authenticated

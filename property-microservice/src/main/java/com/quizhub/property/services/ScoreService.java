@@ -12,12 +12,17 @@ import com.quizhub.property.exceptions.InternalErrorException;
 import com.quizhub.property.model.Score;
 import com.quizhub.property.rabbitmq.RabbitMQSender;
 import com.quizhub.property.repositories.ScoreRepository;
+import com.quizhub.property.responses.ScoreResponse;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import static com.quizhub.property.services.PropertyService.registerEvent;
@@ -37,6 +42,30 @@ public class ScoreService {
     public Iterable<Score> getAllScores() {
         registerEvent(EventRequest.actionType.GET, "/api/scores/all", "200");
         return scoreRepository.findAll();
+    }
+
+    public List<ScoreResponse> getAllScoresToday() {
+        registerEvent(EventRequest.actionType.GET, "/api/scores/all/today", "200");
+
+        Iterable<Score> scores = scoreRepository.findByDateScoredBetweenOrderByDateScoredDesc(
+                LocalDate.now().atStartOfDay(),
+                LocalDate.now().plusDays(1).atStartOfDay()
+        );
+
+        List<ScoreResponse> response = new ArrayList<>();
+
+        for (Score score : scores) {
+            Person person;
+            Quiz quiz;
+            try {
+                person = restTemplate.getForObject("http://person-service/api/persons?id=" + score.getPerson(), Person.class);
+                quiz = restTemplate.getForObject("http://quiz-service/api/quizzes?id=" + score.getQuiz(), Quiz.class);
+                response.add(new ScoreResponse(score, person, quiz));
+            } catch (Exception ignored) {
+            }
+        }
+
+        return response;
     }
 
     public Score getScoreById(UUID id) {

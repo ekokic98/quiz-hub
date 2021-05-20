@@ -1,22 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { getAllQuizzes } from "api/quiz/quiz";
-import { getAllTournaments } from "api/tournament/tournaments";
+import { getAllTournaments } from "api/tournament/tournament";
 import { Col, Row } from "antd";
 import MyCard from "components/MyCard";
 import { quizUrl } from "utilities/appUrls";
 import { useHistory } from "react-router-dom";
+import QuizCarousel from "components/QuizCarousel";
+import { getRandom } from "utilities/common";
+import Leaderboard from "components/Leaderboard";
+import { getAllScoresToday } from "api/property/score";
 
 const LandingPage = () => {
     const history = useHistory();
     const [quizzes, setQuizzes] = useState([]);
+    const [scores, setScores] = useState([]);
     const [tournaments, setTournaments] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setLoading(true);
                 setQuizzes(await getAllQuizzes(false));
+                setScores(await getAllScoresToday());
                 setTournaments(await getAllTournaments(false));
+                setLoading(false);
             } catch (ignored) {
+                setLoading(false);
             }
         }
 
@@ -26,9 +36,29 @@ const LandingPage = () => {
     return (
         <div className="landing-page-container">
             <Row gutter={[32, 32]}>
-                <Col span={24}>
+                <Col span={12}>
                     <h2 style={{ textAlign: 'left' }}>
-                        QUIZZES
+                        RANDOM QUIZZES
+                    </h2>
+                </Col>
+                <Col span={12}>
+                    <h2 style={{ textAlign: 'left' }}>
+                        LATEST PLAYS
+                    </h2>
+                </Col>
+            </Row>
+            <Row gutter={[32, 32]}>
+                <Col span={12}>
+                    <QuizCarousel quizzes={getRandom(quizzes, 5)} />
+                </Col>
+                <Col span={12}>
+                    <Leaderboard loading={loading} noRank scores={scores} />
+                </Col>
+            </Row>
+            <Row gutter={[32, 32]}>
+                <Col span={24}>
+                    <h2 style={{ textAlign: 'left', marginTop: 20 }}>
+                        ALL QUIZZES
                     </h2>
                 </Col>
             </Row>

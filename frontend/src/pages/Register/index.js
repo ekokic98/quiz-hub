@@ -24,6 +24,7 @@ const Register = ({initialValues = {}, registerMode = true}) => {
             history.goBack();
             setLoggedIn(true);
         } catch (ignored) {
+            setLoading(false);
         }
     };
 

@@ -30,6 +30,7 @@ const Login = () => {
             history.goBack();
             setLoggedIn(true);
         } catch (ignored) {
+            setLoading(false);
         }
     };
 
