@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Col, Row} from "antd";
+import { Col, message, Row } from "antd";
 import MyCard from "components/MyCard";
 import { getAllCategories } from "api/quiz/category";
 import { categoriesUrl, quizUrl } from "utilities/appUrls";
@@ -21,7 +21,8 @@ const Categories = (props) => {
                 } else {
                     setData(await getAllCategories());
                 }
-            } catch (ignored) {
+            } catch (error) {
+                message.warning(error.response.data.message);
             }
         }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
-import { Form, Input, Button, Tooltip } from 'antd';
+import { Form, Input, Button, Tooltip, message } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { signUp } from "api/person/auth";
 import { setSession } from "utilities/localStorage";
@@ -19,12 +19,14 @@ const Register = ({initialValues = {}, registerMode = true}) => {
             if (!registerMode && JSON.stringify(values) === JSON.stringify(initialValues)) return;
             setLoading(true);
             const response = await signUp(values);
+            message.success("Successfully registered");
             setLoading(false);
             setSession(response);
             history.goBack();
             setLoggedIn(true);
-        } catch (ignored) {
+        } catch (error) {
             setLoading(false);
+            message.warning(error.response.data.message);
         }
     };
 

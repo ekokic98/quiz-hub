@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from "react-router-dom";
-import {Form, Input, Button, Checkbox} from 'antd';
+import { Form, Input, Button, Checkbox, message } from 'antd';
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
 import { registerUrl } from "utilities/appUrls";
 import { login } from "api/person/auth";
@@ -20,6 +20,7 @@ const Login = () => {
         try {
             setLoading(true);
             const response = await login(values);
+            message.success("Successfully logged in");
             setLoading(false);
             setSession(response);
             if (values.remember) {
@@ -29,8 +30,9 @@ const Login = () => {
             }
             history.goBack();
             setLoggedIn(true);
-        } catch (ignored) {
+        } catch (error) {
             setLoading(false);
+            message.warning(error.response.data.message);
         }
     };
 

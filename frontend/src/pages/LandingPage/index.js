@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAllQuizzes } from "api/quiz/quiz";
 import { getAllTournaments } from "api/tournament/tournament";
-import { Col, Row } from "antd";
+import { Col, message, Row } from "antd";
 import MyCard from "components/MyCard";
 import { quizUrl } from "utilities/appUrls";
 import { useHistory } from "react-router-dom";
@@ -25,8 +25,9 @@ const LandingPage = () => {
                 setScores(await getAllScoresToday());
                 setTournaments(await getAllTournaments(false));
                 setLoading(false);
-            } catch (ignored) {
+            } catch (error) {
                 setLoading(false);
+                message.warning(error.response.data.message);
             }
         }
 
