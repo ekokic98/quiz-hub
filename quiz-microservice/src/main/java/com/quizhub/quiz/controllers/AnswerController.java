@@ -2,6 +2,7 @@ package com.quizhub.quiz.controllers;
 
 import com.quizhub.quiz.exceptions.BadRequestException;
 import com.quizhub.quiz.model.Answer;
+import com.quizhub.quiz.response.QA_Response;
 import com.quizhub.quiz.services.AnswerService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -41,5 +42,13 @@ public class AnswerController {
     })
     public ResponseEntity<Answer> add(@RequestBody @Valid Answer answer) {
         return ResponseEntity.ok(answerService.add(answer));
+    }
+
+    @GetMapping("/quiz")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),
+    })
+    public ResponseEntity<List<QA_Response>> getAllQuestionsAndAnswersByQuiz(@RequestParam UUID id) {
+        return ResponseEntity.ok(answerService.getQuestionsAndAnswersByQuizId(id));
     }
 }
