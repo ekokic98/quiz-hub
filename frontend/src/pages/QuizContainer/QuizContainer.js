@@ -1,11 +1,12 @@
 import React from 'react'
-import '../../assets/css/QuizContainer.css'
-import QuizDetails from './QuizDetails'
-import Question from './Question'
-import Answers from './Answers'
-import * as tmp from './tempConstants'
+import QuizDetails from 'components/Quiz/QuizDetails'
+import Question from 'components/Quiz/Question'
+import Answers from 'components/Quiz/Answers'
+import * as tmp from 'components/Quiz/tempConstants'
 import { useState } from 'react'
 import { useHistory } from "react-router-dom"
+
+import './quizContainer.scss'
 
 const QuizContainer = () => {
     const history = useHistory()
@@ -29,9 +30,9 @@ const QuizContainer = () => {
     }
 
 
-    const onTimeExpired = (currentScore) => {
+    const onTimeExpired = () => {
         // all unanswered questions (null) are replaced with false     
-        let answerHistoryCopy = finalAnswer.answerHistory.map(n => n == null ? false : n )
+        finalAnswer.answerHistory.map(n => n == null ? false : n );
         console.log("processing your results...")
         history.push("/") // process results and invoke callback to store results to database and return to main screen  TODO
     }

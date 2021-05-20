@@ -1,16 +1,16 @@
-import { useState, useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import React from 'react'
-import '../../assets/css/QuizDetails.css'
+import './quizDetails.scss'
 import Timer from "react-compound-timer"
 
 
 const QuizDetails = ({ details, quizHandler, nextQuestion }) => {
-    const [qsNum, setNum] = useState(1)
+    const qsNum = 1;
     const timerRef = useRef(null)
     
     // timer pausing if pauseTimer signal is set
     useEffect(() => { 
-        if (details.pauseTimer == true) {
+        if (details.pauseTimer === true) {
             timerRef.current.pause()
 
             setTimeout(function() {
@@ -19,13 +19,13 @@ const QuizDetails = ({ details, quizHandler, nextQuestion }) => {
                 nextQuestion()
             }, 2800)
         }
-      }, [details]);
+      }, [details, nextQuestion]);
 
 
     const createGrid = (v) => {
-        var gridArr = []
+        let gridArr = [];
         for (let i = 0; i < v; i++) {
-            var style_classes = "qBox "
+            let style_classes = "qBox ";
             if (details.answerHistory[i] != null)
                 style_classes += details.answerHistory[i] ? "gBox" : "rBox"
             gridArr.push(<div key={i} className={style_classes}>{i + 1}</div>)

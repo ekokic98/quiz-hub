@@ -49,7 +49,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // authorization requests config
                 .authorizeRequests()
                 // allow all who are accessing "auth" service
-                .antMatchers(HttpMethod.POST, "/person-service/api/auth/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/person/api/auth/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/quiz/api/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/tournament/api/**").permitAll()
                 // must be an admin if trying to access admin area (authentication is also required here)
                 .antMatchers(adminRoutes).hasRole("ADMIN")
                 // Any other request must be authenticated

@@ -1,5 +1,6 @@
 -- Tournament quiz
-INSERT INTO public.quiz (id, date_created, name, time_limit, total_questions, category_id, person_id) VALUES ('1bfdd50f-90b3-4804-81f2-1062e4292508', '2021-04-07 19:43:26.218458', '2021-04-07T19:43:26.155401400', 150, 10, null, null);
+INSERT INTO public.quiz (id, date_created, name, time_limit, total_questions, category_id, person_id) VALUES ('1bfdd50f-90b3-4804-81f2-1062e4292508', '2021-04-07 19:43:26.218458', 'Fun quiz', 150, 10, null, 'd234091b-41f8-45a5-927a-89f88e6d5da0');
+INSERT INTO public.quiz (id, date_created, name, person_id, time_limit, total_questions, tournament_id, category_id) VALUES ('a545e6a4-546e-45ad-880f-81bfda328b01', '2021-04-07 22:17:14.059577', 'Quizz 8', 'd72d5d78-97d7-11eb-a8b3-0242ac130003', 23, 10, null, null);
 
 INSERT INTO public.question (id, name, type, quiz_id) VALUES ('e400ee02-9b6d-490c-a5b8-d74b363fe160', 'How many books are in the Chronicles of Narnia series?', 0, '1bfdd50f-90b3-4804-81f2-1062e4292508');
 INSERT INTO public.question (id, name, type, quiz_id) VALUES ('ab822744-664b-4f1c-aa72-c29822f4eca5', 'In the game Half-Life, which enemy is showcased as the final boss?', 0, '1bfdd50f-90b3-4804-81f2-1062e4292508');
@@ -7,10 +8,10 @@ INSERT INTO public.question (id, name, type, quiz_id) VALUES ('3119f95b-f5ab-405
 INSERT INTO public.question (id, name, type, quiz_id) VALUES ('300d80a3-83b6-4579-b05b-68763ee5943b', 'According to Toby Fox, what was the method to creating the initial tune for Megalovania?', 0, '1bfdd50f-90b3-4804-81f2-1062e4292508');
 INSERT INTO public.question (id, name, type, quiz_id) VALUES ('940cf9a0-5606-4dad-8c2f-281a495a80ad', 'What was the cause of Marilyn Monroes suicide?', 0, '1bfdd50f-90b3-4804-81f2-1062e4292508');
 INSERT INTO public.question (id, name, type, quiz_id) VALUES ('3a67429e-863b-42c6-ae30-f5a7fc7db9b0', '&quot;All the Boys&quot; by Panic! At the Disco was released as a bonus track on what album?', 0, '1bfdd50f-90b3-4804-81f2-1062e4292508');
-INSERT INTO public.question (id, name, type, quiz_id) VALUES ('95bf63b8-40c3-4254-85e9-6b4e1405c0ca', 'Albert Einstein had trouble with mathematics when he was in school.', 0, '1bfdd50f-90b3-4804-81f2-1062e4292508');
-INSERT INTO public.question (id, name, type, quiz_id) VALUES ('ccdac450-e9ab-4221-8663-84010519f065', 'In &quot;Halo 2&quot;, what is the name of the monitor of Installation 05?', 0, '1bfdd50f-90b3-4804-81f2-1062e4292508');
-INSERT INTO public.question (id, name, type, quiz_id) VALUES ('83c7c37f-6917-4396-869d-49c6a01325f6', 'In the Zombies mode of &quot;Call of Duty: Black Ops&quot;, what is the &quot;Pack-A-Punched&quot; version of the &quot;Galil&quot; called?', 0, '1bfdd50f-90b3-4804-81f2-1062e4292508');
-INSERT INTO public.question (id, name, type, quiz_id) VALUES ('2370d6ff-08cc-4c47-8313-96c5c2c4cf1d', 'What is the name of Chris&#039;s brother in &quot;Everybody Hates Chris&quot;?', 0, '1bfdd50f-90b3-4804-81f2-1062e4292508');
+INSERT INTO public.question (id, name, type, quiz_id) VALUES ('95bf63b8-40c3-4254-85e9-6b4e1405c0ca', 'Albert Einstein had trouble with mathematics when he was in school.', 0, 'a545e6a4-546e-45ad-880f-81bfda328b01');
+INSERT INTO public.question (id, name, type, quiz_id) VALUES ('ccdac450-e9ab-4221-8663-84010519f065', 'In &quot;Halo 2&quot;, what is the name of the monitor of Installation 05?', 0, 'a545e6a4-546e-45ad-880f-81bfda328b01');
+INSERT INTO public.question (id, name, type, quiz_id) VALUES ('83c7c37f-6917-4396-869d-49c6a01325f6', 'In the Zombies mode of &quot;Call of Duty: Black Ops&quot;, what is the &quot;Pack-A-Punched&quot; version of the &quot;Galil&quot; called?', 0, 'a545e6a4-546e-45ad-880f-81bfda328b01');
+INSERT INTO public.question (id, name, type, quiz_id) VALUES ('2370d6ff-08cc-4c47-8313-96c5c2c4cf1d', 'What is the name of Chris&#039;s brother in &quot;Everybody Hates Chris&quot;?', 0, 'a545e6a4-546e-45ad-880f-81bfda328b01');
 
 INSERT INTO public.answer (id, correct, name, question_id) VALUES ('e6347dd3-0eed-49b4-8c27-1d0f131ef7b0', true, '7', 'e400ee02-9b6d-490c-a5b8-d74b363fe160');
 INSERT INTO public.answer (id, correct, name, question_id) VALUES ('f14c05b4-7b26-4d29-8981-5eba8f7e00db', false, '6', 'e400ee02-9b6d-490c-a5b8-d74b363fe160');
@@ -60,6 +61,8 @@ INSERT INTO public.category (id, image_url, name) VALUES ('bcb18585-5dbd-44f3-a9
 INSERT INTO public.category (id, image_url, name) VALUES ('66028772-71af-4b15-b006-dfca38ea77b3', 'https://placeimg.com/640/480/animals', 'Animal');
 INSERT INTO public.category (id, image_url, name) VALUES ('97a5735c-7959-4eba-ab25-2eb3f559ec85', 'https://placeimg.com/640/480/arch', 'Arhitecture');
 
-INSERT INTO public.quiz (id, date_created, name, person_id, time_limit, total_questions, tournament_id, category_id) VALUES ('a545e6a4-546e-45ad-880f-81bfda328b01', '2021-04-07 22:17:14.059577', 'Quizz 8', 'd234091b-41f8-45a5-927a-89f88e6d5da0', 23, 10, null, '97a5735c-7959-4eba-ab25-2eb3f559ec85');
+UPDATE quiz SET category_id = '285d4c25-efc3-4916-bc9d-edaada54fae7' WHERE id = '1bfdd50f-90b3-4804-81f2-1062e4292508';
+UPDATE quiz SET category_id = 'bfd8b999-3c43-4a3a-ad39-ce490bc86d5c' WHERE id = 'a545e6a4-546e-45ad-880f-81bfda328b01';
+
 INSERT INTO public.quiz (id, date_created, name, person_id, time_limit, total_questions, tournament_id, category_id) VALUES ('debb8e83-54ba-4320-b0a1-29779fc54648', '2021-04-07 22:17:14.059577', 'Novie kviz', null, 25, 13, '112e4019-c5ec-49a2-9be4-4871dcebe89f', '66028772-71af-4b15-b006-dfca38ea77b3');
 INSERT INTO public.quiz (id, date_created, name, person_id, time_limit, total_questions, tournament_id, category_id) VALUES ('f1e252f0-737e-4fb0-87a8-2cd23a18b4f9', '2021-04-07 22:17:14.059577', 'kviz', null, 30, 23, '112e4019-c5ec-49a2-9be4-4871dcebe89f', 'bcb18585-5dbd-44f3-a97c-7302e57a9620');

@@ -2,12 +2,18 @@ import React from 'react';
 import { Col, Dropdown, Row } from "antd";
 import Logo from 'assets/images/Logo.svg';
 import LoginMenu from 'components/LoginMenu';
+import LogoutMenu from 'components/LogoutMenu';
 import { useHistory } from 'react-router-dom';
-import { homeUrl, categoriesUrl } from "../../utilities/appUrls";
+import { homeUrl, categoriesUrl } from "utilities/appUrls";
+import { getUser } from "utilities/localStorage";
+import { useUserContext } from "AppContext";
+
 import './header.scss';
 
 const Header = () => {
     const history = useHistory();
+    const { loggedIn } = useUserContext();
+
     return (
         <Row className='header-container' align='middle'>
             <Col span={4} offset={1} className="logo-col" onClick={() => history.push(homeUrl)}>
@@ -18,11 +24,17 @@ const Header = () => {
                 <h3 onClick={() => history.push(categoriesUrl)}>CATEGORIES</h3>
             </Col>
             <Col span={2}>
-                <Dropdown overlay={LoginMenu} className="login-dropdown">
+                { loggedIn ?
+                <Dropdown overlay={<LogoutMenu history={history} />} className="login-dropdown">
                     <h3 className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                        LOGIN
+                        { getUser().username }
                     </h3>
-                </Dropdown>
+                </Dropdown> :
+                <Dropdown overlay={<LoginMenu history={history} />} className="login-dropdown">
+                    <h3 className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                        MY ACCOUNT
+                    </h3>
+                </Dropdown> }
             </Col>
         </Row>
     );

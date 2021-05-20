@@ -1,28 +1,35 @@
 package com.quizhub.person.response;
 
-import com.quizhub.person.model.Person;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class LoginResponseBody {
 
+    private String tokenType;
     private String jwt;
     private UUID id;
+    private String city;
+    private String country;
+    private LocalDateTime dateCreated;
+    private String imageUrl;
     private String firstName;
     private String lastName;
     private String email;
     private String username;
-    private String tokenType;
     private ArrayList<String> roles;
 
     public LoginResponseBody() {
     }
 
-    public LoginResponseBody(String tokenType, String jwt, UUID id, String firstName, String lastName, String email, String username, ArrayList<String> roles) {
+    public LoginResponseBody(String tokenType, String jwt, UUID id, String city, String country, LocalDateTime dateCreated, String imageUrl, String firstName, String lastName, String email, String username, ArrayList<String> roles) {
         this.tokenType = tokenType;
         this.jwt = jwt;
         this.id = id;
+        this.city = city;
+        this.country = country;
+        this.dateCreated = dateCreated;
+        this.imageUrl = imageUrl;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -92,5 +99,37 @@ public class LoginResponseBody {
 
     public void setRoles(ArrayList<String> roles) {
         this.roles = roles;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

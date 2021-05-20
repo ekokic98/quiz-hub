@@ -1,13 +1,9 @@
 @import "src/assets/scss/variables";
 
-.login-menu {
+.logout-menu {
   width: 250px;
   background-color: $white;
   padding: 10px;
   border-radius: 2px;
   border: 1px solid $gray;
-
-  .login-menu-body {
-    margin-bottom: 10px;
-  }
 }
