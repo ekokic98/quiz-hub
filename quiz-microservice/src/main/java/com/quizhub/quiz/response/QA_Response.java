@@ -4,17 +4,19 @@ import java.util.ArrayList;
 
 public class QA_Response {
     private String question_id;
-    private String content;
+    private String category;
     private String type;
-    private int correctAnswer;
-    private ArrayList<String> allAnswers;
+    private String question;
+    private String correct_answer;
+    private ArrayList<String> incorrect_answers;
 
-    public QA_Response(String question_id, String content, String type, int correctAnswer, ArrayList<String> allAnswers) {
+    public QA_Response(String question_id, String category, String type, String question, String correct_answer, ArrayList<String> incorrect_answers) {
         this.question_id = question_id;
-        this.content = content;
+        this.category = category;
         this.type = type;
-        this.correctAnswer = correctAnswer;
-        this.allAnswers = allAnswers;
+        this.question = question;
+        this.correct_answer = correct_answer;
+        this.incorrect_answers = incorrect_answers;
     }
 
     public QA_Response() {
@@ -28,12 +30,12 @@ public class QA_Response {
         this.question_id = question_id;
     }
 
-    public String getContent() {
-        return content;
+    public String getCategory() {
+        return category;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getType() {
@@ -44,19 +46,27 @@ public class QA_Response {
         this.type = type;
     }
 
-    public int getCorrectAnswer() {
-        return correctAnswer;
+    public String getQuestion() {
+        return question;
     }
 
-    public void setCorrectAnswer(int correctAnswer) {
-        this.correctAnswer = correctAnswer;
+    public void setQuestion(String question) {
+        this.question = question;
     }
 
-    public ArrayList<String> getAllAnswers() {
-        return allAnswers;
+    public String getCorrect_answer() {
+        return correct_answer;
     }
 
-    public void setAllAnswers(ArrayList<String> allAnswers) {
-        this.allAnswers = allAnswers;
+    public void setCorrect_answer(String correct_answer) {
+        this.correct_answer = correct_answer;
+    }
+
+    public ArrayList<String> getIncorrect_answers() {
+        return incorrect_answers;
+    }
+
+    public void setIncorrect_answers(ArrayList<String> incorrect_answers) {
+        this.incorrect_answers = incorrect_answers;
     }
 }

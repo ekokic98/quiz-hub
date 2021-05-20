@@ -26,4 +26,6 @@ public interface QuizRepository extends JpaRepository<Quiz, UUID> {
 
     @Query(value = "SELECT * FROM quiz ORDER BY random() LIMIT 1;",nativeQuery = true)
     Optional<Quiz> getRandomQuiz();
+
+    Optional<Quiz> getQuizById(UUID id);
 }
