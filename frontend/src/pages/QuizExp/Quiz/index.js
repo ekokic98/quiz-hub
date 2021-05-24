@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {
     Container,
@@ -26,6 +26,11 @@ const Quiz = ({data, countdownTime, endQuiz}) => {
     const handleItemClick = (e, {name}) => {
         setUserSlectedAns(name);
     };
+
+    useEffect(() => {
+        console.log("............................................")
+        console.log(data);
+    }, []);
 
     const handleNext = () => {
         let point = 0;
@@ -66,11 +71,13 @@ const Quiz = ({data, countdownTime, endQuiz}) => {
     };
 
     return (
+        
         <Item.Header>
             <Container>
                 <Segment>
                     <Item.Group divided>
                         <Item>
+                            {console.log(data)}
                             <Item.Content>
                                 <Item.Extra>
                                     <Header as="h1" block floated="left">

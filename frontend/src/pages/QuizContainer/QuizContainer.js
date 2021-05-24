@@ -3,8 +3,8 @@ import QuizDetails from 'components/Quiz/QuizDetails'
 import Question from 'components/Quiz/Question'
 import Answers from 'components/Quiz/Answers'
 import * as tmp from 'components/Quiz/tempConstants'
-import { useState } from 'react'
-import { useHistory } from "react-router-dom"
+import { useState, useEffect } from 'react'
+import { useHistory, useParams } from "react-router-dom"
 
 import './quizContainer.scss'
 
@@ -12,11 +12,14 @@ const QuizContainer = () => {
     const history = useHistory()
     const [questionIndex, setQuestionIndex] = useState(0)
     const [finalAnswer, setFinalAnswer] = useState({"answerHistory": Array(tmp.TEMP.length).fill(null), "totalQuestions": tmp.TEMP.length, "pauseTimer": false, "score": 0})
-
+    const {id} = useParams()
         
     // getters..
     const getQuestion = (index) => tmp.TEMP[index].name
     
+    useEffect(() => {
+        console.log(id)
+    }, [])
     const getAnswers = (index) => { 
         let allAnswers = tmp.TEMP[index].incorrectAnswers.slice()
         allAnswers.push(tmp.TEMP[index].correctAnswer)

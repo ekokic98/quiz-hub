@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Button, Popup} from 'semantic-ui-react';
 import Swal from 'sweetalert2';
 
-import {timeConverter} from '../../utils';
+import {timeConverter} from '../../../utilities/quizUtils';
 
 const Countdown = ({countdownTime, timeOver, setTimeTaken}) => {
     const totalTime = countdownTime * 1000;

@@ -1,12 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import Layout from '../Layout'; //
 import Loader from '../Loader'; //
 //import Main from '../Main';
 import Quiz from '../Quiz'; //
 import Result from '../Result'; //
-
+import { useHistory, useParams } from "react-router-dom"
 import {shuffle} from '../../../utilities/quizUtils'; //
+import {  getQuizData } from "api/quiz/qa";
 
 const App = () => {
     const [loading, setLoading] = useState(false);
@@ -15,9 +16,26 @@ const App = () => {
     const [isQuizStarted, setIsQuizStarted] = useState(false);
     const [isQuizCompleted, setIsQuizCompleted] = useState(false);
     const [resultData, setResultData] = useState(null);
+    const {id} = useParams()
+
+    useEffect(() => {
+        const fetchQuestionsAnswers = async () => {
+            setLoading(true);
+            console.log(id);
+            try {
+                let qaData =  await getQuizData(id);
+                startQuiz(qaData, 300000);
+               
+            }
+            catch (error) {
+               console.warn(error.response.data.message);
+            }
+        }
+        fetchQuestionsAnswers();
+    }, [])
 
     const startQuiz = (data, countdownTime) => {
-        setLoading(true);
+       //setLoading(true);
         setCountdownTime(countdownTime);
 
         setTimeout(() => {

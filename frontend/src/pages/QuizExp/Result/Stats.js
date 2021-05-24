@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Segment, Header, Button} from 'semantic-ui-react';
 
-import ShareButton from '../ShareButton';
-import {calculateScore, calculateGrade, timeConverter} from '../../utils';
+//import ShareButton from '../ShareButton';
+import {calculateScore, calculateGrade, timeConverter} from '../../../utilities/quizUtils';
 
 const Stats = ({
                    totalQuestions,

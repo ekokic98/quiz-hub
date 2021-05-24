@@ -74,7 +74,9 @@ public class AnswerService {
                 if (a.getCorrect()) correctAnswer = a.getName();
                 else incorrectAnswers.add(a.getName());
             }
-            qa_response.add(new QA_Response(q.getId().toString(), quiz.getCategory().getName(), q.getType().name(), q.getName(), correctAnswer, incorrectAnswers));
+            ArrayList<String> options = (ArrayList<String>) incorrectAnswers.clone();
+            options.add(correctAnswer);
+            qa_response.add(new QA_Response(q.getId().toString(), quiz.getCategory().getName(), "multiple", q.getName(), correctAnswer, incorrectAnswers, options));
         }
         return qa_response;
     }
