@@ -5,18 +5,20 @@ import java.util.ArrayList;
 public class QA_Response {
     private String question_id;
     private String category;
-    private String type;
+    private String type ;
     private String question;
     private String correct_answer;
     private ArrayList<String> incorrect_answers;
+    private ArrayList<String> options;
 
-    public QA_Response(String question_id, String category, String type, String question, String correct_answer, ArrayList<String> incorrect_answers) {
+    public QA_Response(String question_id, String category, String type, String question, String correct_answer, ArrayList<String> incorrect_answers, ArrayList<String> options) {
         this.question_id = question_id;
         this.category = category;
         this.type = type;
         this.question = question;
         this.correct_answer = correct_answer;
         this.incorrect_answers = incorrect_answers;
+        this.options = options;
     }
 
     public QA_Response() {
@@ -68,5 +70,13 @@ public class QA_Response {
 
     public void setIncorrect_answers(ArrayList<String> incorrect_answers) {
         this.incorrect_answers = incorrect_answers;
+    }
+
+    public ArrayList<String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(ArrayList<String> options) {
+        this.options = options;
     }
 }
