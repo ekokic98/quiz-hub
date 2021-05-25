@@ -30,8 +30,6 @@ services:
     container_name: config-ms
     build:
       context: ./config-server
-    ports:
-      - "8888:8888"
     networks:
       - quiz-hub
     environment:
@@ -145,11 +143,11 @@ services:
     networks:
       - quiz-hub
     environment:
-      - CONFIG_SERVER_URI=optional:configserver:http://config-ms:8888
-    ports:
-      - "8086:8086"
+      - EUREKA_URI=http://eureka:8761/eureka
     depends_on:
       - tournament-service
+    ports:
+      - "8086:8086"
     deploy:
       restart_policy:
         condition: on-failure
@@ -166,7 +164,7 @@ services:
     networks:
       - quiz-hub
     environment:
-      - REACT_APP_HOST_URL=http://api-gateway-service:8086
+      - REACT_APP_HOST_URL=http://localhost:8086
     depends_on:
       - api-gateway-service
     deploy:

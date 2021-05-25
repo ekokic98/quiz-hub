@@ -27,7 +27,7 @@ const LandingPage = () => {
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
-                message.warning(error.response.data.message);
+                //message.warning(error.response.data.message);
             }
         }
 

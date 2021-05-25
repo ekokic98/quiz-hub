@@ -1,4 +1,4 @@
-FROM node:12.19.0
+FROM node:12.19.0-alpine
 RUN mkdir /app
 WORKDIR /app
 COPY package.json /app
