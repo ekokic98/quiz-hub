@@ -27,10 +27,6 @@ const Quiz = ({data, countdownTime, endQuiz}) => {
         setUserSlectedAns(name);
     };
 
-    useEffect(() => {
-        console.log("............................................")
-        console.log(data);
-    }, []);
 
     const handleNext = () => {
         let point = 0;

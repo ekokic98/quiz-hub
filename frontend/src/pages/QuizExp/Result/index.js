@@ -11,7 +11,7 @@ const Result = ({
                     timeTaken,
                     questionsAndAnswers,
                     replayQuiz,
-                    resetQuiz
+                    exitQuiz
                 }) => {
     const [activeTab, setActiveTab] = useState('Stats');
 
@@ -39,7 +39,7 @@ const Result = ({
                     correctAnswers={correctAnswers}
                     timeTaken={timeTaken}
                     replayQuiz={replayQuiz}
-                    resetQuiz={resetQuiz}
+                    exitQuiz={exitQuiz}
                 />
             )}
             {activeTab === 'QNA' && <QNA questionsAndAnswers={questionsAndAnswers}/>}
@@ -54,7 +54,7 @@ Result.propTypes = {
     timeTaken: PropTypes.number.isRequired,
     questionsAndAnswers: PropTypes.array.isRequired,
     replayQuiz: PropTypes.func.isRequired,
-    resetQuiz: PropTypes.func.isRequired
+    exitQuiz: PropTypes.func.isRequired
 };
 
 export default Result;

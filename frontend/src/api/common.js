@@ -24,5 +24,5 @@ export const authorizedGet = async (url, data) => {
     const config = {
         headers: { Authorization: "Bearer " + getToken() }
     };
-    return (await axios.post(hostUrl + url, data, config )).data;
+    return (await axios.get(hostUrl + url, config )).data;
 };

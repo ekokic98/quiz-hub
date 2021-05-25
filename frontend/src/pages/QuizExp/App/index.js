@@ -12,6 +12,7 @@ import { getUser } from "utilities/localStorage";
 import { LocalDateTime } from 'js-joda';
 import { postScore} from "api/property/score";
 
+
 const App = () => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState(null);
@@ -19,7 +20,8 @@ const App = () => {
     const [isQuizStarted, setIsQuizStarted] = useState(false);
     const [isQuizCompleted, setIsQuizCompleted] = useState(false);
     const [resultData, setResultData] = useState(null);
-    const {id} = useParams()
+    const {id} = useParams();
+    let history = useHistory();
 
     useEffect(() => {
         const fetchQuestionsAnswers = async () => {
@@ -99,17 +101,8 @@ const App = () => {
         }, 1000);
     };
 
-    const resetQuiz = () => {
-        setLoading(true);
-
-        setTimeout(() => {
-            setData(null);
-            setCountdownTime(null);
-            setIsQuizStarted(false);
-            setIsQuizCompleted(false);
-            setResultData(null);
-            setLoading(false);
-        }, 1000);
+    const exitQuiz = () => {
+        history.push("/");
     };
 
     return (
@@ -120,7 +113,7 @@ const App = () => {
                 <Quiz data={data} countdownTime={countdownTime} endQuiz={endQuiz}/>
             )}
             {!loading && isQuizCompleted && (
-                <Result {...resultData} replayQuiz={replayQuiz} resetQuiz={resetQuiz}/>
+                <Result {...resultData} replayQuiz={replayQuiz} exitQuiz={exitQuiz}/>
             )}
         </Layout>
     );

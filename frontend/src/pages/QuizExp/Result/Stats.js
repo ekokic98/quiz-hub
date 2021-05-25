@@ -10,7 +10,7 @@ const Stats = ({
                    correctAnswers,
                    timeTaken,
                    replayQuiz,
-                   resetQuiz
+                   exitQuiz
                }) => {
     const score = calculateScore(totalQuestions, correctAnswers);
     const {grade, remarks} = calculateGrade(score);
@@ -53,7 +53,7 @@ const Stats = ({
                 <Button
                     color="teal"
                     content="Back to Home"
-                    onClick={resetQuiz}
+                    onClick={exitQuiz}
                     size="big"
                     icon="home"
                     labelPosition="left"
@@ -70,7 +70,7 @@ Stats.propTypes = {
     correctAnswers: PropTypes.number.isRequired,
     timeTaken: PropTypes.number.isRequired,
     replayQuiz: PropTypes.func.isRequired,
-    resetQuiz: PropTypes.func.isRequired
+    exitQuiz: PropTypes.func.isRequired
 };
 
 export default Stats;
