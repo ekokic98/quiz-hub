@@ -8,6 +8,9 @@ import Result from '../Result'; //
 import { useHistory, useParams } from "react-router-dom"
 import {shuffle} from '../../../utilities/quizUtils'; //
 import {  getQuizData } from "api/quiz/qa";
+import { getUser } from "utilities/localStorage";
+import { LocalDateTime } from 'js-joda';
+import { postScore} from "api/property/score";
 
 const App = () => {
     const [loading, setLoading] = useState(false);
@@ -21,11 +24,9 @@ const App = () => {
     useEffect(() => {
         const fetchQuestionsAnswers = async () => {
             setLoading(true);
-            console.log(id);
             try {
                 let qaData =  await getQuizData(id);
-                startQuiz(qaData, 300000);
-               
+                startQuiz(qaData.qa_response, qaData.quiz.timeLimit); 
             }
             catch (error) {
                console.warn(error.response.data.message);
@@ -34,8 +35,22 @@ const App = () => {
         fetchQuestionsAnswers();
     }, [])
 
+    // prepares user's score for database
+    const prepareScore = (resultData) => {
+        let userData = getUser();
+        console.log(resultData);
+
+        let score = null;
+        // is user logged in?
+        if (userData != null) {
+            score = {correctAnswers: resultData.correctAnswers, dateScored: LocalDateTime.now().toString(), id: null, person: userData.id, 
+                points: resultData.correctAnswers * 3, quiz: id, totalTime: resultData.timeTaken}
+            console.log(score);
+        }
+        return score;
+    }
+
     const startQuiz = (data, countdownTime) => {
-       //setLoading(true);
         setCountdownTime(countdownTime);
 
         setTimeout(() => {
@@ -47,11 +62,21 @@ const App = () => {
 
     const endQuiz = resultData => {
         setLoading(true);
-
+        let scoreData = prepareScore(resultData);
         setTimeout(() => {
             setIsQuizStarted(false);
             setIsQuizCompleted(true);
+  
+            if (scoreData != null) {
+            const sendScore = async (scoreData) => {
+                try  {let qaData =  await postScore(scoreData); }
+                catch (error) {console.warn(error.response.data);}
+            }
+            sendScore(scoreData);
+            }
+
             setResultData(resultData);
+
             setLoading(false);
         }, 2000);
     };

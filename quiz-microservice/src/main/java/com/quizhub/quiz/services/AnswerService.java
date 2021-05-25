@@ -9,6 +9,7 @@ import com.quizhub.quiz.repositories.AnswerRepository;
 import com.quizhub.quiz.repositories.QuestionRepository;
 import com.quizhub.quiz.repositories.QuizRepository;
 import com.quizhub.quiz.response.QA_Response;
+import com.quizhub.quiz.response.QA_Response_Wrapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -53,7 +54,8 @@ public class AnswerService {
         return answerRepository.save(answer);
     }
 
-    public List<QA_Response> getQuestionsAndAnswersByQuizId (UUID id) {
+    public QA_Response_Wrapper getQuestionsAndAnswersByQuizId (UUID id) {
+
         List<QA_Response> qa_response = new ArrayList<>();
         List<Question> questionList = questionRepository.findAllByQuizId(id);
         Optional<Quiz> pQuiz = quizRepository.getQuizById(id);
@@ -78,6 +80,6 @@ public class AnswerService {
             options.add(correctAnswer);
             qa_response.add(new QA_Response(q.getId().toString(), quiz.getCategory().getName(), "multiple", q.getName(), correctAnswer, incorrectAnswers, options));
         }
-        return qa_response;
+        return new QA_Response_Wrapper(qa_response, quiz);
     }
 }

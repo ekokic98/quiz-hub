@@ -77,7 +77,6 @@ const Quiz = ({data, countdownTime, endQuiz}) => {
                 <Segment>
                     <Item.Group divided>
                         <Item>
-                            {console.log(data)}
                             <Item.Content>
                                 <Item.Extra>
                                     <Header as="h1" block floated="left">
