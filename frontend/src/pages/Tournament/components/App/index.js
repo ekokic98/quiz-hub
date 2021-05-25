@@ -8,7 +8,7 @@ import Result from '../Result';
 
 import {shuffle} from '../../utils';
 
-const App = () => {
+const TApp = () => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState(null);
     const [countdownTime, setCountdownTime] = useState(null);
@@ -85,4 +85,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default TApp;
