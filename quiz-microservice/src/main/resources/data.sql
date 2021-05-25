@@ -66,6 +66,16 @@ INSERT INTO public.answer (id, correct, name, question_id) VALUES ('43911d1c-008
 INSERT INTO public.answer (id, correct, name, question_id) VALUES ('fdd49194-09ad-4337-9f44-b0b49a6d418e', false, 'Shadows', '3119f95b-f5ab-4056-8fd5-b783a7c9ff7c');
 INSERT INTO public.answer (id, correct, name, question_id) VALUES ('6253b0a3-3f22-4b4d-aebf-4221370856bd', false, 'Suite Autumn', '3119f95b-f5ab-4056-8fd5-b783a7c9ff7c');
 
+INSERT INTO public.answer (id, correct, name, question_id) VALUES ('799da0fa-ff19-4861-8bb7-b52280097b3b', true, 'Halo', '1060c6a1-6b09-4572-8651-8fd74a1b00c3');
+INSERT INTO public.answer (id, correct, name, question_id) VALUES ('1e572bac-6778-48d3-a047-a1b8062b8039', false, 'Opening Suite', '1060c6a1-6b09-4572-8651-8fd74a1b00c3');
+INSERT INTO public.answer (id, correct, name, question_id) VALUES ('9710e0f9-7ab2-4e79-8076-f62153f47c81', false, 'Shadows', '1060c6a1-6b09-4572-8651-8fd74a1b00c3');
+INSERT INTO public.answer (id, correct, name, question_id) VALUES ('e330cf58-0f07-4111-be4c-e3c93a37fc27', false, 'Suite Autumn', '1060c6a1-6b09-4572-8651-8fd74a1b00c3');
+
+INSERT INTO public.answer (id, correct, name, question_id) VALUES ('05b93d42-07de-4b36-ac91-29c5efac473e', true, 'Halo', '13dac7b8-c488-4a38-9624-e68fe68403c3');
+INSERT INTO public.answer (id, correct, name, question_id) VALUES ('67136894-fa35-4487-9e84-9572e649defa', false, 'Opening Suite', '13dac7b8-c488-4a38-9624-e68fe68403c3');
+INSERT INTO public.answer (id, correct, name, question_id) VALUES ('08792d22-de1a-4333-af4b-5ce4f548dc70', false, 'Shadows', '13dac7b8-c488-4a38-9624-e68fe68403c3');
+INSERT INTO public.answer (id, correct, name, question_id) VALUES ('10b54c4e-b796-40b3-aeb1-516208feedce', false, 'Suite Autumn', '13dac7b8-c488-4a38-9624-e68fe68403c3');
+
 INSERT INTO public.answer (id, correct, name, question_id) VALUES ('09b744c4-4a33-4179-a776-1d80f2a2d6a7', true, 'Singing into a Microphone', '300d80a3-83b6-4579-b05b-68763ee5943b');
 INSERT INTO public.answer (id, correct, name, question_id) VALUES ('83e8bf76-29d6-417d-b146-0706b958bab3', false, 'Playing a Piano', '300d80a3-83b6-4579-b05b-68763ee5943b');
 INSERT INTO public.answer (id, correct, name, question_id) VALUES ('ca63cfca-e7d4-44c2-8ee0-f6dba3232e2f', false, 'Using a Composer Software', '300d80a3-83b6-4579-b05b-68763ee5943b');
