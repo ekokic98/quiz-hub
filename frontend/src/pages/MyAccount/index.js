@@ -6,11 +6,13 @@ import { getUser } from "utilities/localStorage";
 import moment from "moment";
 import EditTab from "pages/MyAccount/editTab";
 
+import 'pages/MyAccount/myAccount.scss'
+
 const MyAccount = () => {
 
     const user = getUser();
-    const [counter, setCounter] = useState(0);
-    const tabs = [<div>0</div>, <EditTab/>, <div>2</div>, <div>3</div>]
+    const [counter, setCounter] = useState(1);
+    const tabs = [<div>Summary</div>, <EditTab/>, <div>Followers</div>, <div>Favorites</div>]
 
     const radioButtonHandler = (event) => {
         setCounter(event.target.value)
@@ -20,22 +22,23 @@ const MyAccount = () => {
         <Row>
             <Col span={ 10 }>
                 <Avatar size={ 200 } icon={ <UserOutlined/> }/>
-                <Radio.Group defaultValue={ 0 } buttonStyle="solid" onChange={ radioButtonHandler }>
+                <Radio.Group defaultValue={ 1 } buttonStyle="solid" onChange={ radioButtonHandler } className='padding'>
                     <Radio.Button value={ 0 }>Summary</Radio.Button>
                     <Radio.Button value={ 1 }>Edit</Radio.Button>
                     <Radio.Button value={ 2 }>Followers</Radio.Button>
                     <Radio.Button value={ 3 }>Favorites</Radio.Button>
                 </Radio.Group>
 
-                <div align={ 'left' }>
+                <div align={ 'left' } className='padding'>
                     <h3><UserOutlined/> { `${ user.firstName } ${ user.lastName }` }</h3>
                     <h3><UserOutlined/> { user.username }</h3>
                     <h3><MailOutlined/> { user.email }</h3>
-                    <h3><HomeOutlined/> { `${ user?.city }, ${ user?.country }` }</h3>
-                    <h3><CalendarOutlined/> account created at { moment(user.dateCreated).local().format("D MMMM YYYY [at] HH:mm") }</h3>
+                    { user?.city && <h3><HomeOutlined/> { user?.city }</h3> }
+                    <h3><CalendarOutlined/> account created
+                        at { moment(user.dateCreated).local().format("D MMMM YYYY [at] HH:mm") }</h3>
                 </div>
             </Col>
-            <Col span={ 14 }>
+            <Col span={ 12 } offset={ 2 }>
                 { tabs[counter] }
             </Col>
         </Row>

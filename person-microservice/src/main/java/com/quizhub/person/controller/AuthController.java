@@ -4,18 +4,17 @@ import com.quizhub.person.model.Person;
 import com.quizhub.person.model.Role;
 import com.quizhub.person.request.LoginRequest;
 import com.quizhub.person.request.SignupRequest;
+import com.quizhub.person.request.UpdateRequest;
 import com.quizhub.person.response.LoginResponseBody;
 import com.quizhub.person.security.JwtUtils;
 import com.quizhub.person.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -36,6 +35,31 @@ public class AuthController {
         ArrayList<String> roles = new ArrayList<>();
         roles.add("ROLE_USER");
         String token = jwtTokenUtil.generateToken(person);
+        return ResponseEntity.ok().body(new LoginResponseBody(
+                "Bearer",
+                token,
+                person.getId(),
+                person.getCity(),
+                person.getCountry(),
+                person.getDateCreated(),
+                person.getImageUrl(),
+                person.getFirstName(),
+                person.getLastName(),
+                person.getEmail(),
+                person.getUsername(),
+                roles
+        ));
+    }
+
+    @PutMapping("/update-profile")
+    public ResponseEntity<LoginResponseBody> updateProfile(@RequestBody @Valid UpdateRequest updateProfileRequest) {
+        Person person = personService.updateProfile(updateProfileRequest);
+        String token = jwtTokenUtil.generateToken(person);
+        ArrayList<String> roles = new ArrayList<>();
+        roles.add(person.getRole().name());
+        if (person.getRole() == Role.ROLE_ADMIN) {
+            roles.add("ROLE_USER");
+        }
         return ResponseEntity.ok().body(new LoginResponseBody(
                 "Bearer",
                 token,

@@ -1,11 +1,13 @@
 package com.quizhub.person.service;
 
+import com.quizhub.person.exception.BadRequestException;
 import com.quizhub.person.exception.ConflictException;
 import com.quizhub.person.model.Person;
 import com.quizhub.person.model.Role;
 import com.quizhub.person.repository.PersonRepository;
 import com.quizhub.person.request.LoginRequest;
 import com.quizhub.person.request.SignupRequest;
+import com.quizhub.person.request.UpdateRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,28 @@ public class AuthService {
         p.setRoles(Role.ROLE_USER);
         Person person = personRepository.save(p);
         person.setPassword(null);
+        return person;
+    }
+
+    public Person updateProfile(UpdateRequest updateProfileRequest) {
+        Person person = personRepository.findByUsername(updateProfileRequest.getUsername())
+                .orElseThrow(() -> new BadRequestException("Username doesn't exist"));
+
+        /*
+        if (!person.getId().equals(personId)) {
+            throw new UnauthorizedException("You are not allowed to edit someone else's profile");
+        }
+         */
+
+        if (personRepository.existsByEmail(updateProfileRequest.getEmail())) {
+            throw new ConflictException("Email is already taken");
+        }
+
+        person.setFirstName(updateProfileRequest.getFirstName());
+        person.setLastName(updateProfileRequest.getLastName());
+        person.setEmail(updateProfileRequest.getEmail());
+        person.setCity(updateProfileRequest.getCity());
+
         return person;
     }
 
