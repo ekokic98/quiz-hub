@@ -13,6 +13,7 @@ import MyAccount from "pages/MyAccount";
 import App from "pages/QuizExp/App";
 import QuizMain from "pages/QuizExp/QuizMain";
 import TApp from "pages/Tournament/components/App";
+import Admin from "../pages/Admin";
 
 const MyRoutes = () => {
     return (
@@ -27,6 +28,7 @@ const MyRoutes = () => {
             <GuestRoute path="/login" component={Login}/>
             <GuestRoute path="/register" component={Register}/>
             <PrivateRoute path="/my-account" component={MyAccount}/>
+            <PrivateRoute path="/admin" component={Admin}/>
             <Route component={PageNotFound}/>
         </Switch>
     );
