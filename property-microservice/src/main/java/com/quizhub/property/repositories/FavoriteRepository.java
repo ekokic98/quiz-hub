@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface FavoriteRepository extends CrudRepository<Favorite, UUID> {
-    Optional<List<Favorite>> getFavoriteByPerson (UUID id);
+    List<Favorite> getFavoriteByPerson (UUID id);
     Optional<List<Favorite>> getFavoriteByQuiz(UUID id);
     boolean existsByQuizAndPerson (UUID q, UUID p);
 }
