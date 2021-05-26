@@ -16,7 +16,6 @@ const Register = ({initialValues = {}, registerMode = true}) => {
 
     const onFinish = async (values) => {
         try {
-            if (!registerMode && JSON.stringify(values) === JSON.stringify(initialValues)) return;
             setLoading(true);
             const response = await signUp(values);
             message.success("Successfully registered");
@@ -171,11 +170,12 @@ const Register = ({initialValues = {}, registerMode = true}) => {
                     <Input.Password/>
                 </Form.Item>
                 }
-                <Form.Item>
+                { registerMode && <Form.Item>
                     <Button loading={ loading } type="primary" htmlType="submit" id="registration-button">
-                        { registerMode ? "Register" : "Update" }
+                        Register
                     </Button>
                 </Form.Item>
+                }
             </Form>
         </div>
     );
