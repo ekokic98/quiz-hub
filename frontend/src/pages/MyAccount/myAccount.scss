@@ -1,3 +1,64 @@
-.padding {
-  padding-top: 20px !important;
+@import "src/assets/scss/variables";
+
+.my-account-page {
+  .my-account-radio-group {
+    padding-top: 20px;
+
+    .radio-group-btn {
+      &:hover {
+        color: $white;
+        background-color: $primary-dark-10;
+        border: $primary-dark-10;
+      }
+
+      &:active {
+        color: $white;
+        background-color: $primary-dark-10;
+        border: $primary-dark-10;
+      }
+    }
+  }
+
+  .edit-profile {
+    background-color: transparent;
+    box-shadow: 0 0 4px $gray ;
+    border-radius: 50px;
+    padding: 40px !important;
+  }
+
+  .second-tab {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    height: 450px;
+    overflow: auto;
+
+    .no-content {
+      color: $gray;
+      font-size: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      h2 {
+        color: $gray;
+      }
+    }
+  }
+
+  .update-btn {
+    width: 50%;
+    background-color: $primary;
+    border: $primary;
+
+    &:active {
+      background: $primary-dark-10;
+      border-color: $primary-dark-10;
+    }
+
+    &:hover {
+      background: $primary-dark-10;
+      border-color: $primary-dark-10;
+    }
+  }
 }

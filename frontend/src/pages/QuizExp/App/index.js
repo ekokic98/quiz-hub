@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 
 import Layout from '../Layout'; //
 import Loader from '../Loader'; //
-//import Main from '../Main';
 import Quiz from '../Quiz'; //
 import Result from '../Result'; //
 import { useHistory, useParams } from "react-router-dom"
