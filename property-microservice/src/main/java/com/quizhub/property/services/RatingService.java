@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.quizhub.property.services.PropertyService.registerEvent;
@@ -67,6 +68,10 @@ public class RatingService {
                 });
     }
 
+    public Optional<Rating> getRatingByUserAndQuiz(UUID userId, UUID quizId) {
+        return ratingRepository.findByQuizAndPerson(quizId, userId);
+    }
+
     public Rating addRating(Rating rating) {
         try {
             Quiz quiz;
@@ -83,11 +88,11 @@ public class RatingService {
             } catch (Exception e) {
                 throw new BadRequestException("Quiz or person does not exist");
             }
-            if (ratingRepository.existsByQuizAndPerson(rating.getQuiz(), rating.getPerson())) {
-                throw new ConflictException("Rating already exists");
-            }
+            Rating savedRating = ratingRepository.findByQuizAndPerson(rating.getQuiz(), rating.getPerson())
+                    .orElse(rating);
+            savedRating.setRate(rating.getRate());
             registerEvent(EventRequest.actionType.CREATE, "/api/ratings", "200");
-            return ratingRepository.save(rating);
+            return ratingRepository.save(savedRating);
         } catch (ConflictException exception) {
             registerEvent(EventRequest.actionType.CREATE, "/api/ratings", "409");
             throw exception;

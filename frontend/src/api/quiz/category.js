@@ -7,7 +7,7 @@ export const getAllCategories = async () => {
 }
 
 export const getCategory = async (id) => {
-    return await get(categoriesUrl, id);
+    return await get(categoriesUrl + "?id=" + id);
 }
 
 export const addCategory = async (category) => {

@@ -1,5 +1,6 @@
 package com.quizhub.quiz.response;
 
+import com.quizhub.quiz.dto.Person;
 import com.quizhub.quiz.model.Quiz;
 
 import java.util.List;
@@ -7,10 +8,12 @@ import java.util.List;
 public class QA_Response_Wrapper {
     List<QA_Response> qa_response;
     Quiz quiz;
+    Person person;
 
-    public QA_Response_Wrapper(List<QA_Response> qa_response, Quiz quiz) {
+    public QA_Response_Wrapper(List<QA_Response> qa_response, Quiz quiz, Person person) {
         this.qa_response = qa_response;
         this.quiz = quiz;
+        this.person = person;
     }
 
     public List<QA_Response> getQa_response() {
@@ -27,5 +30,13 @@ public class QA_Response_Wrapper {
 
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }

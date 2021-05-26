@@ -12,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface ScoreRepository extends CrudRepository<Score, UUID> {
     Optional<List<Score>> getScoresByPerson(UUID p);
-    Optional<List<Score>> getScoresByQuiz(UUID q);
+    List<Score> getScoresByQuiz(UUID q);
 
     Iterable<Score> findByDateScoredBetweenOrderByDateScoredDesc(LocalDateTime from, LocalDateTime to);
 }

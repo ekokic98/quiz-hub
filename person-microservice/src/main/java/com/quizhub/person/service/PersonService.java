@@ -7,7 +7,10 @@ import com.quizhub.person.event.EventServiceGrpc;
 import com.quizhub.person.exception.BadRequestException;
 import com.quizhub.person.exception.ConflictException;
 import com.quizhub.person.model.Person;
+import com.quizhub.person.model.PersonFollower;
+import com.quizhub.person.repository.PersonFollowerRepository;
 import com.quizhub.person.repository.PersonRepository;
+import com.quizhub.person.request.FollowRequest;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
@@ -22,11 +25,13 @@ import java.util.UUID;
 public class PersonService {
 
     private final PersonRepository personRepository;
+    private final PersonFollowerRepository personFollowerRepository;
     private static String grpcUrl;
     private static int grpcPort;
 
-    public PersonService(PersonRepository personRepository) {
+    public PersonService(PersonRepository personRepository, PersonFollowerRepository personFollowerRepository) {
         this.personRepository = personRepository;
+        this.personFollowerRepository = personFollowerRepository;
     }
 
     @Value("${app.grpc-url}")
@@ -107,5 +112,24 @@ public class PersonService {
         }
 
         channel.shutdown();
+    }
+
+    public PersonFollower followPerson(FollowRequest followRequest) {
+        Person person = personRepository.findById(followRequest.getUserId())
+                .orElseThrow(() -> new BadRequestException("Wrong user id"));
+
+        Person follower = personRepository.findById(followRequest.getFollowerId())
+                .orElseThrow(() -> new BadRequestException("Wrong follower id"));
+
+        return personFollowerRepository.save(new PersonFollower(
+                null,
+                person,
+                follower
+        ));
+    }
+
+    public boolean unfollowPerson(PersonFollower personFollower) {
+        personFollowerRepository.deleteById(personFollower.getId());
+        return true;
     }
 }

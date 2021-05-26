@@ -10,8 +10,6 @@ import {
     Message,
 } from 'semantic-ui-react';
 
-import mindImg from '../../images/mind.svg';
-
 import {
     CATEGORIES,
     NUM_OF_QUESTIONS,

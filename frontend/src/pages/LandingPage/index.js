@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { getAllQuizzes } from "api/quiz/quiz";
 import { getAllTournaments } from "api/tournament/tournament";
-import { Col, message, Row } from "antd";
+import { Col, Row } from "antd";
 import MyCard from "components/MyCard";
-import { quizUrl } from "utilities/appUrls";
+import { quizUrl, tournamentUrl } from "utilities/appUrls";
 import { useHistory } from "react-router-dom";
 import QuizCarousel from "components/QuizCarousel";
 import { getRandom } from "utilities/common";
@@ -15,7 +15,7 @@ const LandingPage = () => {
     const [quizzes, setQuizzes] = useState([]);
     const [scores, setScores] = useState([]);
     const [tournaments, setTournaments] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -58,7 +58,7 @@ const LandingPage = () => {
             </Row>
             <Row gutter={[32, 32]}>
                 <Col span={24}>
-                    <h2 style={{ textAlign: 'left', marginTop: 20 }}>
+                    <h2 style={{ textAlign: 'left', marginTop: 20, marginBottom: 10 }}>
                         ALL QUIZZES
                     </h2>
                 </Col>
@@ -72,7 +72,7 @@ const LandingPage = () => {
             </Row>
             <Row gutter={[32, 32]}>
                 <Col span={24}>
-                    <h2 style={{ textAlign: 'left', marginTop: 20 }}>
+                    <h2 style={{ textAlign: 'left', marginTop: 20, marginBottom: 10 }}>
                         TOURNAMENTS
                     </h2>
                 </Col>
@@ -80,7 +80,7 @@ const LandingPage = () => {
             <Row gutter={[32, 32]}>
                 {tournaments.map(tournament =>
                     <Col xs={12} sm={8} md={4}>
-                        <MyCard key={tournament.id} title={tournament.name} />
+                        <MyCard onClick={() => history.push(tournamentUrl + "/" + tournament.id)} key={tournament.id} title={tournament.name} />
                     </Col>
                 )}
             </Row>

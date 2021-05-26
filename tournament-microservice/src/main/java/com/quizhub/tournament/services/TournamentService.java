@@ -158,6 +158,7 @@ public class TournamentService {
 
         JSONObject body = new JSONObject();
         body.put("questions", questions);
+        body.put("tournamentId", quizParams.getTournamentId().toString());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

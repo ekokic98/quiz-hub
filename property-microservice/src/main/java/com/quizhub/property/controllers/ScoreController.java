@@ -48,7 +48,7 @@ public class ScoreController {
 
 
     @GetMapping("/all/quiz")
-    public ResponseEntity<Iterable<Score>> getAllScoresByQuiz (@RequestParam UUID id) {
+    public ResponseEntity<List<ScoreResponse>> getAllScoresByQuiz (@RequestParam UUID id) {
         return ResponseEntity.ok(scoreService.getAllScoresByQuiz(id));
     }
 

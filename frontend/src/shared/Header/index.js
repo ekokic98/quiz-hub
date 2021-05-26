@@ -18,7 +18,7 @@ const Header = () => {
         <Row className='header-container' align='middle'>
             <Col span={4} offset={1} className="logo-col" onClick={() => history.push(homeUrl)}>
                 <img src={Logo} alt="Logo" height='80'/>
-                <h1>QuizHub</h1>
+                <h1 style={{ marginTop: 0 }}>QuizHub</h1>
             </Col>
             <Col span={2} offset={15}>
                 <h3 onClick={() => history.push(categoriesUrl)}>CATEGORIES</h3>

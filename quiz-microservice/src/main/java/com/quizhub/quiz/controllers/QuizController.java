@@ -88,10 +88,17 @@ public class QuizController {
     }
 
     public static class TournamentQuiz {
+        private final String tournamentId;
         private final Question[] questions;
 
-        public TournamentQuiz(@JsonProperty("questions") Question[] questions) {
+        public TournamentQuiz(@JsonProperty("tournamentId") String tournamentId,
+                              @JsonProperty("questions") Question[] questions) {
+            this.tournamentId = tournamentId;
             this.questions = questions;
+        }
+
+        public String getTournamentId() {
+            return tournamentId;
         }
 
         public Question[] getQuestions() {

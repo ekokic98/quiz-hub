@@ -60,7 +60,7 @@ public class FavoriteService {
 
     public Iterable<Favorite> getAllFavoritesByQuiz(UUID id) {
         registerEvent(EventRequest.actionType.GET, "/api/favorites/all/quiz", "200");
-        return favoriteRepository.getFavoriteByPerson(id)
+        return favoriteRepository.getFavoriteByQuiz(id)
                 .orElseThrow(() -> {
                     registerEvent(EventRequest.actionType.GET, "/api/favorites/all/quiz", "400");
                     return new BadRequestException("Quiz with id " + id.toString() + " does not exist");
