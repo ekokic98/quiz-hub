@@ -21,7 +21,7 @@ const Leaderboard = ({ scores, noRank, loading }) => {
     });
 
     return (
-        <div className="leaderboard-container">
+        <div style={{ paddingTop: 10 }}>
             <Table pagination={{ hideOnSinglePage: true }} loading={loading} dataSource={data}>
                 { !noRank && <Column title="Rank" dataIndex="rank" key="rank" /> }
                 <Column

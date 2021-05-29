@@ -4,14 +4,16 @@ import GuestRoute from 'routing/GuestRoute';
 
 import LandingPage from 'pages/LandingPage';
 import Categories from 'pages/Categories';
+import Tournaments from 'pages/Tournaments';
 import Login from 'pages/Login';
 import Register from 'pages/Register';
 import PageNotFound from 'pages/PageNotFound';
 import PrivateRoute from "routing/PrivateRoute";
 import MyAccount from "pages/MyAccount";
-import QuizContainer  from 'pages/QuizContainer/QuizContainer';
-import App from "../pages/QuizExp/App";
-import TApp from "../pages/Tournament/components/App";
+import App from "pages/QuizExp/App";
+import QuizMain from "pages/QuizExp/QuizMain";
+import TApp from "pages/Tournament/components/App";
+import Admin from "../pages/Admin";
 
 const MyRoutes = () => {
     return (
@@ -19,11 +21,14 @@ const MyRoutes = () => {
             <Route exact path="/" component={LandingPage}/>
             <Route path="/categories/*" component={Categories}/>
             <Route path="/categories" component={Categories}/>
-            <Route path="/quiz/:id" component={App}/>
+            <Route path="/quiz/play/:id" component={App}/>
+            <Route path="/quiz/:id" component={QuizMain}/>
+            <Route path="/tournament/:id" component={Tournaments}/>
             <Route path="/play-quiz" component={TApp}/>
             <GuestRoute path="/login" component={Login}/>
             <GuestRoute path="/register" component={Register}/>
             <PrivateRoute path="/my-account" component={MyAccount}/>
+            <PrivateRoute path="/admin" component={Admin}/>
             <Route component={PageNotFound}/>
         </Switch>
     );

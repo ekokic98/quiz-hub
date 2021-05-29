@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {Segment, Header, Button} from 'semantic-ui-react';
 
 //import ShareButton from '../ShareButton';
 import {calculateScore, calculateGrade, timeConverter} from '../../../utilities/quizUtils';
+import { message, Rate } from "antd";
+import { addRating, getRatingByUserAndQuiz } from "api/property/rating";
+import { getUser } from "utilities/localStorage";
+import { useParams } from "react-router-dom";
 
 const Stats = ({
                    totalQuestions,
@@ -12,9 +16,41 @@ const Stats = ({
                    replayQuiz,
                    exitQuiz
                }) => {
+    const user = getUser();
+    const { id } = useParams();
     const score = calculateScore(totalQuestions, correctAnswers);
     const {grade, remarks} = calculateGrade(score);
     const {hours, minutes, seconds} = timeConverter(timeTaken);
+
+    const [rating, setRating] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (user) {
+                try {
+                    const response = await getRatingByUserAndQuiz(user.id, id);
+                    setRating(response?.rate);
+                } catch (ignored) {
+                }
+            }
+        }
+
+        fetchData();
+    }, [id, user])
+
+    const rateQuiz = async (newRating) => {
+        try {
+            setRating(newRating);
+            await addRating({
+                person: user.id,
+                quiz: id,
+                rate: newRating
+            });
+            message.success("You have successfully rated the quiz");
+        } catch (error) {
+            message.warning(error.response.data.message);
+        }
+    }
 
     return (
         <Segment>
@@ -40,7 +76,7 @@ const Stats = ({
                 Time Taken:{' '}
                 {`${Number(hours)}h ${Number(minutes)}m ${Number(seconds)}s`}
             </Header>
-            <div style={{marginTop: 35}}>
+            <div style={{ marginTop: 35, position: 'relative' }}>
                 <Button
                     primary
                     content="Play Again"
@@ -59,6 +95,12 @@ const Stats = ({
                     labelPosition="left"
                     style={{marginBottom: 8}}
                 />
+                {user &&
+                    <span style={{ position: 'absolute', marginTop: 10, right: 5, fontSize: 20 }}>
+                        Rate
+                        <Rate value={rating} style={{ marginLeft: 10, fontSize: 32 }} onChange={rateQuiz} />
+                    </span>
+                }
                 {/*<ShareButton/>*/}
             </div>
         </Segment>

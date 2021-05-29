@@ -1,5 +1,6 @@
 package com.quizhub.property.controllers;
 
+import com.quizhub.property.dto.Quiz;
 import com.quizhub.property.exceptions.BadRequestException;
 import com.quizhub.property.exceptions.InternalErrorException;
 import com.quizhub.property.model.Favorite;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -35,7 +37,7 @@ public class FavoriteController {
     }
 
     @GetMapping("/all/user")
-    public ResponseEntity<Iterable<Favorite>> getAllFavoritesByUser(@RequestParam String username) {
+    public ResponseEntity<List<Quiz>> getAllFavoritesByUser(@RequestParam String username) {
         return ResponseEntity.ok(favoriteService.getAllFavoritesByUser(username));
     }
 

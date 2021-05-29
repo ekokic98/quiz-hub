@@ -3,7 +3,9 @@ package com.quizhub.person.service;
 import com.quizhub.person.exception.BadRequestException;
 import com.quizhub.person.exception.ConflictException;
 import com.quizhub.person.model.Person;
+import com.quizhub.person.model.PersonFollower;
 import com.quizhub.person.model.Role;
+import com.quizhub.person.repository.PersonFollowerRepository;
 import com.quizhub.person.repository.PersonRepository;
 import com.quizhub.person.request.LoginRequest;
 import com.quizhub.person.request.SignupRequest;
@@ -12,14 +14,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+
 @Service
 public class AuthService {
 
     private final PersonRepository personRepository;
+    private final PersonFollowerRepository personFollowerRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthService(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(PersonRepository personRepository, PersonFollowerRepository personFollowerRepository, PasswordEncoder passwordEncoder) {
         this.personRepository = personRepository;
+        this.personFollowerRepository = personFollowerRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -73,5 +80,9 @@ public class AuthService {
         }
         person.setPassword(null);
         return person;
+    }
+
+    public List<PersonFollower> getFollows(UUID id) {
+        return personFollowerRepository.findByPersonId(id);
     }
 }

@@ -172,6 +172,7 @@ public class QuizService {
         quiz.setName(LocalDateTime.now().toString());
         quiz.setTimeLimit(tournamentQuiz.getQuestionsLength() * 15);
         quiz.setTotalQuestions(tournamentQuiz.getQuestionsLength());
+        quiz.setTournamentId(UUID.fromString(tournamentQuiz.getTournamentId()));
         Quiz savedQuiz = quizRepository.save(quiz);
         tournamentQuiz.getQuestions();
         for (var question : tournamentQuiz.getQuestions()) {

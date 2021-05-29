@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.UUID;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -47,7 +47,8 @@ public class AuthController {
                 person.getLastName(),
                 person.getEmail(),
                 person.getUsername(),
-                roles
+                roles,
+                Collections.emptyList()
         ));
     }
 
@@ -72,7 +73,8 @@ public class AuthController {
                 person.getLastName(),
                 person.getEmail(),
                 person.getUsername(),
-                roles
+                roles,
+                personService.getFollows(person.getId())
         ));
     }
 
@@ -97,7 +99,8 @@ public class AuthController {
                 person.getLastName(),
                 person.getEmail(),
                 person.getUsername(),
-                roles
+                roles,
+                personService.getFollows(person.getId())
         ));
     }
 }

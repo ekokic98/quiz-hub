@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 
 import Layout from '../Layout'; //
 import Loader from '../Loader'; //
-//import Main from '../Main';
 import Quiz from '../Quiz'; //
 import Result from '../Result'; //
 import { useHistory, useParams } from "react-router-dom"
@@ -11,6 +10,7 @@ import {  getQuizData } from "api/quiz/qa";
 import { getUser } from "utilities/localStorage";
 import { LocalDateTime } from 'js-joda';
 import { postScore} from "api/property/score";
+import { quizUrl } from "utilities/appUrls";
 
 
 const App = () => {
@@ -35,7 +35,7 @@ const App = () => {
             }
         }
         fetchQuestionsAnswers();
-    }, [])
+    }, [id])
 
     // prepares user's score for database
     const prepareScore = (resultData) => {
@@ -71,8 +71,11 @@ const App = () => {
   
             if (scoreData != null) {
             const sendScore = async (scoreData) => {
-                try  {let qaData =  await postScore(scoreData); }
-                catch (error) {console.warn(error.response.data);}
+                try {
+                    await postScore(scoreData);
+                } catch (error) {
+                    console.warn(error.response.data);
+                }
             }
             sendScore(scoreData);
             }
@@ -102,7 +105,7 @@ const App = () => {
     };
 
     const exitQuiz = () => {
-        history.push("/");
+        history.push(quizUrl + "/" + id);
     };
 
     return (

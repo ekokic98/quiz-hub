@@ -1,7 +1,6 @@
 package com.quizhub.person.repository;
 
 import com.quizhub.person.model.Person;
-import com.quizhub.person.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

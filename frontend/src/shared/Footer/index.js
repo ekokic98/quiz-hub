@@ -1,5 +1,6 @@
 import React from 'react';
-import { Col, Row } from "antd";
+import {Button, Col, Row} from "antd";
+import {GithubFilled} from '@ant-design/icons';
 
 import './footer.scss';
 
@@ -7,8 +8,10 @@ const Footer = () => {
     return (
         <Row className="footer-container" align="middle">
             <Col span={8}>
-                Project by:
                 <div className="project-names">
+                    <span>
+                        Made with ❤️ by:
+                    </span>
                     <span>
                         Amra Musić
                     </span>
@@ -25,7 +28,10 @@ const Footer = () => {
             </Col>
 
             <Col span={8}>
-                QuizHub
+                © QuizHub
+                <Button type="text" href={"https://github.com/kkadusic/quiz-hub"}>
+                    <GithubFilled className="footer-icon"/>
+                </Button>
             </Col>
 
             <Col span={8}>

@@ -9,9 +9,14 @@
   padding-left: 3%;
   width: 100%;
   margin-top: 30px;
+  color: $secondary;
 
   .project-names {
     display: flex;
     justify-content: space-evenly;
+  }
+
+  .footer-icon {
+    font-size: 20px;
   }
 }

@@ -1,0 +1,32 @@
+@import "src/assets/scss/variables";
+
+.quiz-main-container {
+  .created-by-container {
+    font-size: 16px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .quiz-label {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+  }
+
+  .quiz-label-text {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 50px;
+  }
+
+  .favorite-button {
+    font-size: 22px;
+    height: 44px;
+  }
+
+  .ant-rate {
+    font-size: 64px;
+  }
+}

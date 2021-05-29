@@ -1,7 +1,11 @@
 package com.quizhub.person.response;
 
+import com.quizhub.person.model.Person;
+import com.quizhub.person.model.PersonFollower;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class LoginResponseBody {
@@ -17,12 +21,13 @@ public class LoginResponseBody {
     private String lastName;
     private String email;
     private String username;
-    private ArrayList<String> roles;
+    private List<String> roles;
+    private List<PersonFollower> follows;
 
     public LoginResponseBody() {
     }
 
-    public LoginResponseBody(String tokenType, String jwt, UUID id, String city, String country, LocalDateTime dateCreated, String imageUrl, String firstName, String lastName, String email, String username, ArrayList<String> roles) {
+    public LoginResponseBody(String tokenType, String jwt, UUID id, String city, String country, LocalDateTime dateCreated, String imageUrl, String firstName, String lastName, String email, String username, List<String> roles, List<PersonFollower> follows) {
         this.tokenType = tokenType;
         this.jwt = jwt;
         this.id = id;
@@ -35,6 +40,7 @@ public class LoginResponseBody {
         this.email = email;
         this.username = username;
         this.roles = roles;
+        this.follows = follows;
     }
 
     public String getJwt() {
@@ -93,11 +99,11 @@ public class LoginResponseBody {
         this.username = username;
     }
 
-    public ArrayList<String> getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(ArrayList<String> roles) {
+    public void setRoles(List<String> roles) {
         this.roles = roles;
     }
 
@@ -131,5 +137,13 @@ public class LoginResponseBody {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public List<PersonFollower> getFollows() {
+        return follows;
+    }
+
+    public void setFollows(List<PersonFollower> follows) {
+        this.follows = follows;
     }
 }

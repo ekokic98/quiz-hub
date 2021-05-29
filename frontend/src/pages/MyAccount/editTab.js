@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { getUser, setSession } from "utilities/localStorage";
-import { Button, Form, Input, message, Select, Tooltip } from "antd";
+import { Button, Form, Input, message, Select } from "antd";
 import { updateProfile } from "api/person/auth";
 import { cities } from "assets/json/constants";
 
@@ -29,6 +29,7 @@ const EditTab = () => {
     return (
         <Form
             name="editProfile"
+            className="edit-profile"
             onFinish={ onUpdateHandler }
             scrollToFirstError
             size="middle"
@@ -117,7 +118,7 @@ const EditTab = () => {
             </Form.Item>
 
             <Form.Item>
-                <Button loading={ loading } type="primary" htmlType="submit">
+                <Button className='update-btn' loading={ loading } type="primary" htmlType="submit">
                     Update
                 </Button>
             </Form.Item>

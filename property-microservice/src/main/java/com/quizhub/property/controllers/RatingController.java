@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -41,6 +42,11 @@ public class RatingController {
     @GetMapping("/all/quiz")
     public ResponseEntity<Iterable<Rating>> getAllRatingsByQuiz(@RequestParam UUID id) {
         return ResponseEntity.ok(ratingService.getAllRatingsByQuiz(id));
+    }
+
+    @GetMapping("/quiz")
+    public ResponseEntity<Optional<Rating>> getRatingByUserAndQuiz(@RequestParam UUID userId, @RequestParam UUID quizId) {
+        return ResponseEntity.ok(ratingService.getRatingByUserAndQuiz(userId, quizId));
     }
 
     @PostMapping

@@ -1,24 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import { Col, message, Row } from "antd";
 import MyCard from "components/MyCard";
-import { getAllCategories } from "api/quiz/category";
-import { categoriesUrl, quizUrl } from "utilities/appUrls";
+import { quizUrl } from "utilities/appUrls";
 import { useHistory } from "react-router-dom";
-import { getQuizzesByCategory } from "api/quiz/quiz";
+import { getQuizzesForTournament } from "api/quiz/quiz";
+import placeholderImage from 'assets/images/placeholder.png';
 
-const Categories = (props) => {
-    const [data, setData] = useState([]);
+const Tournaments = (props) => {
+    const [quizzes, setQuizzes] = useState([]);
     const history = useHistory();
-    const id = props.match?.params[0];
+    const id = props.match?.params?.id;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                if (id) {
-                    setData(await getQuizzesByCategory(id));
-                } else {
-                    setData(await getAllCategories());
-                }
+                setQuizzes(await getQuizzesForTournament(id));
             } catch (error) {
                 message.warning(error.response.data.message);
             }
@@ -32,20 +28,20 @@ const Categories = (props) => {
             <Row gutter={[32, 32]}>
                 <Col span={24}>
                     <h2 style={{ textAlign: 'left', marginBottom: 10 }}>
-                        { id ? "QUIZZES" : "ALL CATEGORIES" }
+                        QUIZZES
                     </h2>
                 </Col>
             </Row>
             <Row gutter={[32, 32]}>
-                {data.map(entity =>
+                {quizzes.map(quiz =>
                     <Col xs={12} sm={8} md={4}>
-                        <MyCard onClick={() => history.push((id ? quizUrl : categoriesUrl) + "/" + entity.id)} key={entity.id} imgSrc={id ? entity?.category?.imageUrl : entity.imageUrl} title={entity.name} />
+                        <MyCard onClick={() => history.push(quizUrl + "/" + quiz.id)} key={quiz.id} imgSrc={quiz.category !== null ? quiz.category.imageUrl : placeholderImage} title={quiz.name} />
                     </Col>
                 )}
-                {data.length === 0 &&
+                {quizzes.length === 0 &&
                     <Col style={{ textAlign: 'left' }} span={24}>
                         <h2>
-                            { id ? "No quizzes" : "No categories"}
+                            No quizzes
                         </h2>
                     </Col>
                 }
@@ -54,4 +50,4 @@ const Categories = (props) => {
     );
 }
 
-export default Categories;
+export default Tournaments;

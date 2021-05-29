@@ -97,13 +97,25 @@ public class ScoreService {
     }
 
 
-    public Iterable<Score> getAllScoresByQuiz(UUID id) {
+    public List<ScoreResponse> getAllScoresByQuiz(UUID id) {
         registerEvent(EventRequest.actionType.GET, "/api/scores/all/user", "200");
-        return scoreRepository.getScoresByQuiz(id)
-                .orElseThrow(() -> {
-                    registerEvent(EventRequest.actionType.GET, "/api/scores/all/user", "400");
-                    return new BadRequestException("Person with username " + id + " does not exist");
-                });
+
+        Iterable<Score> scores = scoreRepository.getScoresByQuiz(id);
+
+        List<ScoreResponse> response = new ArrayList<>();
+
+        for (Score score : scores) {
+            Person person;
+            Quiz quiz;
+            try {
+                person = restTemplate.getForObject("http://person-service/api/persons?id=" + score.getPerson(), Person.class);
+                quiz = restTemplate.getForObject("http://quiz-service/api/quizzes?id=" + score.getQuiz(), Quiz.class);
+                response.add(new ScoreResponse(score, person, quiz));
+            } catch (Exception ignored) {
+            }
+        }
+
+        return response;
     }
 
     public Score addScore(Score score) throws JsonProcessingException {

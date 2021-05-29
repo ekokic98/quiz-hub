@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import static com.quizhub.property.services.PropertyService.registerEvent;
@@ -43,7 +45,7 @@ public class FavoriteService {
                 });
     }
 
-    public Iterable<Favorite> getAllFavoritesByUser(String username) {
+    public List<Quiz> getAllFavoritesByUser(String username) {
         Person person;
         try {
             person = restTemplate.getForObject("http://person-service/api/persons/username?username=" + username, Person.class);
@@ -51,16 +53,26 @@ public class FavoriteService {
             throw new BadRequestException("Quiz or person does not exist");
         }
         registerEvent(EventRequest.actionType.GET, "/api/favorites/all/user", "200");
-        return favoriteRepository.getFavoriteByPerson(person.getId())
-                .orElseThrow(() -> {
-                    registerEvent(EventRequest.actionType.GET, "/api/favorites/all/user", "400");
-                    return new BadRequestException("Person with username " + username + " does not exist");
-                });
+
+        List<Favorite> favorites = favoriteRepository.getFavoriteByPerson(person.getId());
+
+        List<Quiz> quizzes = new ArrayList<>();
+        for (Favorite favorite : favorites) {
+            try {
+                Quiz quiz = restTemplate.getForObject("http://quiz-service/api/quizzes?id=" + favorite.getQuiz(), Quiz.class);
+                quizzes.add(quiz);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new BadRequestException("Quiz or person does not exist");
+            }
+        }
+
+        return quizzes;
     }
 
     public Iterable<Favorite> getAllFavoritesByQuiz(UUID id) {
         registerEvent(EventRequest.actionType.GET, "/api/favorites/all/quiz", "200");
-        return favoriteRepository.getFavoriteByPerson(id)
+        return favoriteRepository.getFavoriteByQuiz(id)
                 .orElseThrow(() -> {
                     registerEvent(EventRequest.actionType.GET, "/api/favorites/all/quiz", "400");
                     return new BadRequestException("Quiz with id " + id.toString() + " does not exist");

@@ -3,6 +3,8 @@ package com.quizhub.person.controller;
 import com.quizhub.person.exception.BadRequestException;
 import com.quizhub.person.exception.ConflictException;
 import com.quizhub.person.model.Person;
+import com.quizhub.person.model.PersonFollower;
+import com.quizhub.person.request.FollowRequest;
 import com.quizhub.person.service.PersonService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -55,5 +57,21 @@ public class PersonController {
     })
     public ResponseEntity<Person> getPersonByUsername(@RequestParam String username) {
         return ResponseEntity.ok(personService.getPersonByUsername(username));
+    }
+
+    @PostMapping("/follow")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class)
+    })
+    public ResponseEntity<PersonFollower> followPerson(@RequestBody @Valid FollowRequest followRequest) {
+        return ResponseEntity.ok(personService.followPerson(followRequest));
+    }
+
+    @PostMapping("/unfollow")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class)
+    })
+    public ResponseEntity<Boolean> unfollowPerson(@RequestBody @Valid PersonFollower personFollower) {
+        return ResponseEntity.ok(personService.unfollowPerson(personFollower));
     }
 }
