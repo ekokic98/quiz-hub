@@ -12,7 +12,7 @@ import PrivateRoute from "routing/PrivateRoute";
 import MyAccount from "pages/MyAccount";
 import App from "pages/QuizExp/App";
 import QuizMain from "pages/QuizExp/QuizMain";
-import TApp from "pages/Tournament/components/App";
+import  CreateQuiz from 'pages/CreateQuiz';
 import Admin from "../pages/Admin";
 
 const MyRoutes = () => {
@@ -24,7 +24,7 @@ const MyRoutes = () => {
             <Route path="/quiz/play/:id" component={App}/>
             <Route path="/quiz/:id" component={QuizMain}/>
             <Route path="/tournament/:id" component={Tournaments}/>
-            <Route path="/play-quiz" component={TApp}/>
+            <Route path="/create-quiz" component={CreateQuiz}/>
             <GuestRoute path="/login" component={Login}/>
             <GuestRoute path="/register" component={Register}/>
             <PrivateRoute path="/my-account" component={MyAccount}/>
