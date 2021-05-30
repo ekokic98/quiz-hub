@@ -2,6 +2,8 @@ package com.quizhub.quiz.model;
 
 import com.quizhub.quiz.model.enums.QuestionType;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -17,8 +19,9 @@ public class Question {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "quiz_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Quiz quiz;
 
     @Column(nullable = false)

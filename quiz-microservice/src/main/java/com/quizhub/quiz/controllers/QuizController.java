@@ -44,8 +44,14 @@ public class QuizController {
 
     @PostMapping("/update-quiz")
     public ResponseEntity<String> updateQuiz(@RequestBody UpdateQuizModel updateQuizModel) {
-        quizService.updateQuiz(updateQuizModel);
+        quizService.createUpdateQuiz(updateQuizModel, true);
         return ResponseEntity.ok("Quiz has been successfully updated!");
+    }
+
+    @PostMapping("/create-quiz")
+    public ResponseEntity<String> createQuiz(@RequestBody UpdateQuizModel updateQuizModel) {
+        quizService.createUpdateQuiz(updateQuizModel, false);
+        return ResponseEntity.ok("Quiz has been successfully created!");
     }
 
     @GetMapping("/random")

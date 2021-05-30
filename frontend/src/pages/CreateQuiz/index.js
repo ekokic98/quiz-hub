@@ -1,14 +1,15 @@
-import { Form, Input, Button } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {  Button } from 'antd';
 import 'pages/CreateQuiz/createQuiz.scss';
-import * as tmp from 'pages/CreateQuiz/quizModel';
+
 
 import {useEffect, useState} from 'react';
 import Question from 'pages/CreateQuiz/Question';
 import { useHistory, useParams } from "react-router-dom";
 import {  getFullQuiz } from "api/quiz/qa";
+import {  updateQuizReq, createQuizReq } from "api/quiz/quiz";
 import {  getAllCategories } from "api/quiz/category";
 import Select from 'react-select';
+import {getUser} from 'utilities/localStorage';
 
 const QUESTION_PLACEHOLDER = {
     "question_id": "5555555-5555-5555-5555-555555555", "category": "Category", "type": "multiple",
@@ -22,7 +23,7 @@ const BLANK_QUIZ = {
 };
 
 
-const CreateQuiz = () => {
+const CreateUpdateQuiz = () => {
   const [quizData, setQuizData] = useState(BLANK_QUIZ);
   const {id} = useParams();
 
@@ -60,6 +61,24 @@ const CreateQuiz = () => {
     }
   }
 
+  const sendQuiz = async (create, clone) => {
+    try {
+      if (create) {
+      let user = getUser();
+      clone.quiz.personId = user.id;
+       await createQuizReq(clone);
+      }
+      else {
+       await updateQuizReq(clone);
+      }
+      alert("success!");
+    }
+    catch (error) {
+       console.warn(error.response.data.message);
+       alert("fail!");
+    }
+  }
+
   const updateQuiz = (id, item) => {
       let clone = JSON.parse(JSON.stringify(quizData));
       clone.qa_response[id] = item;
@@ -69,6 +88,7 @@ const CreateQuiz = () => {
   const deleteQuestion = (id) => {
     let clone = JSON.parse(JSON.stringify(quizData));
     clone.qa_response.splice(id, 1);
+    clone.quiz.totalQuestions = clone.qa_response.length;
     setQuizData(clone);
   }
 
@@ -87,6 +107,7 @@ const CreateQuiz = () => {
   const onAddQuestion = () => {
     let clone = JSON.parse(JSON.stringify(quizData));
     clone.qa_response.push(QUESTION_PLACEHOLDER);
+    clone.quiz.totalQuestions = clone.qa_response.length;
     setQuizData(clone);
   };
 
@@ -98,7 +119,6 @@ const CreateQuiz = () => {
 
   const onSubmitQuiz = () => {
     let qa_list = quizData.qa_response;
-    console.log("...")
     for (let i = 0; i < qa_list.length; i++) {
       if (!qa_list[i].question) {
         setErrorLabel("question empty error");
@@ -119,7 +139,6 @@ const CreateQuiz = () => {
         }
       }
     }
-    console.log(quizData.quiz.categoryId);
 
     if (!quizData.quiz.categoryId) {
       setErrorLabel("category not set");
@@ -130,7 +149,8 @@ const CreateQuiz = () => {
       setErrorLabel("quiz name not set");
       return ;
     }
-
+    let clone = JSON.parse(JSON.stringify(quizData));
+    sendQuiz(!id, clone);
     setErrorLabel("");
   };
 
@@ -138,7 +158,7 @@ const CreateQuiz = () => {
       <>
        Quiz name: <input type="text" value={quizData.quiz.name} onChange={onChangeQuizName}/> <br/>  
        Minutes: <input type="number" value={quizData.quiz.timeLimit} onChange={onChangeTimeLimit} min="1"/> 
-       <Select options={categoriesData} onChange={onChangeCategory}/>
+       <Select options={categoriesData} onChange={onChangeCategory} />
        <button  className="ans-btn"  onClick={onAddQuestion}>Add question</button><br/> <br/> 
        
         {quizData.qa_response.map(item => {
@@ -154,4 +174,4 @@ const CreateQuiz = () => {
   );
 };
 
-export default CreateQuiz;
+export default CreateUpdateQuiz;

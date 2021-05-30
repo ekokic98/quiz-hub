@@ -125,10 +125,12 @@ public class QuizService {
         ));
     }
 
-    public void updateQuiz (UpdateQuizModel quizModel) {
+    public void createUpdateQuiz(UpdateQuizModel quizModel, boolean update) {
         // update is implemented as delete - add operation
         // delete quiz
         QuizResponse quizResponse = quizModel.getQuiz();
+        // is it updating or creating quiz?
+        if (update)
          deleteQuizById(quizResponse.getId());
 
          Optional<Category> optionalCategory = categoryRepository.findById(quizResponse.getCategoryId());
