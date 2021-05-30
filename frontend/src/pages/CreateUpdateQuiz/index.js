@@ -1,9 +1,9 @@
-import {  Button } from 'antd';
-import 'pages/CreateQuiz/createQuiz.scss';
-
-
+import {  Button, message } from 'antd';
+import 'pages/CreateUpdateQuiz/createQuiz.scss';
+import { Input } from 'antd';
+import { DeleteFilled } from '@ant-design/icons';
 import {useEffect, useState} from 'react';
-import Question from 'pages/CreateQuiz/Question';
+import Question from 'pages/CreateUpdateQuiz/Question';
 import { useHistory, useParams } from "react-router-dom";
 import {  getFullQuiz } from "api/quiz/qa";
 import {  updateQuizReq, createQuizReq } from "api/quiz/quiz";
@@ -26,13 +26,13 @@ const BLANK_QUIZ = {
 const CreateUpdateQuiz = () => {
   const [quizData, setQuizData] = useState(BLANK_QUIZ);
   const {id} = useParams();
-
+  let history = useHistory();
   const [categoriesData, setCategoriesData] = useState([{value: "placeholder", label: "placeholder"}]);
   const [errorLabel, setErrorLabel] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchCategories();
-
     // when id is not provided it means that quiz is created not updated
      if (id)  fetchQuiz();
      
@@ -44,7 +44,7 @@ const CreateUpdateQuiz = () => {
         setQuizData(qaData)
     }
     catch (error) {
-       console.warn(error.response.data.message);
+       message.error(!error.response.data.message ? error : error.response.data.message);
     }
   }
 
@@ -57,26 +57,31 @@ const CreateUpdateQuiz = () => {
         setCategoriesData(reshaped);
     }
     catch (error) {
-       console.warn(error.response.data.message);
+      message.error(!error.response.data.message ? error : error.response.data.message);
     }
   }
 
   const sendQuiz = async (create, clone) => {
     try {
       if (create) {
-      let user = getUser();
-      clone.quiz.personId = user.id;
-       await createQuizReq(clone);
+        let user = getUser();
+        clone.quiz.personId = user.id;
+        await createQuizReq(clone);
+        message.success("Quiz has been successfully created! Redirecting...");
       }
       else {
-       await updateQuizReq(clone);
+        await updateQuizReq(clone);
+        message.success("Quiz has been successfully updated! Redirecting...");
       }
-      alert("success!");
+      setTimeout(() => {
+        history.push("/");
+      }, 2500);
     }
     catch (error) {
-       console.warn(error.response.data.message);
-       alert("fail!");
+       message.error(!error.response.data.message ? error : error.response.data.message);
     }
+    setLoading(false);
+   
   }
 
   const updateQuiz = (id, item) => {
@@ -118,59 +123,71 @@ const CreateUpdateQuiz = () => {
   };
 
   const onSubmitQuiz = () => {
+    setLoading(true);
     let qa_list = quizData.qa_response;
     for (let i = 0; i < qa_list.length; i++) {
       if (!qa_list[i].question) {
-        setErrorLabel("question empty error");
+        message.warn("Questions cannot be blank!");
+        setLoading(false);
         return ;
       }
       if (!qa_list[i].correct_answer || !qa_list[i].options.includes(qa_list[i].correct_answer)) {
-        setErrorLabel("question missing correct  answer");
+        message.warn("Question " + i + "# is missing correct answer!");
+        setLoading(false);
         return ;
       }
       if (qa_list[i].options.length < 2) {
-        setErrorLabel("question must have at least 2 answers!");
+        message.warn("Question " + i + "# has less than 2 answers!");
+        setLoading(false);
         return ;
       } 
       for (let j = 0; j < qa_list[i].options.length; j++) {
         if (!qa_list[i].options[j]) {
-          setErrorLabel("answer cannot be null");
+          message.warn("Answers cannot be blank!");
+          setLoading(false);
           return ;
         }
       }
     }
 
     if (!quizData.quiz.categoryId) {
-      setErrorLabel("category not set");
+      message.warn("Category not set!");
+      setLoading(false);
       return ;
     }
 
     if (!quizData.quiz.name) {
-      setErrorLabel("quiz name not set");
+      message.warn("Quiz name cannot be blank!");
+      setLoading(false);
       return ;
     }
     let clone = JSON.parse(JSON.stringify(quizData));
     sendQuiz(!id, clone);
-    setErrorLabel("");
+
   };
 
   return (
-      <>
-       Quiz name: <input type="text" value={quizData.quiz.name} onChange={onChangeQuizName}/> <br/>  
-       Minutes: <input type="number" value={quizData.quiz.timeLimit} onChange={onChangeTimeLimit} min="1"/> 
-       <Select options={categoriesData} onChange={onChangeCategory} />
+      <div className="cu-container">
+       Quiz name: <Input className="quiz-input" type="text" value={quizData.quiz.name} onChange={onChangeQuizName}/> <br/>  
+       Minutes: <Input className="quiz-input" type="number" value={quizData.quiz.timeLimit} onChange={onChangeTimeLimit} min="1"/> 
+       <Select id="cat-selector" options={categoriesData} onChange={onChangeCategory} />
        <button  className="ans-btn"  onClick={onAddQuestion}>Add question</button><br/> <br/> 
        
         {quizData.qa_response.map(item => {
             let id = quizData.qa_response.indexOf(item);
             return (
-            <>Question #{id + 1}  <button  className="ans-btn"  onClick={() => deleteQuestion(id)}>Delete question</button>
-            <Question key={id} question={item} inx={id} updateQuiz={updateQuiz} /> <br></br> </>);
+              <div className="question-item-outer">
+                <div className="question-item-top">
+                <p className="question-title">Question #{id + 1}</p>  
+                <button  className="ans-btn del-qn-btn icon-btn"  onClick={() => deleteQuestion(id)}><DeleteFilled /></button>
+                </div>
+                <Question key={id} question={item} inx={id} updateQuiz={updateQuiz} /> <br></br> 
+            </div>);
         })}
       
-        <Button onClick={onSubmitQuiz}> Submit quiz</Button>
+        <Button onClick={onSubmitQuiz} loading={loading}> Submit quiz</Button>
         <p id="err-label" >{errorLabel}</p>
-        </>
+        </div>
   );
 };
 

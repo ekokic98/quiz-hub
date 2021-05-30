@@ -12,7 +12,7 @@ import PrivateRoute from "routing/PrivateRoute";
 import MyAccount from "pages/MyAccount";
 import App from "pages/QuizExp/App";
 import QuizMain from "pages/QuizExp/QuizMain";
-import  CreateUpdateQuiz from 'pages/CreateQuiz';
+import  CreateUpdateQuiz from 'pages/CreateUpdateQuiz';
 import Admin from "../pages/Admin";
 
 const MyRoutes = () => {

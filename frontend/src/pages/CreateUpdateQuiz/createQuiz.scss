@@ -1,0 +1,108 @@
+.dynamic-delete-button {
+    position: relative;
+    top: 4px;
+    margin: 0 8px;
+    color: #999;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .dynamic-delete-button:hover {
+    color: #777;
+  }
+  .dynamic-delete-button[disabled] {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .green-btn {
+      color: green;
+  }
+
+  .icon-btn {
+    border: none;
+    background-color: inherit;
+    height: 25pt;
+    font-size: 18pt;
+  }
+
+  #err-label {
+      color: lightcoral;
+      font-size: 10pt;
+  }
+
+  .delete-btn {
+    color: rgb(247, 85, 85);
+  }
+
+  .icon-btn:hover {
+    opacity: 80%;
+  }
+
+  .ans-input {
+    width: 300pt !important;
+    height: 25pt !important;
+  }
+
+  .qn-input {
+    width: 500pt !important;
+  }
+
+  #cat-selector {
+    width: 400pt !important;
+  }
+
+  .quiz-input {
+    width: 400pt !important;
+  }
+
+  .cu-container {
+    margin-left: 10%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .question-item-outer {
+    margin-top: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 1pt solid gray;
+    border-radius: 10px;
+    padding: 5pt;
+  }
+
+  .question-item-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 5pt;
+  }
+
+  .answer-item {
+    margin-top: 10pt;
+    display: flex;
+  }
+
+  .question-item-top {
+    width: 100%;
+    display: inline-block;
+  }
+
+  .del-qn-btn {
+    float: right;
+
+  }
+
+  .question-title {
+    float: left;
+
+  }

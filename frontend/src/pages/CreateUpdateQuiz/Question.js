@@ -1,5 +1,5 @@
 import { Form, Input, Button, Space } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { CheckCircleFilled, DeleteFilled } from '@ant-design/icons';
 import {useState} from 'react';
 
 const Question = (props) => {
@@ -49,20 +49,19 @@ const Question = (props) => {
 
 
     return (
-    <div className="question-item">
-         <input type="text" value={qa.question} onChange={onChangeQuestion}></input> 
+    <div className="question-item-inner">
+         <Input className="qn-input" type="text" value={qa.question} onChange={onChangeQuestion}></Input> 
         <button className="ans-btn" onClick={onAdd}>Add new answer</button>
-        <br></br>
+
         {qa.options.map(
             item => {  
             let item_id =  qa.options.indexOf(item);
             return (
-            <>
-            <input key={item_id} type="text" value={item} onChange={(e) => onChangeAnswer(e, item_id)}></input> 
-            <button  className="ans-btn"  onClick={() => deleteAnswer(item_id)}>Delete</button>
-            <button  className={item === qa.correct_answer ? "ans-btn green-btn" : "ans-btn"} onClick={() => setCorrectAnswer(item_id)}>Set correct</button>
-            <br></br>
-            </>);
+            <div className="answer-item">             
+                <Input  className="ans-input" key={item_id} type="text" value={item} onChange={(e) => onChangeAnswer(e, item_id)}></Input> 
+                <button  className="icon-btn delete-btn"  onClick={() => deleteAnswer(item_id)}><DeleteFilled /></button>
+                <button  className={item === qa.correct_answer ? "icon-btn green-btn" : "icon-btn"} onClick={() => setCorrectAnswer(item_id)}><CheckCircleFilled/></button>
+            </div>);
             }
            
          )}
