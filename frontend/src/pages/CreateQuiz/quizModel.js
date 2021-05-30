@@ -84,23 +84,11 @@ export const data = {
       "id": "1bfdd50f-90b3-4804-81f2-1062e4292508",
       "personId": "d234091b-41f8-45a5-927a-89f88e6d5da0",
       "tournamentId": null,
-      "category": {
-        "id": "285d4c25-efc3-4916-bc9d-edaada54fae7",
-        "name": "Tech",
-        "imageUrl": "https://placeimg.com/640/480/tech"
-      },
+      "categoryId": "285d4c25-efc3-4916-bc9d-edaada54fae7",
       "name": "Fun quiz",
       "dateCreated": "2021-04-07T19:43:26.218458",
       "timeLimit": 150000,
       "totalQuestions": 6
-    },
-    "person": {
-      "id": "d234091b-41f8-45a5-927a-89f88e6d5da0",
-      "firstName": "Anna",
-      "lastName": "Smith",
-      "imageUrl": "$2a$12$rfIMtjMb/fk03.5bAKIk1ekSGkDNQQOl7cKeNEuRZUNzItOv9cA9C",
-      "username": "Anna5",
-      "email": "ana.smith@gmail.com"
     }
 };
 

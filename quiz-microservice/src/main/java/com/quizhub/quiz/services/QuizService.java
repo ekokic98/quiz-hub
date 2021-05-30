@@ -18,6 +18,9 @@ import com.quizhub.quiz.repositories.AnswerRepository;
 import com.quizhub.quiz.repositories.CategoryRepository;
 import com.quizhub.quiz.repositories.QuestionRepository;
 import com.quizhub.quiz.repositories.QuizRepository;
+import com.quizhub.quiz.response.QA_Response;
+import com.quizhub.quiz.response.QuizResponse;
+import com.quizhub.quiz.response.UpdateQuizModel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
@@ -120,6 +123,42 @@ public class QuizService {
                 quiz.getTimeLimit(),
                 quiz.getTotalQuestions()
         ));
+    }
+
+    public void updateQuiz (UpdateQuizModel quizModel) {
+        // update is implemented as delete - add operation
+        // delete quiz
+        QuizResponse quizResponse = quizModel.getQuiz();
+         deleteQuizById(quizResponse.getId());
+
+         Optional<Category> optionalCategory = categoryRepository.findById(quizResponse.getCategoryId());
+         Category category;
+        if (optionalCategory.isPresent()) {
+            category = optionalCategory.get();
+        }
+        else {
+            throw new BadRequestException("Category does not exist");
+        }
+
+        // add quiz
+        Quiz quiz = add(new Quiz(quizResponse.getId(), quizResponse.getPersonId(), category, quizResponse.getName(), null,
+                LocalDateTime.now(), quizResponse.getTimeLimit(), quizResponse.getTotalQuestions()));
+        Quiz savedQuiz = quizRepository.save(quiz);
+
+        // answers and questions
+        List<QA_Response> q_list = quizModel.getQa_response();
+        for (var question : q_list) {
+            Question savedQuestion = questionRepository.save(new Question(savedQuiz, question.getQuestion(), QuestionType.SINGLE_CHOICE));
+            answerRepository.save(new Answer(savedQuestion, question.getCorrect_answer(), true));
+            // frontend ignores incorrect_answers list, so it is required to manually create list
+            List<String> incorrectAnswers = question.getOptions();
+            incorrectAnswers.remove(question.getCorrect_answer());
+            for (var answer : incorrectAnswers) {
+                answerRepository.save(new Answer(savedQuestion, answer, false));
+            }
+        }
+
+
     }
 
     public Quiz getQuiz(UUID id) {
