@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 
-import Layout from '../Layout'; //
-import Loader from '../Loader'; //
-import Quiz from '../Quiz'; //
-import Result from '../Result'; //
+import Layout from '../Layout'; 
+import Loader from '../Loader'; 
+import Quiz from '../Quiz'; 
+import Result from '../Result'; 
 import { useHistory, useParams } from "react-router-dom"
-import {shuffle} from '../../../utilities/quizUtils'; //
+import {shuffle} from '../../../utilities/quizUtils'; 
 import {  getQuizData } from "api/quiz/qa";
 import { getUser } from "utilities/localStorage";
 import { LocalDateTime } from 'js-joda';
@@ -28,7 +28,7 @@ const App = () => {
             setLoading(true);
             try {
                 let qaData =  await getQuizData(id);
-                startQuiz(qaData.qa_response, qaData.quiz.timeLimit); 
+                startQuiz(qaData.qa_response, qaData.quiz.timeLimit / 1000); 
             }
             catch (error) {
                console.warn(error.response.data.message);
@@ -124,9 +124,5 @@ const App = () => {
 
 export default App;
 
-/*
-            {!loading && !isQuizStarted && !isQuizCompleted && (
-                <Main startQuiz={startQuiz}/>
-            )}
-*/
+
 

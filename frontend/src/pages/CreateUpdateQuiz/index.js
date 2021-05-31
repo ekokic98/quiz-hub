@@ -28,38 +28,45 @@ const CreateUpdateQuiz = () => {
   const {id} = useParams();
   let history = useHistory();
   const [categoriesData, setCategoriesData] = useState([{value: "placeholder", label: "placeholder"}]);
-  const [errorLabel, setErrorLabel] = useState("");
   const [loading, setLoading] = useState(false);
+  const [timer, setTimer] = useState(0);
 
   useEffect(() => {
+    const fetchQuiz = async () => {
+      try {
+          message.loading("Loading your quiz, please wait...");
+          let qaData =  await getFullQuiz(id);
+          setQuizData(qaData);
+          let minutes = Math.round(quizData.quiz.timeLimit /  60000);
+          setTimer(minutes);
+          message.success("Quiz successfully loaded!");
+      }
+      catch (error) {
+         message.error(!error.response.data.message ? error : error.response.data.message);
+         setTimeout(() => {
+          history.push("/");
+        }, 1500);
+      }
+    }
+
+    const fetchCategories = async () => {
+      try {
+          let categories =  await getAllCategories();
+          let reshaped = categories.map(item => {
+            return {...item, value: item.id, label: item.name};
+          });
+          setCategoriesData(reshaped);
+      }
+      catch (error) {
+        message.error(!error.response.data.message ? error : error.response.data.message);
+      }
+    }
+    // call methods for fetching quizzes and categories
     fetchCategories();
-    // when id is not provided it means that quiz is created not updated
+    // when id is not provided in url it means that quiz is created, not updated
      if (id)  fetchQuiz();
-     
   }, []);
 
-  const fetchQuiz = async () => {
-    try {
-        let qaData =  await getFullQuiz(id);
-        setQuizData(qaData)
-    }
-    catch (error) {
-       message.error(!error.response.data.message ? error : error.response.data.message);
-    }
-  }
-
-  const fetchCategories = async () => {
-    try {
-        let categories =  await getAllCategories();
-        let reshaped = categories.map(item => {
-          return {...item, value: item.id, label: item.name};
-        });
-        setCategoriesData(reshaped);
-    }
-    catch (error) {
-      message.error(!error.response.data.message ? error : error.response.data.message);
-    }
-  }
 
   const sendQuiz = async (create, clone) => {
     try {
@@ -80,22 +87,21 @@ const CreateUpdateQuiz = () => {
     catch (error) {
        message.error(!error.response.data.message ? error : error.response.data.message);
     }
-    setLoading(false);
-   
-  }
+    setLoading(false); 
+  };
 
-  const updateQuiz = (id, item) => {
+  const updateQuiz = (id, item) => { 
       let clone = JSON.parse(JSON.stringify(quizData));
       clone.qa_response[id] = item;
       setQuizData(clone);
-  }
+  };
 
   const deleteQuestion = (id) => {
     let clone = JSON.parse(JSON.stringify(quizData));
     clone.qa_response.splice(id, 1);
     clone.quiz.totalQuestions = clone.qa_response.length;
     setQuizData(clone);
-  }
+  };
 
   const onChangeQuizName = e => {
     let clone = JSON.parse(JSON.stringify(quizData));
@@ -105,8 +111,11 @@ const CreateUpdateQuiz = () => {
 
   const onChangeTimeLimit = e => {
     let clone = JSON.parse(JSON.stringify(quizData));
-    clone.quiz.timeLimit = e.target.value;
+    let miliseconds = e.target.value * 60000;
+    console.log(miliseconds);
+    clone.quiz.timeLimit = miliseconds;
     setQuizData(clone);
+    setTimer(e.target.value);
   };
 
   const onAddQuestion = () => {
@@ -156,11 +165,18 @@ const CreateUpdateQuiz = () => {
       return ;
     }
 
+    if (quizData.quiz.timeLimit < 0) {
+      message.warn("Time limit cannot be negative!");
+      setLoading(false);
+      return ;
+    }
+
     if (!quizData.quiz.name) {
       message.warn("Quiz name cannot be blank!");
       setLoading(false);
       return ;
     }
+
     let clone = JSON.parse(JSON.stringify(quizData));
     sendQuiz(!id, clone);
 
@@ -169,16 +185,17 @@ const CreateUpdateQuiz = () => {
   return (
       <div className="cu-container">
        <div className="quiz-details-div">
-       <div className="quiz-details-top">
-       <p className="quiz-name-label top-label">Quiz name</p> 
-       <Input className="quiz-input" type="text" value={quizData.quiz.name} onChange={onChangeQuizName}/> 
-         <p className="time-limit-label top-label">Time limit (minutes)</p> 
-         <Input className="time-input" type="number" value={quizData.quiz.timeLimit} onChange={onChangeTimeLimit} min="1"/> </div>
-         <div className="quiz-details-top quiz-details-bottom">
-         <p className="category-label top-label">Category</p> 
-        <Select id="cat-selector" options={categoriesData} onChange={onChangeCategory} placeholder="Select category..." />
-        <button  className="ans-btn add-qn-btn"  onClick={onAddQuestion}>Add question</button>
+        <div className="quiz-details-top">
+          <p className="quiz-name-label top-label">Quiz name</p> 
+          <Input className="quiz-input" type="text" value={quizData.quiz.name} onChange={onChangeQuizName}/> 
+          <p className="time-limit-label top-label">Time limit (minutes)</p> 
+          <Input className="time-input" type="number" value={timer} onChange={onChangeTimeLimit} min="1"/> 
         </div>
+          <div className="quiz-details-top quiz-details-bottom">
+            <p className="category-label top-label">Category</p> 
+            <Select id="cat-selector" options={categoriesData} onChange={onChangeCategory} placeholder="Select category..." />
+            <button  className="ans-btn add-qn-btn"  onClick={onAddQuestion}>Add question</button>
+          </div>
        </div>
        <div className="question-list">
         {quizData.qa_response.map(item => {
@@ -186,15 +203,14 @@ const CreateUpdateQuiz = () => {
             return (
               <div className="question-item-outer">
                 <div className="question-item-top">
-                <p className="question-title">Question #{id + 1}</p>  
-                <button  className="ans-btn del-qn-btn icon-btn"  onClick={() => deleteQuestion(id)}><DeleteFilled /></button>
+                  <p className="question-title">Question #{id + 1}</p>  
+                  <button  className="ans-btn del-qn-btn icon-btn"  onClick={() => deleteQuestion(id)}><DeleteFilled /></button>
                 </div>
                 <Question key={id} question={item} inx={id} updateQuiz={updateQuiz} /> <br></br> 
-            </div>);
+              </div>);
         })}
        </div>
-        <Button onClick={onSubmitQuiz} loading={loading}> Submit quiz</Button>
-        <p id="err-label" >{errorLabel}</p>
+        <Button onClick={onSubmitQuiz} loading={loading} className="sub-btn"> Submit quiz</Button>
         </div>
   );
 };

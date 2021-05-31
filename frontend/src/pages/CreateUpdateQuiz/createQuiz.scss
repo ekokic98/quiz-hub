@@ -3,7 +3,19 @@
   .quiz-details-div {
     display: flex;
     flex-direction: column;
-    width: 500pt;
+    width: 600pt;
+  }
+
+  .add-qn-btn {
+    font-size: 13pt;
+    height: 27pt;
+    background-color: rgb(15, 179, 15);
+    color: white;
+    border: none;
+  }
+
+  .add-qn-btn:hover {
+    opacity: 80%;
   }
 
   .cu-container {
@@ -11,21 +23,22 @@
   }
 
   .time-limit-label {
-    margin-left: 1%;
-    margin-right: 1%;
-    font-size: 10pt;
+    margin-left: 2%;
+    margin-right: 2%;
+    font-size: 13pt;
     padding-top: 2%;
   }
 
   .quiz-name-label {
-    margin-left: 1%;
-    margin-right: 1%;
-    font-size: 10pt;
+    margin-left: 2%;
+    margin-right: 2%;
+    font-size: 13pt;
     padding-top: 2%;
   }
 
   .time-input {
     width: 80pt !important;
+    font-size: 12pt !important;
   }
 
   .green-btn {
@@ -75,11 +88,12 @@
 
   #cat-selector {
     width: 200pt !important;
-    line-height: 5pt;
     margin-left: 2%;
+    font-size: 12pt !important;
   }
 
   .quiz-input {
+    font-size: 13pt !important;
     width: 250pt !important;
   }
 
@@ -139,6 +153,7 @@
     background-color: rgb(15, 179, 15) !important;
     color: white !important;
     border-radius: 10%;
+    margin-left: 1%;
   }
 
   .qn-ans-section {
@@ -175,5 +190,16 @@
   }
 
   .category-label {
-    padding-top: 2%;
+    padding-top: 2.5%;
+    font-size: 13pt;
+  }
+
+  .sub-btn {
+    background-color: $gray !important;
+    border: $tertiary solid 2pt !important;
+    width: 150pt !important;
+    font-size: 13pt !important;
+    font-weight: bold !important;
+    height: 28pt !important;
+    margin-top: 2%;
   }

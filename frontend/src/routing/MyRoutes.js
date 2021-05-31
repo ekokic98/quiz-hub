@@ -10,8 +10,8 @@ import Register from 'pages/Register';
 import PageNotFound from 'pages/PageNotFound';
 import PrivateRoute from "routing/PrivateRoute";
 import MyAccount from "pages/MyAccount";
-import App from "pages/QuizExp/App";
-import QuizMain from "pages/QuizExp/QuizMain";
+import App from "pages/PlayQuiz/App";
+import QuizMain from "pages/PlayQuiz/QuizMain";
 import  CreateUpdateQuiz from 'pages/CreateUpdateQuiz';
 import Admin from "../pages/Admin";
 
