@@ -1,4 +1,4 @@
-import { get } from "./common";
+import { get, post } from "./common";
 
 const quizzesUrl = "/quizzes";
 
@@ -12,4 +12,12 @@ export const getQuizzesByCategory = async (categoryId) => {
 
 export const getQuizzesForTournament = async (id) => {
     return await get(quizzesUrl + "/tournament?id=" + id);
+}
+
+export const updateQuizReq = async (updatedQuiz) => {
+    return await post(quizzesUrl + "/update-quiz", updatedQuiz);
+}
+
+export const createQuizReq = async (updatedQuiz) => {
+    return await post(quizzesUrl + "/create-quiz", updatedQuiz);
 }

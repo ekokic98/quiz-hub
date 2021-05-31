@@ -53,7 +53,7 @@ const Quiz = ({data, countdownTime, endQuiz}) => {
         setCorrectAnswers(correctAnswers + point);
         setQuestionIndex(questionIndex + 1);
         setUserSlectedAns(null);
-        setQuestionsAndAnswers(qna);
+        setQuestionsAndAnswers(qna);  
     };
 
     const timeOver = timeTaken => {

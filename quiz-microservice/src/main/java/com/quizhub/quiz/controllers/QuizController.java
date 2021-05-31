@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.quizhub.quiz.exceptions.BadRequestException;
 import com.quizhub.quiz.exceptions.ConflictException;
 import com.quizhub.quiz.model.Quiz;
+import com.quizhub.quiz.response.UpdateQuizModel;
 import com.quizhub.quiz.services.QuizService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -39,6 +40,18 @@ public class QuizController {
     @GetMapping("/category")
     public ResponseEntity<List<Quiz>> getQuizzesByCategory(@RequestParam UUID id) {
         return ResponseEntity.ok(quizService.getQuizzesByCategory(id));
+    }
+
+    @PostMapping("/update-quiz")
+    public ResponseEntity<String> updateQuiz(@RequestBody UpdateQuizModel updateQuizModel) {
+        quizService.createUpdateQuiz(updateQuizModel, true);
+        return ResponseEntity.ok("Quiz has been successfully updated!");
+    }
+
+    @PostMapping("/create-quiz")
+    public ResponseEntity<String> createQuiz(@RequestBody UpdateQuizModel updateQuizModel) {
+        quizService.createUpdateQuiz(updateQuizModel, false);
+        return ResponseEntity.ok("Quiz has been successfully created!");
     }
 
     @GetMapping("/random")
