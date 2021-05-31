@@ -1,22 +1,47 @@
-.dynamic-delete-button {
-    position: relative;
-    top: 4px;
-    margin: 0 8px;
-    color: #999;
-    font-size: 24px;
-    cursor: pointer;
-    transition: all 0.3s;
+@import "src/assets/scss/variables";
+
+  .quiz-details-div {
+    display: flex;
+    flex-direction: column;
+    width: 500pt;
   }
-  .dynamic-delete-button:hover {
-    color: #777;
+
+  .cu-container {
+    margin-top: 4%;
   }
-  .dynamic-delete-button[disabled] {
-    cursor: not-allowed;
-    opacity: 0.5;
+
+  .time-limit-label {
+    margin-left: 1%;
+    margin-right: 1%;
+    font-size: 10pt;
+    padding-top: 2%;
+  }
+
+  .quiz-name-label {
+    margin-left: 1%;
+    margin-right: 1%;
+    font-size: 10pt;
+    padding-top: 2%;
+  }
+
+  .time-input {
+    width: 80pt !important;
   }
 
   .green-btn {
       color: green;
+  }
+
+  .quiz-details-top {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .quiz-details-bottom {
+    margin-top: 1%;
   }
 
   .icon-btn {
@@ -45,15 +70,17 @@
   }
 
   .qn-input {
-    width: 500pt !important;
+    width: 400pt !important;
   }
 
   #cat-selector {
-    width: 400pt !important;
+    width: 200pt !important;
+    line-height: 5pt;
+    margin-left: 2%;
   }
 
   .quiz-input {
-    width: 400pt !important;
+    width: 250pt !important;
   }
 
   .cu-container {
@@ -76,6 +103,7 @@
     border: 1pt solid gray;
     border-radius: 10px;
     padding: 5pt;
+    width: 500pt;
   }
 
   .question-item-inner {
@@ -105,4 +133,47 @@
   .question-title {
     float: left;
 
+  }
+
+  .ans-add-btn {
+    background-color: rgb(15, 179, 15) !important;
+    color: white !important;
+    border-radius: 10%;
+  }
+
+  .qn-ans-section {
+    display: flex;
+    margin-top: 4%;
+  }
+
+  .question-title {
+    font-weight: 600;
+    font-size: 14pt;
+  }
+
+  .ans-section {
+    overflow-y: auto;
+    margin-top: 3%;
+    height: 160pt;
+    max-height: 160pt;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .question-list {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2%;
+    overflow-y: auto;
+    height: 600pt;
+    max-height: 585pt;
+    padding-right: 1%;
+  }
+
+  .add-qn-btn {
+    margin-left: 2%;
+  }
+
+  .category-label {
+    padding-top: 2%;
   }

@@ -24,8 +24,8 @@ const MyRoutes = () => {
             <Route path="/quiz/play/:id" component={App}/>
             <Route path="/quiz/:id" component={QuizMain}/>
             <Route path="/tournament/:id" component={Tournaments}/>
-            <Route path="/update-quiz/:id" component={CreateUpdateQuiz}/>
-            <Route path="/create-quiz" component={CreateUpdateQuiz}/>
+            <PrivateRoute path="/update-quiz/:id" component={CreateUpdateQuiz}/>
+            <PrivateRoute path="/create-quiz" component={CreateUpdateQuiz}/>
             <GuestRoute path="/login" component={Login}/>
             <GuestRoute path="/register" component={Register}/>
             <PrivateRoute path="/my-account" component={MyAccount}/>

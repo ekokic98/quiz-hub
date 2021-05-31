@@ -1,5 +1,5 @@
 import { Form, Input, Button, Space } from 'antd';
-import { CheckCircleFilled, DeleteFilled } from '@ant-design/icons';
+import { CheckCircleFilled, DeleteFilled, PlusOutlined, CommentOutlined  } from '@ant-design/icons';
 import {useState} from 'react';
 
 const Question = (props) => {
@@ -50,9 +50,11 @@ const Question = (props) => {
 
     return (
     <div className="question-item-inner">
-         <Input className="qn-input" type="text" value={qa.question} onChange={onChangeQuestion}></Input> 
-        <button className="ans-btn" onClick={onAdd}>Add new answer</button>
-
+        <div className="qn-ans-section">
+            <Input className="qn-input" type="text" value={qa.question} onChange={onChangeQuestion}></Input> 
+            <button className="ans-add-btn icon-btn" onClick={onAdd}><CommentOutlined /></button>
+        </div>
+        <div className="ans-section">
         {qa.options.map(
             item => {  
             let item_id =  qa.options.indexOf(item);
@@ -65,6 +67,7 @@ const Question = (props) => {
             }
            
          )}
+        </div>
         
     </div>
     );

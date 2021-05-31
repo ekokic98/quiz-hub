@@ -127,17 +127,17 @@ const CreateUpdateQuiz = () => {
     let qa_list = quizData.qa_response;
     for (let i = 0; i < qa_list.length; i++) {
       if (!qa_list[i].question) {
-        message.warn("Questions cannot be blank!");
+        message.warn("Question #" + String(i + 1) + " cannot be blank!");
         setLoading(false);
         return ;
       }
       if (!qa_list[i].correct_answer || !qa_list[i].options.includes(qa_list[i].correct_answer)) {
-        message.warn("Question " + i + "# is missing correct answer!");
+        message.warn("Question #" + String(i + 1) + " is missing correct answer!");
         setLoading(false);
         return ;
       }
       if (qa_list[i].options.length < 2) {
-        message.warn("Question " + i + "# has less than 2 answers!");
+        message.warn("Question #" +  String(i + 1) + " has less than 2 answers!");
         setLoading(false);
         return ;
       } 
@@ -168,11 +168,19 @@ const CreateUpdateQuiz = () => {
 
   return (
       <div className="cu-container">
-       Quiz name: <Input className="quiz-input" type="text" value={quizData.quiz.name} onChange={onChangeQuizName}/> <br/>  
-       Minutes: <Input className="quiz-input" type="number" value={quizData.quiz.timeLimit} onChange={onChangeTimeLimit} min="1"/> 
-       <Select id="cat-selector" options={categoriesData} onChange={onChangeCategory} />
-       <button  className="ans-btn"  onClick={onAddQuestion}>Add question</button><br/> <br/> 
-       
+       <div className="quiz-details-div">
+       <div className="quiz-details-top">
+       <p className="quiz-name-label top-label">Quiz name</p> 
+       <Input className="quiz-input" type="text" value={quizData.quiz.name} onChange={onChangeQuizName}/> 
+         <p className="time-limit-label top-label">Time limit (minutes)</p> 
+         <Input className="time-input" type="number" value={quizData.quiz.timeLimit} onChange={onChangeTimeLimit} min="1"/> </div>
+         <div className="quiz-details-top quiz-details-bottom">
+         <p className="category-label top-label">Category</p> 
+        <Select id="cat-selector" options={categoriesData} onChange={onChangeCategory} placeholder="Select category..." />
+        <button  className="ans-btn add-qn-btn"  onClick={onAddQuestion}>Add question</button>
+        </div>
+       </div>
+       <div className="question-list">
         {quizData.qa_response.map(item => {
             let id = quizData.qa_response.indexOf(item);
             return (
@@ -184,7 +192,7 @@ const CreateUpdateQuiz = () => {
                 <Question key={id} question={item} inx={id} updateQuiz={updateQuiz} /> <br></br> 
             </div>);
         })}
-      
+       </div>
         <Button onClick={onSubmitQuiz} loading={loading}> Submit quiz</Button>
         <p id="err-label" >{errorLabel}</p>
         </div>
