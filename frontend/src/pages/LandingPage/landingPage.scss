@@ -1,3 +1,19 @@
-.landing-page-container {
+@import "src/assets/scss/variables";
 
+.landing-page-container {
+    .create-quiz-btn {
+        background: inherit !important;
+        background-color: inherit !important;
+        border: none !important;
+        margin-left: 1%;
+        margin-top: 0.4%;
+        font-size: 22pt;
+        color: rgb(15, 179, 15);
+     }
+
+     .create-quiz-btn:hover {
+         opacity: 80%;
+     }
 }
+
+

@@ -9,6 +9,10 @@ import QuizCarousel from "components/QuizCarousel";
 import { getRandom } from "utilities/common";
 import Leaderboard from "components/Leaderboard";
 import { getAllScoresToday } from "api/property/score";
+import {Button} from 'antd';
+import 'pages/LandingPage/landingPage.scss';
+import {PlusSquareFilled } from "@ant-design/icons";
+import { useUserContext } from "AppContext";
 
 const LandingPage = () => {
     const history = useHistory();
@@ -16,6 +20,7 @@ const LandingPage = () => {
     const [scores, setScores] = useState([]);
     const [tournaments, setTournaments] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { loggedIn } = useUserContext();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,6 +46,7 @@ const LandingPage = () => {
                     <h2 style={{ textAlign: 'left' }}>
                         RANDOM QUIZZES
                     </h2>
+
                 </Col>
                 <Col span={12}>
                     <h2 style={{ textAlign: 'left' }}>
@@ -51,17 +57,22 @@ const LandingPage = () => {
             <Row gutter={[32, 32]}>
                 <Col span={12}>
                     <QuizCarousel quizzes={getRandom(quizzes, 5)} />
+                 
                 </Col>
                 <Col span={12}>
                     <Leaderboard loading={loading} noRank scores={scores} />
                 </Col>
             </Row>
-            <Row gutter={[32, 32]}>
+            <Row gutter={[48, 48]}>
                 <Col span={24}>
+                    <div style={{display:'flex'}}>
                     <h2 style={{ textAlign: 'left', marginTop: 20, marginBottom: 10 }}>
                         ALL QUIZZES
                     </h2>
+                    {loggedIn && <Button size="large" className="create-quiz-btn" onClick={() => {history.push("/create-quiz")}}><PlusSquareFilled /></Button>}
+                    </div>
                 </Col>
+
             </Row>
             <Row gutter={[32, 32]}>
                 {quizzes.map(quiz =>

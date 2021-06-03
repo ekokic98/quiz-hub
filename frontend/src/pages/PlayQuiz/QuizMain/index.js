@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 import { getAllRatingsByQuiz } from "api/property/rating";
 import { getAllScoresByQuiz } from "api/property/score";
 import Leaderboard from "components/Leaderboard";
-import { PlusOutlined, MinusOutlined, StarOutlined, StarFilled, ClockCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { PlusOutlined, MinusOutlined, StarOutlined, StarFilled, ClockCircleOutlined, QuestionCircleOutlined, EditFilled } from "@ant-design/icons";
 import { followPerson, unfollowPerson } from "api/person/person";
 import { getUser, setUser } from "utilities/localStorage";
 import { addFavorite, deleteFavorite, getAllFavoritesByQuiz } from "api/property/favorite";
@@ -124,7 +124,7 @@ const QuizMain = (props) => {
     return (
         <div className="quiz-main-container">
             { loading ? <Spin size="large"/> :
-                <>
+                <> 
                     <Row gutter={[32, 32]}>
                         <Col span={6}>
                             <MyCard
@@ -132,6 +132,11 @@ const QuizMain = (props) => {
                                 imgSrc={quizData.quiz.category !== null && quizData.quiz.category.imageUrl}
                                 title={quizData.quiz.name}
                             />
+                            <div style={{display:'flex', width: '100%'}}>
+                                { person.id === quizData.person?.id &&
+                                <Button size="large" className="update-quiz-btn" onClick={() => {history.push("/update-quiz/" + quizId )}}>Edit your quiz<EditFilled /></Button>
+                                }
+                            </div>
                             <div className="quiz-time">
                                 <div>
                                     <ClockCircleOutlined style={{ marginRight: 10 }} />

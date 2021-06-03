@@ -86,7 +86,7 @@ const CreateUpdateQuiz = () => {
       }, 2500);
     }
     catch (error) {
-       message.error(!error.response.data.message ? error : error.response.data.message);
+       message.error(error.response.data.message ? error : error.response.data.message);
     }
     setLoading(false); 
   };
@@ -135,6 +135,12 @@ const CreateUpdateQuiz = () => {
   const onSubmitQuiz = () => {
     setLoading(true);
     let qa_list = quizData.qa_response;
+
+    if (quizData.qa_response.length <= 1) {
+      message.warn("Quiz cannot have only one question!");
+      setLoading(false);
+      return ;
+    }
     for (let i = 0; i < qa_list.length; i++) {
       if (!qa_list[i].question) {
         message.warn("Question #" + String(i + 1) + " cannot be blank!");
