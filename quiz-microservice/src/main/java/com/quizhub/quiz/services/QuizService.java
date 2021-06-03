@@ -210,8 +210,8 @@ public class QuizService {
 
     public Quiz addQuizFromTournament(QuizController.TournamentQuiz tournamentQuiz) {
         Quiz quiz = new Quiz();
-        quiz.setName(LocalDateTime.now().toString());
-        quiz.setTimeLimit(tournamentQuiz.getQuestionsLength() * 15);
+        quiz.setName(String.valueOf(quizRepository.countByTournamentId(UUID.fromString(tournamentQuiz.getTournamentId())) + 1));
+        quiz.setTimeLimit(tournamentQuiz.getQuestionsLength() * 15000);
         quiz.setTotalQuestions(tournamentQuiz.getQuestionsLength());
         quiz.setTournamentId(UUID.fromString(tournamentQuiz.getTournamentId()));
         Quiz savedQuiz = quizRepository.save(quiz);
@@ -229,7 +229,7 @@ public class QuizService {
 
     public List<Quiz> getQuizzesForTournament(UUID id) {
         registerEvent(EventRequest.actionType.GET, "/api/quizzes/tournament", "200");
-        return quizRepository.findAllByTournamentId(id);
+        return quizRepository.findAllByTournamentIdOrderByDateCreatedAsc(id);
     }
 
     public static void registerEvent(EventRequest.actionType actionType, String resource, String status) {

@@ -21,3 +21,7 @@ export const updateQuizReq = async (updatedQuiz) => {
 export const createQuizReq = async (updatedQuiz) => {
     return await post(quizzesUrl + "/create-quiz", updatedQuiz);
 }
+
+export const getQuizzesByName = async (name) => {
+    return await get(quizzesUrl + "/search?name=" + name);
+}

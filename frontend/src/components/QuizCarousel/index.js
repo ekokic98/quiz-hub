@@ -24,7 +24,7 @@ const QuizCarousel = ({ quizzes }) => {
                 ]}
             >
                 {quizzes.map(quiz => (
-                    <div className="quiz-carousel">
+                    <div key={quiz.id} className="quiz-carousel">
                         <MyCard
                             key={quiz.id}
                             onClick={() => history.push( quizUrl + "/" + quiz.id)}

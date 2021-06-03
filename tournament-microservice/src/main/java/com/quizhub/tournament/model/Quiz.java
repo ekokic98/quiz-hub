@@ -22,7 +22,7 @@ public class Quiz {
     private Tournament tournament;
 
     @NotBlank
-    @Size(min = 2, max = 50)
+    @Size(min = 1, max = 50)
     @Column(nullable = false)
     private String name;
 
@@ -37,7 +37,7 @@ public class Quiz {
         this.id = UUID.fromString(id);
     }
 
-    public Quiz(UUID id, Tournament tournament, @Size(min = 2, max = 50) @NotBlank String name, @Min(value = 1, message = "Each quiz should contain at least one question") int totalQuestions) {
+    public Quiz(UUID id, Tournament tournament, @Size(min = 1, max = 50) @NotBlank String name, @Min(value = 1, message = "Each quiz should contain at least one question") int totalQuestions) {
         this.id = id;
         this.tournament = tournament;
         this.name = name;

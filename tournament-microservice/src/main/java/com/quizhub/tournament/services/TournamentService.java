@@ -10,11 +10,13 @@ import com.quizhub.tournament.event.EventServiceGrpc;
 import com.quizhub.tournament.exceptions.BadRequestException;
 import com.quizhub.tournament.exceptions.ConflictException;
 import com.quizhub.tournament.exceptions.ServiceUnavailableException;
+import com.quizhub.tournament.model.Person;
 import com.quizhub.tournament.model.Score;
 import com.quizhub.tournament.model.Tournament;
 import com.quizhub.tournament.repositories.QuizRepository;
 import com.quizhub.tournament.repositories.ScoreRepository;
 import com.quizhub.tournament.repositories.TournamentRepository;
+import com.quizhub.tournament.responses.ScoreResponse;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
@@ -30,10 +32,8 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TournamentService {
@@ -122,13 +122,17 @@ public class TournamentService {
         }
     }
 
-    public List<Score> getLeaderboardForTournament(UUID id) {
+    public List<ScoreResponse> getLeaderboardForTournament(UUID id) {
         if (!tournamentRepository.existsById(id)) {
             registerEvent(EventRequest.actionType.GET, "/api/tournaments/leaderboard", "400");
             throw new BadRequestException("Wrong tournament id");
         }
         registerEvent(EventRequest.actionType.GET, "/api/tournaments/leaderboard", "200");
-        return scoreRepository.getLeaderboardForTournament(id.toString());
+        return scoreRepository
+                .getLeaderboardForTournament(id.toString())
+                .stream()
+                .map(score -> new ScoreResponse(score, score.getPerson(), score.getQuiz()))
+                .collect(Collectors.toList());
     }
 
     public Quiz addGeneratedQuizToTournament(TournamentController.QuizParams quizParams) {

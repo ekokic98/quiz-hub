@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { getQuizData } from "api/quiz/qa";
-import { Button, Col, message, Row, Spin } from "antd";
+import { Button, Col, message, Row, Spin, Input, Form, Comment, List } from "antd";
 import MyCard from "components/MyCard";
 import { quizUrl } from "utilities/appUrls";
 import { useHistory } from "react-router-dom";
 import { getAllRatingsByQuiz } from "api/property/rating";
 import { getAllScoresByQuiz } from "api/property/score";
 import Leaderboard from "components/Leaderboard";
-import { PlusOutlined, MinusOutlined, StarOutlined, StarFilled } from "@ant-design/icons";
+import { PlusOutlined, MinusOutlined, StarOutlined, StarFilled, ClockCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { followPerson, unfollowPerson } from "api/person/person";
 import { getUser, setUser } from "utilities/localStorage";
 import { addFavorite, deleteFavorite, getAllFavoritesByQuiz } from "api/property/favorite";
-import placeholderImage from 'assets/images/placeholder.png';
+import { addComment, getCommentsByQuiz } from "api/property/comment";
+import moment from "moment";
 
 import "./quizMain.scss";
+
+const { TextArea } = Input;
 
 const QuizMain = (props) => {
     const history = useHistory();
@@ -23,6 +26,9 @@ const QuizMain = (props) => {
     const [ratings, setRatings] = useState([]);
     const [person, setPerson] = useState(getUser());
     const [favorites, setFavorites] = useState([]);
+    const [comments, setComments] = useState([]);
+    const [comment, setComment] = useState("");
+    const [commentLoading, setCommentLoading] = useState(false);
 
     const quizId = props.match?.params?.id;
 
@@ -34,6 +40,7 @@ const QuizMain = (props) => {
                 setScores(await getAllScoresByQuiz(quizId));
                 setRatings(await getAllRatingsByQuiz(quizId));
                 setFavorites(await getAllFavoritesByQuiz(quizId));
+                setComments(await getCommentsByQuiz(quizId));
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
@@ -91,7 +98,27 @@ const QuizMain = (props) => {
         }
     }
 
-    const isFollowed = person.follows.some(follower => follower.follower.id === quizData.person?.id);
+    const postComment = async () => {
+        if (!comment) {
+            return;
+        }
+        setCommentLoading(true);
+        try {
+            const newComment = await addComment({
+                person: person.id,
+                quiz: quizId,
+                content: comment
+            });
+            setComments([{comment: newComment, person: person}, ...comments]);
+            setComment("");
+        } catch (error) {
+            message.warning(error.response.data.message);
+        }
+        setCommentLoading(false);
+    };
+
+
+    const isFollowed = person && person.follows.some(follower => follower.follower.id === quizData.person?.id);
     const isFavorited = favorites.some(favorite => favorite.person === person.id);
 
     return (
@@ -102,9 +129,19 @@ const QuizMain = (props) => {
                         <Col span={6}>
                             <MyCard
                                 onClick={() => history.push(quizUrl + "/play/" + quizId)}
-                                imgSrc={quizData.quiz.category !== null ? quizData.quiz.category.imageUrl : placeholderImage}
+                                imgSrc={quizData.quiz.category !== null && quizData.quiz.category.imageUrl}
                                 title={quizData.quiz.name}
                             />
+                            <div className="quiz-time">
+                                <div>
+                                    <ClockCircleOutlined style={{ marginRight: 10 }} />
+                                    { moment().startOf('day').milliseconds(parseInt(quizData.quiz.timeLimit)).format('mm:ss') }
+                                </div>
+                                <div>
+                                    { quizData.qa_response.length }
+                                    <QuestionCircleOutlined style={{ marginLeft: 10 }} />
+                                </div>
+                            </div>
                             { quizData.person &&
                                 <div className="created-by-container">
                                     <span>
@@ -150,21 +187,59 @@ const QuizMain = (props) => {
                             <div className="quiz-label-text">
                                 { ratings.length !== 0 ? (ratings.map(rating => rating.rate).reduce((prev, curr) => prev + curr) / ratings.length) : "No ratings" }
                             </div>
-                            <Button type={ isFavorited ? "primary" : "default" } className="favorite-button" block onClick={ favorite }>
-                                { isFavorited ?
-                                    <>
-                                        <StarFilled style={{ marginRight: 5 }}/>
-                                        Unfavorite
-                                    </> :
-                                    <>
-                                        <StarOutlined style={{ marginRight: 5 }}/>
-                                        Favorite
-                                    </>
-                                }
-                            </Button>
+                            { person &&
+                                <Button type={ isFavorited ? "primary" : "default" } className="favorite-button" block
+                                        onClick={ favorite }>
+                                    { isFavorited ?
+                                        <>
+                                            <StarFilled style={ {marginRight: 5} }/>
+                                            Unfavorite
+                                        </> :
+                                        <>
+                                            <StarOutlined style={ {marginRight: 5} }/>
+                                            Favorite
+                                        </>
+                                    }
+                                </Button>
+                            }
                         </Col>
                         <Col span={12}>
                             <Leaderboard loading={loading} scores={scores} />
+                            <h2 style={{ textAlign: 'left' }}>
+                                Comments
+                            </h2>
+                            { person &&
+                                <>
+                                    <Form.Item>
+                                        <TextArea
+                                            maxLength={255}
+                                            style={{maxHeight: 300}}
+                                            rows={3}
+                                            onChange={e => setComment(e.target.value)} value={comment}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item style={{ textAlign: 'right' }}>
+                                        <Button htmlType="submit" loading={commentLoading} onClick={postComment} type="primary">
+                                            Add Comment
+                                        </Button>
+                                    </Form.Item>
+                                </>
+                            }
+                            <List
+                                style={{textAlign: 'left'}}
+                                dataSource={comments}
+                                header={`${comments.length} ${comments.length > 1 ? 'replies' : 'reply'}`}
+                                itemLayout="horizontal"
+                                renderItem={item =>
+                                    <Comment
+                                        content={item.comment.content}
+                                        datetime={moment(item.comment.dateCreated).local().format("D MMMM YYYY [at] HH:mm")}
+                                        author={item.person.username}
+                                        avatar={item.person.imageUrl}
+                                    />
+                                }
+                                locale={{ emptyText: 'No comments' }}
+                            />
                         </Col>
                     </Row>
                 </>

@@ -171,8 +171,8 @@ UPDATE quiz SET category_id = 'f5242a3b-3076-4ad2-a422-433901ce2e39' WHERE id = 
 UPDATE quiz SET category_id = '66028772-71af-4b15-b006-dfca38ea77b3' WHERE id = 'da5b7318-f10c-4deb-b2cd-021779d10cea';
 UPDATE quiz SET category_id = '66028772-71af-4b15-b006-dfca38ea77b3' WHERE id = '536d15d9-a539-448f-948a-21bc88c33663';
 
-INSERT INTO public.quiz (id, date_created, name, person_id, time_limit, total_questions, tournament_id, category_id) VALUES ('5ee340cf-e0fc-433d-9058-655ed3ee4c8a', '2021-05-26 21:45:10.772297', '2021-05-26T21:45:10.701295700', null, 75, 5, '112e4019-c5ec-49a2-9be4-4871dcebe89f', null);
-INSERT INTO public.quiz (id, date_created, name, person_id, time_limit, total_questions, tournament_id, category_id) VALUES ('debb8e83-54ba-4320-b0a1-29779fc54648', '2021-05-26 21:45:17.299680', '2021-05-26T21:45:17.297681500', null, 150, 10, '112e4019-c5ec-49a2-9be4-4871dcebe89f', null);
+INSERT INTO public.quiz (id, date_created, name, person_id, time_limit, total_questions, tournament_id, category_id) VALUES ('5ee340cf-e0fc-433d-9058-655ed3ee4c8a', '2021-05-26 21:45:10.772297', '1', null, 75000, 5, '112e4019-c5ec-49a2-9be4-4871dcebe89f', null);
+INSERT INTO public.quiz (id, date_created, name, person_id, time_limit, total_questions, tournament_id, category_id) VALUES ('debb8e83-54ba-4320-b0a1-29779fc54648', '2021-05-26 21:45:17.299680', '2', null, 150000, 10, '112e4019-c5ec-49a2-9be4-4871dcebe89f', null);
 
 INSERT INTO public.question (id, name, type, quiz_id) VALUES ('7e63fe25-ec36-4842-9a04-515634eec722', 'The Harvard architecture for micro-controllers added which additional bus?', 0, '5ee340cf-e0fc-433d-9058-655ed3ee4c8a');
 INSERT INTO public.question (id, name, type, quiz_id) VALUES ('0da7da4b-cccd-42eb-819b-4eae1759565d', 'In &quot;Sonic the Hedgehog 3&quot; for the Sega Genesis, what is the color of the second Chaos Emerald you can get from Special Stages?', 0, '5ee340cf-e0fc-433d-9058-655ed3ee4c8a');

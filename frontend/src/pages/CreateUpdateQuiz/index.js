@@ -65,6 +65,7 @@ const CreateUpdateQuiz = () => {
     fetchCategories();
     // when id is not provided in url it means that quiz is created, not updated
      if (id)  fetchQuiz();
+    // eslint-disable-next-line
   }, []);
 
 

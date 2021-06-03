@@ -7,12 +7,15 @@ import com.quizhub.property.exceptions.BadRequestException;
 import com.quizhub.property.exceptions.ConflictException;
 import com.quizhub.property.model.Comment;
 import com.quizhub.property.repositories.CommentRepository;
+import com.quizhub.property.responses.CommentResponse;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import static com.quizhub.property.services.PropertyService.registerEvent;
@@ -31,6 +34,19 @@ public class CommentService {
     public Iterable<Comment> getAllComments() {
         registerEvent(EventRequest.actionType.GET, "/api/comments/all", "200");
         return commentRepository.findAll();
+    }
+
+    public List<CommentResponse> getCommentsByQuiz(UUID quizId) {
+        registerEvent(EventRequest.actionType.GET, "/api/comments/quiz", "200");
+        List<Comment> comments = commentRepository.findAllByQuizOrderByDateCreatedDesc(quizId);
+        List<CommentResponse> commentResponses = new ArrayList<>();
+
+        for (Comment comment : comments) {
+            Person person = restTemplate.getForObject("http://person-service/api/persons?id=" + comment.getPerson(), Person.class);
+            commentResponses.add(new CommentResponse(comment, person));
+        }
+
+        return commentResponses;
     }
 
     public Comment getComment(UUID id) {

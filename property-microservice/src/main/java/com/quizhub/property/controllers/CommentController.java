@@ -3,6 +3,7 @@ package com.quizhub.property.controllers;
 import com.quizhub.property.exceptions.BadRequestException;
 import com.quizhub.property.exceptions.InternalErrorException;
 import com.quizhub.property.model.Comment;
+import com.quizhub.property.responses.CommentResponse;
 import com.quizhub.property.services.CommentService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,6 +29,12 @@ public class CommentController {
     public @ResponseBody
     ResponseEntity<Iterable<Comment>> getAllComments () {
         return ResponseEntity.ok(commentService.getAllComments());
+    }
+
+    @GetMapping("/quiz")
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class)})
+    public ResponseEntity<List<CommentResponse>> getCommentsByQuiz(@RequestParam UUID quizId) {
+        return ResponseEntity.ok(commentService.getCommentsByQuiz(quizId));
     }
 
     @PostMapping

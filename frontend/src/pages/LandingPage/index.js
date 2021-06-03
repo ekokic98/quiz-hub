@@ -23,7 +23,7 @@ const LandingPage = () => {
                 setLoading(true);
                 setQuizzes(await getAllQuizzes(false));
                 setScores(await getAllScoresToday());
-                setTournaments(await getAllTournaments(false));
+                setTournaments(await getAllTournaments());
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
@@ -65,7 +65,7 @@ const LandingPage = () => {
             </Row>
             <Row gutter={[32, 32]}>
                 {quizzes.map(quiz =>
-                    <Col xs={12} sm={8} md={4}>
+                    <Col key={quiz.id} xs={12} sm={8} md={4}>
                         <MyCard onClick={() => history.push( quizUrl + "/" + quiz.id)} key={quiz.id} imgSrc={quiz?.category?.imageUrl} title={quiz.name} />
                     </Col>
                 )}
@@ -79,7 +79,7 @@ const LandingPage = () => {
             </Row>
             <Row gutter={[32, 32]}>
                 {tournaments.map(tournament =>
-                    <Col xs={12} sm={8} md={4}>
+                    <Col key={tournament.id} xs={12} sm={8} md={4}>
                         <MyCard onClick={() => history.push(tournamentUrl + "/" + tournament.id)} key={tournament.id} title={tournament.name} />
                     </Col>
                 )}

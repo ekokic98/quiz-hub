@@ -32,7 +32,7 @@ public class Quiz {
 
     @Column(nullable = false, unique = true)
     @NotBlank
-    @Size(min = 2, max = 50)
+    @Size(min = 1, max = 50)
     private String name;
 
     @CreationTimestamp

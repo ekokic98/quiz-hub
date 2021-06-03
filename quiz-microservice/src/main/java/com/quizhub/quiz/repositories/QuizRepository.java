@@ -15,17 +15,19 @@ public interface QuizRepository extends JpaRepository<Quiz, UUID> {
 
     List<Quiz> findAllByCategoryId(UUID id);
 
-    List<Quiz> findAllByTournamentId(UUID tournamentId);
+    List<Quiz> findAllByTournamentIdOrderByDateCreatedAsc(UUID tournamentId);
 
     List<Quiz> findAllByTournamentIdIsNotNull();
 
     List<Quiz> findAllByTournamentIdIsNull();
 
-    @Query(value = "SELECT * FROM quiz WHERE name LIKE '%:name%';", nativeQuery = true)
+    @Query(value = "SELECT * FROM quiz WHERE lower(name) LIKE lower('%' || :name || '%')", nativeQuery = true)
     List<Quiz> getQuizzesByName(String name);
 
-    @Query(value = "SELECT * FROM quiz ORDER BY random() LIMIT 1;",nativeQuery = true)
+    @Query(value = "SELECT * FROM quiz ORDER BY random() LIMIT 1",nativeQuery = true)
     Optional<Quiz> getRandomQuiz();
 
     Optional<Quiz> getQuizById(UUID id);
+
+    long countByTournamentId(UUID tournamentId);
 }

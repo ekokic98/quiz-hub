@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import GuestRoute from 'routing/GuestRoute';
 
 import LandingPage from 'pages/LandingPage';
+import Search from 'pages/Search';
 import Categories from 'pages/Categories';
 import Tournaments from 'pages/Tournaments';
 import Login from 'pages/Login';
@@ -19,6 +20,7 @@ const MyRoutes = () => {
     return (
         <Switch>
             <Route exact path="/" component={LandingPage}/>
+            <Route path="/search" component={Search}/>
             <Route path="/categories/*" component={Categories}/>
             <Route path="/categories" component={Categories}/>
             <Route path="/quiz/play/:id" component={App}/>

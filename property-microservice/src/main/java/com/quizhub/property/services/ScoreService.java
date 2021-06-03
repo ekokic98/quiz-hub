@@ -19,11 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.quizhub.property.services.PropertyService.registerEvent;
 
@@ -100,7 +96,7 @@ public class ScoreService {
     public List<ScoreResponse> getAllScoresByQuiz(UUID id) {
         registerEvent(EventRequest.actionType.GET, "/api/scores/all/user", "200");
 
-        Iterable<Score> scores = scoreRepository.getScoresByQuiz(id);
+        Iterable<Score> scores = scoreRepository.getScoresByQuizOrderByPointsDescDateScoredAsc(id);
 
         List<ScoreResponse> response = new ArrayList<>();
 
@@ -134,10 +130,17 @@ public class ScoreService {
             if (quiz == null || person == null) {
                 throw new BadRequestException("Quiz or person cannot be null");
             }
+            Optional<Score> optionalScore = scoreRepository.findFirstByQuizAndPersonOrderByPointsDescDateScoredAsc(
+                    quiz.getId(),
+                    person.getId()
+            );
             Score savedScore = scoreRepository.save(score);
             if (quiz.getTournamentId() != null) {
+                if (optionalScore.isPresent() && score.getPoints() > optionalScore.get().getPoints()) {
+                    score.setId(optionalScore.get().getId());
+                }
                 try {
-                    rabbitMQSender.send(new LeaderboardInfo(person, quiz, savedScore));
+                    rabbitMQSender.send(new LeaderboardInfo(person, quiz, score));
                 } catch (JsonProcessingException exception) {
                     registerEvent(EventRequest.actionType.CREATE, "/api/scores", "500");
                     scoreRepository.deleteById(savedScore.getId());

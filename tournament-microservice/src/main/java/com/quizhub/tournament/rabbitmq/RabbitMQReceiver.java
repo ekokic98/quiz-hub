@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Component
@@ -51,12 +52,14 @@ public class RabbitMQReceiver {
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             LeaderboardInfo leaderboardInfo = objectMapper.readValue(message, LeaderboardInfo.class);
             try {
-                personRepository.save(leaderboardInfo.getPerson());
-
                 UUID tournamentId = leaderboardInfo.getQuiz().getTournament().getId();
                 Tournament tournament = tournamentRepository.findById(tournamentId)
                         .orElseThrow(() -> new BadRequestException("Tournament with id " + tournamentId + " doesn't exist"));
-
+                if (tournament.getDateEnd().isBefore(LocalDateTime.now())) {
+                    rabbitMQSender.send();
+                    return;
+                }
+                personRepository.save(leaderboardInfo.getPerson());
                 quizRepository.save(leaderboardInfo.getQuiz().withTournament(tournament));
                 scoreRepository.save(leaderboardInfo.getScore());
                 rabbitMQSender.send();

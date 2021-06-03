@@ -6,6 +6,7 @@ import com.quizhub.tournament.exceptions.BadRequestException;
 import com.quizhub.tournament.exceptions.ConflictException;
 import com.quizhub.tournament.model.Score;
 import com.quizhub.tournament.model.Tournament;
+import com.quizhub.tournament.responses.ScoreResponse;
 import com.quizhub.tournament.services.TournamentService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -70,7 +71,7 @@ public class TournamentController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad request", response = BadRequestException.class),
     })
-    public ResponseEntity<List<Score>> getLeaderboardForTournament(@RequestParam UUID id) {
+    public ResponseEntity<List<ScoreResponse>> getLeaderboardForTournament(@RequestParam UUID id) {
         return ResponseEntity.ok(tournamentService.getLeaderboardForTournament(id));
     }
 
