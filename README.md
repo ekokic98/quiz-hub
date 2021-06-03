@@ -7,10 +7,10 @@ To clone and run this application, you will need [Git](https://git-scm.com), [Ja
 
 ```bash
 # Clone this repository
-$ git clone https://github.com/kkadusic/auction-app
+$ git clone https://github.com/kkadusic/quiz-hub
 
 # Go into the root directory
-$ cd auction-app
+$ cd quiz-hub
 
 # Build the project without running unit tests
 $ mvn clean install -DskipTests
