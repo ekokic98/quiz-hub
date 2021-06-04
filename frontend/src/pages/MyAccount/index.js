@@ -8,12 +8,13 @@ import EditTab from "pages/MyAccount/editTab";
 import 'pages/MyAccount/myAccount.scss'
 import FollowersTab from "pages/MyAccount/FollowersTab";
 import FavoritesTab from "pages/MyAccount/FavoritesTab";
+import StatisticsTab from "./StatisticsTab";
 
 const MyAccount = () => {
 
     const user = getUser();
     const [counter, setCounter] = useState(0);
-    const tabs = [<EditTab/>, <FollowersTab/>, <FavoritesTab/>]
+    const tabs = [<EditTab/>, <FollowersTab/>, <FavoritesTab/>, <StatisticsTab/>]
 
     const radioButtonHandler = (event) => {
         setCounter(event.target.value)
@@ -28,6 +29,7 @@ const MyAccount = () => {
                     <Radio.Button value={0}>Edit</Radio.Button>
                     <Radio.Button value={1}>Followers</Radio.Button>
                     <Radio.Button value={2}>Favorites</Radio.Button>
+                    <Radio.Button value={3}>Statistics</Radio.Button>
                 </Radio.Group>
 
                 <div align={'left'} className='my-account-radio-group'>
