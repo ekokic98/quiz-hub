@@ -10,7 +10,7 @@ const StatisticsCard = ({data}) => {
     useEffect(() => {
         setAllTimeData(getAllTimeData());
         setThisYearData(getThisYearData());
-        setGraphData(getGraphData());
+        setGraphData(getThisYearGraphData());
     }, []);
 
     const getAllTimeData = () => {
@@ -34,74 +34,78 @@ const StatisticsCard = ({data}) => {
         let time = 0;
         let points = 0;
         let correctAnswers = 0;
+        let quizzesPlayed = 0;
         for (let i = 0; i < data.length; i++) {
             if (data[i].dateScored.substr(0, 4) === new Date().getFullYear().toString()) {
+                quizzesPlayed++;
                 time += data[i].totalTime;
                 correctAnswers += data[i].correctAnswers;
                 points += data[i].points;
             }
         }
         return {
-            quizzes: data.length,
+            quizzes: quizzesPlayed,
             time: time,
             points: points,
             correctAnswers: correctAnswers
         };
     }
 
-    const getGraphData = () => {
+    const getThisYearGraphData = () => {
         let quizzesByMonth = Array(12).fill(0);
         let pointsByMonth = Array(12).fill(0);
         let totalTimeByMonth = Array(12).fill(0);
         for (let i = 0; i < data.length; i++) {
-            if (data[i].dateScored.substr(5, 2) === "01") {
-                quizzesByMonth[0]++;
-                pointsByMonth[0] += data[i].points;
-                totalTimeByMonth[0] += data[i].totalTime;
-            } else if (data[i].dateScored.substr(5, 2) === "02") {
-                quizzesByMonth[1]++;
-                pointsByMonth[1] += data[i].points;
-                totalTimeByMonth[1] += data[i].totalTime;
-            } else if (data[i].dateScored.substr(5, 2) === "03") {
-                quizzesByMonth[2]++;
-                pointsByMonth[2] += data[i].points;
-                totalTimeByMonth[2] += data[i].totalTime;
-            } else if (data[i].dateScored.substr(5, 2) === "04") {
-                quizzesByMonth[3]++;
-                pointsByMonth[3] += data[i].points;
-                totalTimeByMonth[3] += data[i].totalTime;
-            } else if (data[i].dateScored.substr(5, 2) === "05") {
-                quizzesByMonth[4]++;
-                pointsByMonth[4] += data[i].points;
-                totalTimeByMonth[4] += data[i].totalTime;
-            } else if (data[i].dateScored.substr(5, 2) === "06") {
-                quizzesByMonth[5]++;
-                pointsByMonth[5] += data[i].points;
-                totalTimeByMonth[5] += data[i].totalTime;
-            } else if (data[i].dateScored.substr(5, 2) === "07") {
-                quizzesByMonth[6]++;
-                pointsByMonth[6] += data[i].points;
-                totalTimeByMonth[6] += data[i].totalTime;
-            } else if (data[i].dateScored.substr(5, 2) === "08") {
-                quizzesByMonth[7]++;
-                pointsByMonth[7] += data[i].points;
-                totalTimeByMonth[7] += data[i].totalTime;
-            } else if (data[i].dateScored.substr(5, 2) === "09") {
-                quizzesByMonth[8]++;
-                pointsByMonth[8] += data[i].points;
-                totalTimeByMonth[8] += data[i].totalTime;
-            } else if (data[i].dateScored.substr(5, 2) === "10") {
-                quizzesByMonth[9]++;
-                pointsByMonth[9] += data[i].points;
-                totalTimeByMonth[9] += data[i].totalTime;
-            } else if (data[i].dateScored.substr(5, 2) === "11") {
-                quizzesByMonth[10]++;
-                pointsByMonth[10] += data[i].points;
-                totalTimeByMonth[10] += data[i].totalTime;
-            } else {
-                quizzesByMonth[11]++;
-                pointsByMonth[11] += data[i].points;
-                totalTimeByMonth[11] += data[i].totalTime;
+            if (data[i].dateScored.substr(0, 4) === new Date().getFullYear().toString()) {
+                if (data[i].dateScored.substr(5, 2) === "01") {
+                    quizzesByMonth[0]++;
+                    pointsByMonth[0] += data[i].points;
+                    totalTimeByMonth[0] += data[i].totalTime;
+                } else if (data[i].dateScored.substr(5, 2) === "02") {
+                    quizzesByMonth[1]++;
+                    pointsByMonth[1] += data[i].points;
+                    totalTimeByMonth[1] += data[i].totalTime;
+                } else if (data[i].dateScored.substr(5, 2) === "03") {
+                    quizzesByMonth[2]++;
+                    pointsByMonth[2] += data[i].points;
+                    totalTimeByMonth[2] += data[i].totalTime;
+                } else if (data[i].dateScored.substr(5, 2) === "04") {
+                    quizzesByMonth[3]++;
+                    pointsByMonth[3] += data[i].points;
+                    totalTimeByMonth[3] += data[i].totalTime;
+                } else if (data[i].dateScored.substr(5, 2) === "05") {
+                    quizzesByMonth[4]++;
+                    pointsByMonth[4] += data[i].points;
+                    totalTimeByMonth[4] += data[i].totalTime;
+                } else if (data[i].dateScored.substr(5, 2) === "06") {
+                    quizzesByMonth[5]++;
+                    pointsByMonth[5] += data[i].points;
+                    totalTimeByMonth[5] += data[i].totalTime;
+                } else if (data[i].dateScored.substr(5, 2) === "07") {
+                    quizzesByMonth[6]++;
+                    pointsByMonth[6] += data[i].points;
+                    totalTimeByMonth[6] += data[i].totalTime;
+                } else if (data[i].dateScored.substr(5, 2) === "08") {
+                    quizzesByMonth[7]++;
+                    pointsByMonth[7] += data[i].points;
+                    totalTimeByMonth[7] += data[i].totalTime;
+                } else if (data[i].dateScored.substr(5, 2) === "09") {
+                    quizzesByMonth[8]++;
+                    pointsByMonth[8] += data[i].points;
+                    totalTimeByMonth[8] += data[i].totalTime;
+                } else if (data[i].dateScored.substr(5, 2) === "10") {
+                    quizzesByMonth[9]++;
+                    pointsByMonth[9] += data[i].points;
+                    totalTimeByMonth[9] += data[i].totalTime;
+                } else if (data[i].dateScored.substr(5, 2) === "11") {
+                    quizzesByMonth[10]++;
+                    pointsByMonth[10] += data[i].points;
+                    totalTimeByMonth[10] += data[i].totalTime;
+                } else {
+                    quizzesByMonth[11]++;
+                    pointsByMonth[11] += data[i].points;
+                    totalTimeByMonth[11] += data[i].totalTime;
+                }
             }
         }
         return [quizzesByMonth, pointsByMonth, totalTimeByMonth];
