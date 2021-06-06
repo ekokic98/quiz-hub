@@ -133,8 +133,8 @@ const QuizMain = (props) => {
                                 title={quizData.quiz.name}
                             />
                             <div style={{display:'flex', width: '100%'}}>
-                                { person.id === quizData.person?.id &&
-                                <Button size="large" className="update-quiz-btn" onClick={() => {history.push("/update-quiz/" + quizId )}}>Edit your quiz<EditFilled /></Button>
+                                { person && person.id === quizData.person?.id &&
+                                    <Button size="large" className="update-quiz-btn" onClick={() => {history.push("/update-quiz/" + quizId )}}>Edit your quiz<EditFilled /></Button>
                                 }
                             </div>
                             <div className="quiz-time">
