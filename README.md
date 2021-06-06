@@ -23,7 +23,7 @@ $ docker-compose up -d
 
 Application startup takes about 2 minutes, but this may vary on different devices. <br>
 On rare occasions, a page may take a bit longer to load after the start. <br>
-- QuizHub page will be available at [`http://localhost:3000`](http://localhost:3000).
+QuizHub page will be available at [`http://localhost:3000`](http://localhost:3000).
 
 ## Contributors
 
