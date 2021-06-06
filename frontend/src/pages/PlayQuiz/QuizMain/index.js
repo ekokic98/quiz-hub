@@ -119,7 +119,7 @@ const QuizMain = (props) => {
 
 
     const isFollowed = person && person.follows.some(follower => follower.follower.id === quizData.person?.id);
-    const isFavorited = favorites.some(favorite => favorite.person === person.id);
+    const isFavorited = person && favorites.some(favorite => favorite.person === person.id);
 
     return (
         <div className="quiz-main-container">
