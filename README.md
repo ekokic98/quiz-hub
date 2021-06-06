@@ -1,5 +1,7 @@
 # QuizHub
 
+QuizHub is a web application for playing and creating quizzes based on microservice architecture. Users can also post comments on quizzes, follow other users, add quizzes to the wishlist, play various tournaments, have an overview of their statistics and edit profile information.
+
 ## How To Use :wrench:
 
 To clone and run this application, you will need [Git](https://git-scm.com), [Java](https://www.oracle.com/java/technologies/javase-downloads.html),
@@ -29,3 +31,7 @@ On rare occasions, a page may take a bit longer to load after the start. <br>
 <a href="https://github.com/kkadusic" target="_blank"><img width="100px" height="100px" src="https://github.com/kkadusic.png"></a>
 <a href="https://github.com/amra-music" target="_blank"><img width="100px" height="100px" src="https://github.com/amra-music.png"></a>
 <a href="https://github.com/fpoljcic" target="_blank"><img width="100px" height="100px" src="https://github.com/fpoljcic.png"></a>
+
+## Demo :movie_camera:
+
+Check out demo video [here](https://drive.google.com/drive/folders/1mPVD673A4WEfl6pK4Q45f4UCGRC3JIaM?usp=sharing).
