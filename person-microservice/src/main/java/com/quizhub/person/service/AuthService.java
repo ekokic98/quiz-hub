@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -60,7 +61,9 @@ public class AuthService {
         }
          */
 
-        if (personRepository.existsByEmail(updateProfileRequest.getEmail())) {
+        Optional<Person> optionalPerson = personRepository.findByEmail(updateProfileRequest.getEmail());
+
+        if (optionalPerson.isPresent() && !optionalPerson.get().getId().equals(person.getId())) {
             throw new ConflictException("Email is already taken");
         }
 
