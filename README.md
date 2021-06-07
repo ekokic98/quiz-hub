@@ -1,6 +1,6 @@
 # QuizHub
 
-QuizHub is a web application for playing and creating quizzes based on microservice architecture. Users can also post comments on quizzes, follow other users, add quizzes to the wishlist, play various tournaments, have an overview of their statistics and edit profile information.
+QuizHub is a web application for playing and creating quizzes based on microservice architecture. Users can also post comments on quizzes, follow other users, add quizzes to the wishlist, play various tournaments, have an overview of their statistics and edit profile information. <br>
 
 ## How To Use :wrench:
 
@@ -35,3 +35,7 @@ QuizHub page will be available at [`http://localhost:3000`](http://localhost:300
 ## Demo :movie_camera:
 
 Check out demo video [here](https://drive.google.com/drive/folders/1mPVD673A4WEfl6pK4Q45f4UCGRC3JIaM?usp=sharing).
+
+## Deployment :rocket:
+
+Check out live demo [here](http://34.78.67.208/).
