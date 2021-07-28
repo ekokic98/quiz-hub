@@ -7,6 +7,10 @@ QuizHub is a web application for playing and creating quizzes based on microserv
 The following is a diagram of the application architecture:
 <img src="https://user-images.githubusercontent.com/44180058/121525567-c76fd700-c9f8-11eb-980a-d9dda6146c45.png" width=75% height=75%>
 
+## Demo :movie_camera:
+
+Check out demo video [here](https://drive.google.com/file/d/1tRyMWpl1Hae5ZmNSKR0Ob_3J1o3L0zHO/view).
+
 ## How To Use :wrench:
 
 To clone and run this application, you will need [Git](https://git-scm.com), [Java](https://www.oracle.com/java/technologies/javase-downloads.html),
@@ -36,10 +40,6 @@ QuizHub page will be available at [`http://localhost:3000`](http://localhost:300
 <a href="https://github.com/kkadusic" target="_blank"><img width="100px" height="100px" src="https://github.com/kkadusic.png"></a>
 <a href="https://github.com/amra-music" target="_blank"><img width="100px" height="100px" src="https://github.com/amra-music.png"></a>
 <a href="https://github.com/fpoljcic" target="_blank"><img width="100px" height="100px" src="https://github.com/fpoljcic.png"></a>
-
-## Demo :movie_camera:
-
-Check out demo video [here](https://drive.google.com/drive/folders/1mPVD673A4WEfl6pK4Q45f4UCGRC3JIaM?usp=sharing).
 
 ## Deployment :rocket:
 
