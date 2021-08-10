@@ -1,11 +1,11 @@
 # QuizHub
 
-QuizHub is a web application for playing and creating quizzes based on microservice architecture. Users can also post comments on quizzes, follow other users, add quizzes to the wishlist, play various tournaments, have an overview of their statistics and edit profile information. <br>
+QuizHub is a web application for playing and creating quizzes based on microservice architecture. Users can also post comments on quizzes, follow other users, add quizzes to the wishlist, play various tournaments, have an overview of their statistics, and edit profile information. <br>
 
 ## Architecture
 
 The following is a diagram of the application architecture:
-<img src="https://user-images.githubusercontent.com/44180058/121525567-c76fd700-c9f8-11eb-980a-d9dda6146c45.png" width=75% height=75%>
+![QuizHub-architecture](https://user-images.githubusercontent.com/44180058/121525567-c76fd700-c9f8-11eb-980a-d9dda6146c45.png)
 
 ## Demo :movie_camera:
 
