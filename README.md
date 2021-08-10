@@ -40,7 +40,3 @@ QuizHub page will be available at [`http://localhost:3000`](http://localhost:300
 <a href="https://github.com/kkadusic" target="_blank"><img width="100px" height="100px" src="https://github.com/kkadusic.png"></a>
 <a href="https://github.com/amra-music" target="_blank"><img width="100px" height="100px" src="https://github.com/amra-music.png"></a>
 <a href="https://github.com/fpoljcic" target="_blank"><img width="100px" height="100px" src="https://github.com/fpoljcic.png"></a>
-
-## Deployment :rocket:
-
-Check out live demo [here](http://34.78.67.208/).
